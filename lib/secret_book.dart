@@ -75,7 +75,7 @@ class _SecretBookState extends State<SecretBook> {
                     horizontal: 16.0,
                     vertical: 8.0,
                   ),
-                  hintText: '请描述内容...',
+                  hintText: '请描述秘钥...',
                   hintStyle: TextStyle(
                     color: Color.fromARGB(255, 235, 186, 186),
                     fontSize: 16,
@@ -113,6 +113,7 @@ class _SecretBookState extends State<SecretBook> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text("秘钥簿"),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
@@ -139,8 +140,6 @@ class _SecretListState extends State<SecretList> {
   late final SecretData _secretData;
 
   final _scrollController = ScrollController();
-
-  FocusNode _focusNode = FocusNode();
 
   @override
   void dispose() {

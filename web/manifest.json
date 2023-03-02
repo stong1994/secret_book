@@ -1,6 +1,6 @@
 {
-    "name": "key_book",
-    "short_name": "key_book",
+    "name": "secret_book",
+    "short_name": "secret_book",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

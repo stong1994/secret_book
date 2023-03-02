@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.key_book">
+    package="com.example.secret_book">
    <application
-        android:label="key_book"
+        android:label="secret_book"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,4 +1,4 @@
-package com.example.key_book
+package com.example.secret_book
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -34,6 +34,7 @@ class Secret {
     String? content,
   }) {
     return Secret(
+      id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
     );
@@ -107,6 +108,21 @@ class _SecretActionState extends State<SecretAction> {
     widget.onSecretDeleted(widget.secret);
   }
 
+  void onCopy() {
+    copyToClipboard(widget.secret.content);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Navigator.of(context).pop();
+        });
+        return const AlertDialog(
+          title: Text('已复制'),
+        );
+      },
+    );
+  }
+
   Widget _showTitle() {
     return GestureDetector(
       onTap: () {
@@ -114,23 +130,31 @@ class _SecretActionState extends State<SecretAction> {
         eventBus.fire(widget.hashCode);
       },
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: Text(
-              widget.secret.title,
+            child: Center(
+              child: Text(
+                widget.secret.title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           IconButton(
             icon: const Icon(Icons.copy),
-            onPressed: () => copyToClipboard(widget.secret.content),
+            onPressed: onCopy,
+            tooltip: '复制内容',
           ),
           IconButton(
             icon: const Icon(Icons.visibility),
             onPressed: _showContent,
+            tooltip: '显示内容',
           ),
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: _deleteSecret,
+            tooltip: '删除',
+            // disabledColor: _isEditing ? Colors.grey : Colors.red,
           ),
         ],
       ),
