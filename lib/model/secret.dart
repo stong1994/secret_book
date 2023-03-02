@@ -233,9 +233,9 @@ class _SecretActionState extends State<SecretAction> {
             TextButton(
               child: const Text('完成'),
               onPressed: () {
-                String content = _titleEditingController.text;
+                String content = _contentEditingController.text;
                 _updateContent(content);
-                _titleEditingController.clear();
+                _contentEditingController.clear();
                 Navigator.of(context).pop();
               },
             ),
