@@ -189,6 +189,7 @@ class _SecretActionState extends State<SecretAction> {
         _updateTitle(value);
         _titleEditingController.clear();
       },
+      onTapOutside: (event) => _toggleEditing(),
     );
   }
 
