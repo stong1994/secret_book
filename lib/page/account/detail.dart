@@ -21,6 +21,7 @@ class DetailPage {
   late TextEditingController _passwordEditingController;
   late TextEditingController _commentEditingController;
   bool _isEditingTitle = false;
+  bool _isShowPwd = false;
 
   void initState() {
     _titleEditingController = TextEditingController(text: account.title);
@@ -51,10 +52,10 @@ class DetailPage {
                     controller: _accountEditingController,
                     label: "账号",
                   ),
-                  buildTextField(
+                  buildPasswordField(
                     controller: _passwordEditingController,
                     label: "密码",
-                    obscureText: true,
+                    setState: setState,
                   ),
                   buildTextField(
                     controller: _commentEditingController,
@@ -144,12 +145,42 @@ class DetailPage {
   Widget buildTextField({
     required TextEditingController controller,
     required String label,
-    obscureText = false,
   }) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(labelText: label),
-      obscureText: obscureText,
     );
+  }
+
+  Widget buildPasswordField({
+    required TextEditingController controller,
+    required String label,
+    required setState,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+            child: TextField(
+          controller: controller,
+          decoration: InputDecoration(labelText: label),
+          obscureText: !_isShowPwd,
+        )),
+        IconButton(
+          icon: _isShowPwd
+              ? const Icon(Icons.visibility_off)
+              : const Icon(Icons.visibility),
+          onPressed: changePwdStatus(setState),
+          tooltip: _isShowPwd ? '隐藏密码' : '显示密码',
+        ),
+      ],
+    );
+  }
+
+  VoidCallback changePwdStatus(setState) {
+    return () {
+      setState(() {
+        _isShowPwd = !_isShowPwd;
+      });
+    };
   }
 }

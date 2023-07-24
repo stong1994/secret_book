@@ -106,12 +106,12 @@ class _AccountRowState extends State<AccountRow> {
                     tooltip: '复制账号',
                   ),
                   IconButton(
-                    icon: const Icon(Icons.password),
+                    icon: const Icon(Icons.password_outlined),
                     onPressed: onPasswordCopy(context, account),
                     tooltip: '复制密码',
                   ),
                   IconButton(
-                    icon: const Icon(Icons.visibility),
+                    icon: const Icon(Icons.info),
                     onPressed: _showInfo(context, account),
                     tooltip: '详情',
                   ),
