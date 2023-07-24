@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'db/secret_book.dart';
+import 'db/token.dart';
 import 'db/api.dart';
-import 'model/secret.dart';
+import 'model/token.dart';
 
 class TokenBook extends StatefulWidget {
   const TokenBook({super.key});
@@ -26,6 +26,57 @@ class _TokenBookState extends State<TokenBook> {
     _titleEditingController.dispose();
     _contentEditingController.dispose();
     super.dispose();
+  }
+
+  final _scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.all(16),
+        color: Colors.grey,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              mainArea(),
+              Container(
+                padding: EdgeInsets.only(bottom: 16, right: 10),
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  onPressed: onAdd,
+                  child: Icon(Icons.add),
+                ),
+              )
+            ]));
+  }
+
+  Widget mainArea() {
+    return Expanded(
+        child: FutureBuilder<List<Secret>>(
+            future: _secretData.fetchSecrets(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("Error: ${snapshot.error}}"),
+                );
+              }
+
+              List<Secret> secrets = snapshot.data!;
+              return ListView.builder(
+                  controller: _scrollController,
+                  itemCount: secrets.length,
+                  itemBuilder: (context, index) {
+                    return SecretAction(
+                        secret: secrets[index],
+                        onSecretUpdated: onSecretUpdate,
+                        onSecretDeleted: onSecretDelete);
+                  });
+            }));
   }
 
   void onClean() {
@@ -116,28 +167,6 @@ class _TokenBookState extends State<TokenBook> {
     );
   }
 
-  final _scrollController = ScrollController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.all(16),
-        color: Colors.grey,
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              mainArea(),
-              Container(
-                padding: EdgeInsets.only(bottom: 16, right: 10),
-                alignment: Alignment.bottomRight,
-                child: FloatingActionButton(
-                  onPressed: onAdd,
-                  child: Icon(Icons.add),
-                ),
-              )
-            ]));
-  }
-
   void onSecretDelete(Secret secret) {
     setState(() {
       _secretData.deleteSecret(secret);
@@ -148,34 +177,5 @@ class _TokenBookState extends State<TokenBook> {
     setState(() {
       _secretData.updateSecret(secret);
     });
-  }
-
-  Widget mainArea() {
-    return Expanded(
-        child: FutureBuilder<List<Secret>>(
-            future: _secretData.fetchSecrets(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text("Error: ${snapshot.error}}"),
-                );
-              }
-
-              List<Secret> secrets = snapshot.data!;
-              return ListView.builder(
-                  controller: _scrollController,
-                  itemCount: secrets.length,
-                  itemBuilder: (context, index) {
-                    return SecretAction(
-                        secret: secrets[index],
-                        onSecretUpdated: onSecretUpdate,
-                        onSecretDeleted: onSecretDelete);
-                  });
-            }));
   }
 }

@@ -1,11 +1,10 @@
 import '../model/account.dart';
-import 'api.dart';
 import 'package:uuid/uuid.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../config/config.dart';
 
-class AccountBookData implements AccountData {
+class AccountBookData {
   // WidgetsFlutterBinding.ensureInitialized();
   Future<Database> createDatabase() async {
     return await openDatabase(
@@ -18,14 +17,12 @@ class AccountBookData implements AccountData {
     );
   }
 
-  @override
   Future<void> clean() async {
     final db = await createDatabase();
     await db.delete(accountTableName);
     return;
   }
 
-  @override
   Future<Account> addAccount(Account account) async {
     final db = await createDatabase();
     account.id = Uuid().v4();
@@ -33,7 +30,6 @@ class AccountBookData implements AccountData {
     return account;
   }
 
-  @override
   Future deleteAccount(Account account) async {
     final db = await createDatabase();
     await db.delete(
@@ -43,7 +39,6 @@ class AccountBookData implements AccountData {
     );
   }
 
-  @override
   Future<List<Account>> fetchAccounts() async {
     final db = await createDatabase();
     final accounts = await db.query(accountTableName);
@@ -51,7 +46,16 @@ class AccountBookData implements AccountData {
         accounts.length, (index) => Account.fromJson(accounts[index]));
   }
 
-  @override
+  Future<Account> getAccountByID(String id) async {
+    final db = await createDatabase();
+    final accounts = await db.query(
+      accountTableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return Account.fromJson(accounts.first);
+  }
+
   Future<Account> updateAccount(Account account) async {
     final db = await createDatabase();
     await db.update(

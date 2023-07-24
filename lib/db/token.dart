@@ -1,4 +1,5 @@
-import '../model/secret.dart';
+
+import '../model/token.dart';
 import 'api.dart';
 import 'package:uuid/uuid.dart';
 import 'package:sqflite/sqflite.dart';

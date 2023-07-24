@@ -1,5 +1,5 @@
 
-import '../model/secret.dart';
+import '../model/token.dart';
 import '../model/account.dart';
 
 abstract class SecretData {
@@ -8,12 +8,4 @@ abstract class SecretData {
   Future<Secret> addSecret(Secret secret);
   Future<Secret> updateSecret(Secret secret);
   Future deleteSecret(Secret secret);
-}
-
-abstract class AccountData {
-  Future<void> clean();
-  Future<List<Account>> fetchAccounts();
-  Future<Account> addAccount(Account account);
-  Future<Account> updateAccount(Account account);
-  Future deleteAccount(Account account);
 }

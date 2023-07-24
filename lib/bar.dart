@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'account_book.dart';
+import 'page/account/home.dart';
 import 'token_book.dart';
 
 class Bar extends StatefulWidget {
