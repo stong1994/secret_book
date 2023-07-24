@@ -1,11 +1,11 @@
 import '../model/secret.dart';
-import 'secret_data.dart';
+import 'api.dart';
 import 'package:uuid/uuid.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../config/config.dart';
 
-class SqliteData implements SecretData {
+class SecretBookData implements SecretData {
   // WidgetsFlutterBinding.ensureInitialized();
   Future<Database> createDatabase() async {
     return await openDatabase(
@@ -21,7 +21,7 @@ class SqliteData implements SecretData {
   @override
   Future<void> clean() async {
     final db = await createDatabase();
-    await db.delete(sqliteTableName);
+    await db.delete(tokenTableName);
     return;
   }
 
@@ -29,7 +29,7 @@ class SqliteData implements SecretData {
   Future<Secret> addSecret(Secret secret) async {
     final db = await createDatabase();
     secret.id = Uuid().v4();
-    await db.insert(sqliteTableName, secret.toJson());
+    await db.insert(tokenTableName, secret.toJson());
     return secret;
   }
 
@@ -37,7 +37,7 @@ class SqliteData implements SecretData {
   Future deleteSecret(Secret secret) async {
     final db = await createDatabase();
     await db.delete(
-      sqliteTableName,
+      tokenTableName,
       where: 'id = ?',
       whereArgs: [secret.id],
     );
@@ -46,7 +46,7 @@ class SqliteData implements SecretData {
   @override
   Future<List<Secret>> fetchSecrets() async {
     final db = await createDatabase();
-    final secrets = await db.query(sqliteTableName);
+    final secrets = await db.query(tokenTableName);
     return List.generate(
         secrets.length, (index) => Secret.fromJson(secrets[index]));
   }
@@ -55,7 +55,7 @@ class SqliteData implements SecretData {
   Future<Secret> updateSecret(Secret secret) async {
     final db = await createDatabase();
     await db.update(
-      sqliteTableName,
+      tokenTableName,
       secret.toJson(),
       where: 'id = ?',
       whereArgs: [secret.id],

@@ -123,15 +123,13 @@ class _SecretActionState extends State<SecretAction> {
     );
   }
 
-  Widget _showTitle() {
+  Widget _show() {
     return GestureDetector(
-      onTap: () {
-        _toggleEditing();
-        eventBus.fire(widget.hashCode);
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        onTap: () {
+          _toggleEditing();
+          eventBus.fire(widget.hashCode);
+        },
+        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           Expanded(
             child: Center(
               child: Text(
@@ -140,25 +138,28 @@ class _SecretActionState extends State<SecretAction> {
               ),
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.copy),
-            onPressed: onCopy,
-            tooltip: '复制内容',
-          ),
-          IconButton(
-            icon: const Icon(Icons.visibility),
-            onPressed: _showContent,
-            tooltip: '显示内容',
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: _deleteSecret,
-            tooltip: '删除',
-            // disabledColor: _isEditing ? Colors.grey : Colors.red,
-          ),
-        ],
-      ),
-    );
+          Expanded(
+              child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.copy),
+                onPressed: onCopy,
+                tooltip: '复制内容',
+              ),
+              IconButton(
+                icon: const Icon(Icons.visibility),
+                onPressed: _showContent,
+                tooltip: '显示内容',
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: _deleteSecret,
+                tooltip: '删除',
+                // disabledColor: _isEditing ? Colors.grey : Colors.red,
+              ),
+            ],
+          )),
+        ]));
   }
 
   Widget _editSecret() {
@@ -248,6 +249,6 @@ class _SecretActionState extends State<SecretAction> {
 
   @override
   Widget build(BuildContext context) {
-    return _isEditing ? _editSecret() : _showTitle();
+    return _isEditing ? _editSecret() : _show();
   }
 }

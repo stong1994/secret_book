@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
-import 'db/from_sqlite.dart';
-import 'db/secret_data.dart';
+import 'db/secret_book.dart';
+import 'db/api.dart';
 import 'model/secret.dart';
 
-class SecretBook extends StatefulWidget {
-  const SecretBook({super.key});
+class TokenBook extends StatefulWidget {
+  const TokenBook({super.key});
 
   @override
-  _SecretBookState createState() => _SecretBookState();
+  _TokenBookState createState() => _TokenBookState();
 }
 
-class _SecretBookState extends State<SecretBook> {
+class _TokenBookState extends State<TokenBook> {
   final _titleEditingController = TextEditingController();
   final _contentEditingController = TextEditingController();
+  late final SecretData _secretData;
+
+  @override
+  void initState() {
+    super.initState();
+    _secretData = SecretBookData();
+  }
 
   @override
   void dispose() {
@@ -23,13 +30,13 @@ class _SecretBookState extends State<SecretBook> {
 
   void onClean() {
     setState(() {
-      SqliteData().clean();
+      SecretBookData().clean();
     });
   }
 
   void onSecretAdd(String title, String content) {
     setState(() {
-      SqliteData().addSecret(Secret(title: title, content: content));
+      SecretBookData().addSecret(Secret(title: title, content: content));
     });
   }
 
@@ -109,48 +116,7 @@ class _SecretBookState extends State<SecretBook> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("秘钥簿"),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: onAdd,
-          ),
-          IconButton(
-            icon: const Icon(Icons.cleaning_services_outlined),
-            onPressed: onClean,
-          ),
-        ],
-      ),
-      body: SecretList(),
-    );
-  }
-}
-
-class SecretList extends StatefulWidget {
-  @override
-  _SecretListState createState() => _SecretListState();
-}
-
-class _SecretListState extends State<SecretList> {
-  late String title;
-  late final SecretData _secretData;
-
   final _scrollController = ScrollController();
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _secretData = SqliteData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +127,14 @@ class _SecretListState extends State<SecretList> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               mainArea(),
+              Container(
+                padding: EdgeInsets.only(bottom: 16, right: 10),
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  onPressed: onAdd,
+                  child: Icon(Icons.add),
+                ),
+              )
             ]));
   }
 
