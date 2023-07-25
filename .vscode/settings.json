@@ -20,6 +20,8 @@
     },
     "peacock.color": "#007fff",
     "cSpell.words": [
+        "googleauth",
+        "googleauths",
         "sqflite"
     ]
 }

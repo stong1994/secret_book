@@ -1,22 +1,9 @@
 import '../model/account.dart';
 import 'package:uuid/uuid.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 import '../config/config.dart';
+import 'scheme.dart';
 
 class AccountBookData {
-  // WidgetsFlutterBinding.ensureInitialized();
-  Future<Database> createDatabase() async {
-    return await openDatabase(
-      join(await getDatabasesPath(), tokenTableName),
-      version: 1,
-      onCreate: (db, version) {
-        db.execute(
-            'CREATE TABLE accounts(id TEXT PRIMARY KEY, title TEXT, account TEXT, password TEXT, comment TEXT)');
-      },
-    );
-  }
-
   Future<void> clean() async {
     final db = await createDatabase();
     await db.delete(accountTableName);

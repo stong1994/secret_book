@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:secret_book/db/account.dart';
+import 'package:secret_book/model/account.dart';
 import 'package:secret_book/page/account/row.dart';
 import 'package:secret_book/utils/utils.dart';
-import '../../db/account.dart';
-import '../../model/account.dart';
 import 'add.dart';
 import 'dart:math';
 
@@ -47,7 +47,7 @@ class _AccountBookState extends State<AccountBook> {
       padding: const EdgeInsets.only(bottom: 16, right: 10),
       alignment: Alignment.bottomRight,
       child: FloatingActionButton(
-        onPressed: onAdd,
+        onPressed: onAdd(),
         child: const Icon(Icons.add),
       ),
     );
@@ -59,8 +59,8 @@ class _AccountBookState extends State<AccountBook> {
       alignment: Alignment.bottomRight,
       child: FloatingActionButton(
         onPressed: onGenPwd,
-        child: const Icon(Icons.vpn_key),
         tooltip: '生成密码',
+        child: const Icon(Icons.vpn_key),
       ),
     );
   }
@@ -98,8 +98,10 @@ class _AccountBookState extends State<AccountBook> {
     setState(() {});
   }
 
-  void onAdd() {
-    showDialog(context: context, builder: AddPage(rebuild).build);
+  VoidCallback onAdd() {
+    return () {
+      AddPage(context: context, afterFn: rebuild).build();
+    };
   }
 
   void onGenPwd() {

@@ -102,7 +102,7 @@ class _AccountRowState extends State<AccountRow> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.switch_account),
-                    onPressed: onPasswordCopy(context, account),
+                    onPressed: onAccountCopy(context, account),
                     tooltip: '复制账号',
                   ),
                   IconButton(

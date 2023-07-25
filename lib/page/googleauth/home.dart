@@ -1,32 +1,92 @@
-// import 'package:flutter/material.dart';
-// import 'package:otp_pin_code/otp_pin_code.dart';
+import 'package:flutter/material.dart';
+import 'package:secret_book/db/googleauth.dart';
+import 'package:secret_book/model/googleauth.dart';
+import 'package:secret_book/page/account/row.dart';
+import 'package:secret_book/page/googleauth/add.dart';
+import 'package:secret_book/page/googleauth/row.dart';
 
-// class OTPScreen extends StatefulWidget {
-//   @override
-//   _OTPScreenState createState() => _OTPScreenState();
-// }
+class GoogleAuthBook extends StatefulWidget {
+  const GoogleAuthBook({super.key});
 
-// class _OTPScreenState extends State<OTPScreen> {
-//   String otpCode = '';
+  @override
+  _GoogleAuthBookState createState() => _GoogleAuthBookState();
+}
 
-//   void onOtpCodeChanged(String code) {
-//     setState(() {
-//       otpCode = code;
-//     });
-//   }
+class _GoogleAuthBookState extends State<GoogleAuthBook> {
+  late String title;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Google Authenticator'),
-//       ),
-//       body: Center(
-//         child: OTPPinCode(
-//           length: 6,
-//           onCodeChanged: onOtpCodeChanged,
-//         ),
-//       ),
-//     );
-//   }
-// }
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.all(16),
+        color: Colors.grey,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              mainArea(),
+              addButton(),
+            ]));
+  }
+
+  Widget addButton() {
+    return Container(
+      padding: const EdgeInsets.only(bottom: 16, right: 10),
+      alignment: Alignment.bottomRight,
+      child: FloatingActionButton(
+        onPressed: onAdd(),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget mainArea() {
+    return Expanded(
+        child: FutureBuilder<List<GoogleAuth>>(
+            future: GoogleAuthBookData().fetchGoogleAuths(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("Error: ${snapshot.error}}"),
+                );
+              }
+
+              List<GoogleAuth> accounts = snapshot.data!;
+              return ListView.builder(
+                  controller: _scrollController,
+                  itemCount: accounts.length,
+                  itemBuilder: (context, index) {
+                    return GoogleAuthRow(
+                      googleAuthID: accounts[index].id,
+                      afterChangeFn: rebuild,
+                    );
+                  });
+            }));
+  }
+
+  void rebuild() {
+    setState(() {});
+  }
+
+  VoidCallback onAdd() {
+    return () {
+      AddPage(context: context, afterFn: rebuild).build();
+    };
+  }
+}

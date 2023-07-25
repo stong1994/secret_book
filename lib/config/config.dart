@@ -1,6 +1,7 @@
 const sqliteDBName = 'secret_book.db'; 
-const tokenTableName = 'secrets'; // todo change to tokens
+const tokenTableName = 'tokens';
 const accountTableName = 'accounts';
+const googleAuthTableName = 'googleauths';
 
 const storeType = 'sqlite'; // sqlite api
 const apiUrl = 'http://127.0.0.1:8000';

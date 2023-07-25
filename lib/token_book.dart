@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'db/token.dart';
-import 'db/api.dart';
 import 'model/token.dart';
 
 class TokenBook extends StatefulWidget {
@@ -13,7 +12,7 @@ class TokenBook extends StatefulWidget {
 class _TokenBookState extends State<TokenBook> {
   final _titleEditingController = TextEditingController();
   final _contentEditingController = TextEditingController();
-  late final SecretData _secretData;
+  late final SecretBookData _secretData;
 
   @override
   void initState() {
@@ -79,11 +78,11 @@ class _TokenBookState extends State<TokenBook> {
             }));
   }
 
-  void onClean() {
-    setState(() {
-      SecretBookData().clean();
-    });
-  }
+  // void onClean() {
+  //   setState(() {
+  //     SecretBookData().clean();
+  //   });
+  // }
 
   void onSecretAdd(String title, String content) {
     setState(() {
