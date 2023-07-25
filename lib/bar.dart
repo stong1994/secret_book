@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:secret_book/db/export.dart';
 import 'package:secret_book/page/googleauth/home.dart';
 
 import 'page/account/home.dart';
@@ -24,6 +25,12 @@ class _BarState extends State<Bar> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  static const _kFontFam = 'MyFlutterApp';
+  static const String? _kFontPkg = null;
+
+  static const IconData exportIcon =
+      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,9 +45,28 @@ class _BarState extends State<Bar> with SingleTickerProviderStateMixin {
                 Tab(text: 'Token'),
                 Tab(text: '账号'),
                 Tab(text: '谷歌身份验证器'),
-                // Tab(icon: Icon(Icons.person), text: 'Profile'),
               ],
             ),
+            actions: [
+              IconButton(
+                icon: const Icon(exportIcon),
+                onPressed: () {
+                  exportTablesToJson().then((dirPath) {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          Future.delayed(const Duration(milliseconds: 5000),
+                              () {
+                            Navigator.of(context).pop();
+                          });
+                          return AlertDialog(
+                            title: Text('文件已保存至$dirPath'),
+                          );
+                        });
+                  });
+                },
+              ),
+            ],
           ),
         ),
         body: TabBarView(
