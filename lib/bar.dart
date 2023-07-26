@@ -1,6 +1,8 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/export.dart';
 import 'package:secret_book/page/googleauth/home.dart';
+import 'package:secret_book/utils/utils.dart';
 
 import 'page/account/home.dart';
 import 'token_book.dart';
@@ -51,19 +53,20 @@ class _BarState extends State<Bar> with SingleTickerProviderStateMixin {
               IconButton(
                 icon: const Icon(exportIcon),
                 onPressed: () {
-                  exportTablesToJson().then((dirPath) {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          Future.delayed(const Duration(milliseconds: 5000),
-                              () {
-                            Navigator.of(context).pop();
-                          });
-                          return AlertDialog(
-                            title: Text('文件已保存至$dirPath'),
-                          );
-                        });
-                  });
+                  selectDirectory()
+                      .then((dir) => exportTablesToJson(dir).then((success) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  Future.delayed(
+                                      const Duration(milliseconds: 5000), () {
+                                    Navigator.of(context).pop();
+                                  });
+                                  return const AlertDialog(
+                                    title: Text('文件已保存'),
+                                  );
+                                });
+                          }));
                 },
               ),
             ],

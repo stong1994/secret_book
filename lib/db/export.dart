@@ -1,20 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart'; // 导入用于处理文件路径的库
-import 'package:secret_book/config/config.dart';
-import 'package:sqflite/sqflite.dart';
 import 'scheme.dart';
 
-Future<String> exportTablesToJson() async {
+Future<bool> exportTablesToJson(String? dirPath) async {
+  if (dirPath == null) {
+    return false;
+  }
   var database = await createDatabase();
-  var dir = await getDatabasesPath();
+  // var dir = await getDatabasesPath();
 
   try {
     createTableList.forEach((table, stmt) async {
       List<Map<String, dynamic>> tableData =
           await database.rawQuery('SELECT * FROM $table'); // 获取表数据
 
-      var filePath = join(dir, '$table.json');
+      var filePath = join(dirPath, '$table.json');
       File file = File(filePath); // 删除-创建文件
       if (await file.exists()) {
         file.delete();
@@ -26,7 +27,7 @@ Future<String> exportTablesToJson() async {
   } catch (e) {
     throw ("export failed,$e");
   }
-  return dir;
+  return true;
 }
 
 Future<void> importDataFromCSV(String csvFilePath) async {

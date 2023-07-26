@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -37,4 +38,8 @@ VoidCallback onCopy(
     showOnCopy(context, code,
         tip: tip, retentionMillSecond: retentionMillSecond);
   };
+}
+
+Future<String?> selectDirectory() async {
+  return await FilePicker.platform.getDirectoryPath();
 }
