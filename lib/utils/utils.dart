@@ -43,3 +43,8 @@ VoidCallback onCopy(
 Future<String?> selectDirectory() async {
   return await FilePicker.platform.getDirectoryPath();
 }
+
+Future<List<String?>?> selectFile() async {
+  var rst = await FilePicker.platform.pickFiles();
+  return rst?.paths;
+}

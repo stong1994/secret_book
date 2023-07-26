@@ -30,39 +30,43 @@ Future<bool> exportTablesToJson(String? dirPath) async {
   return true;
 }
 
-Future<void> importDataFromCSV(String csvFilePath) async {
-  File file = File(csvFilePath);
-  // String csvData = await file.readAsString();
-
-  // List<List<dynamic>> rows =
-  //     const CsvToListConverter().convert(csvData); // 使用 csv 导入库
-  String csvData = await file.readAsString(); // 读取CSV文件内容
-
-  // List<List<dynamic>> rows =
-  //     csvData.split('\n').map((row) => row.split(',')).toList(); // 拆分CSV行和列
+Future<bool> importDataFromJson(List<String?>? filePaths) async {
+  if (filePaths == null) {
+    return false;
+  }
 
   var database = await createDatabase();
 
-  var tableName = getTableName(getFileName(csvFilePath));
-  if (tableName == null) {
-    throw ("table name is empty");
-  }
   await database.transaction((txn) async {
-    // 删除旧表
-    await txn.execute('DROP TABLE IF EXISTS $tableName');
-    // 创建表
-    var stmt = createTableList[tableName];
-    if (stmt == null) {
-      throw ("not get create table statement");
-    }
-    await txn.execute(stmt);
-    List<dynamic> jsonArray = jsonDecode(csvData);
+    for (var filePath in filePaths) {
+      if (filePath == null) {
+        continue;
+      }
+      // 读取数据
+      File file = File(filePath);
+      String fileData = await file.readAsString();
+      var tableName = getTableName(getFileName(filePath));
+      if (tableName == null) {
+        throw ("table name is empty");
+      }
+      // 删除旧表
+      await txn.execute('DROP TABLE IF EXISTS $tableName');
+      // 创建表
+      var stmt = createTableList[tableName];
+      if (stmt == null) {
+        throw ("not get create table statement");
+      }
+      await txn.execute(stmt);
+      List<dynamic> jsonArray = jsonDecode(fileData);
 
-    // 插入数据
-    for (var data in jsonArray) {
-      await txn.insert(tableName, data);
+      // 插入数据
+      for (var data in jsonArray) {
+        await txn.insert(tableName, data);
+      }
     }
   });
+
+  return true;
 }
 
 String? getTableName(String? fileName) {

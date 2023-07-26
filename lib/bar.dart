@@ -1,11 +1,11 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:secret_book/db/export.dart';
+import 'package:secret_book/db/data_exchange.dart';
 import 'package:secret_book/page/googleauth/home.dart';
 import 'package:secret_book/utils/utils.dart';
 
 import 'page/account/home.dart';
-import 'page/data_exchange/export.dart';
+import 'page/data_exchange/exchange.dart';
 import 'token_book.dart';
 
 class Bar extends StatefulWidget {
@@ -51,6 +51,10 @@ class _BarState extends State<Bar> with SingleTickerProviderStateMixin {
             IconButton(
               icon: const Icon(exportIcon),
               onPressed: export(context),
+            ),
+            IconButton(
+              icon: Icon(Icons.import_contacts),
+              onPressed: import(context),
             ),
           ],
           // ),
