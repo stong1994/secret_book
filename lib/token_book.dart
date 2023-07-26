@@ -33,7 +33,7 @@ class _TokenBookState extends State<TokenBook> {
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.all(16),
-        color: Colors.grey,
+        color: Color.fromARGB(255, 187, 194, 187),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[

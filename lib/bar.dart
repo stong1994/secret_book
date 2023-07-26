@@ -38,16 +38,20 @@ class _BarState extends State<Bar> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Token'),
-              Tab(text: '账号'),
-              Tab(text: '谷歌身份验证器'),
-            ],
-          ),
-          actions: [
+        backgroundColor: Colors.lightBlue,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Row(children: [
+            Expanded(
+                child: TabBar(
+              // isScrollable: true,
+              controller: _tabController,
+              tabs: const [
+                Tab(text: 'Token'),
+                Tab(text: '账号'),
+                Tab(text: '谷歌身份验证器'),
+              ],
+            )),
             IconButton(
               icon: const Icon(exportIcon),
               onPressed: export(context),
@@ -56,8 +60,7 @@ class _BarState extends State<Bar> with SingleTickerProviderStateMixin {
               icon: Icon(Icons.import_contacts),
               onPressed: import(context),
             ),
-          ],
-          // ),
+          ]),
         ),
         body: TabBarView(
           controller: _tabController,

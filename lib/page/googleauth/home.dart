@@ -31,7 +31,7 @@ class _GoogleAuthBookState extends State<GoogleAuthBook> {
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.all(16),
-        color: Colors.grey,
+        color: Color.fromARGB(255, 204, 216, 204),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[

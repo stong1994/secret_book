@@ -32,7 +32,7 @@ class _AccountBookState extends State<AccountBook> {
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.all(16),
-        color: Colors.grey,
+        color: Color.fromARGB(255, 200, 215, 200),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
