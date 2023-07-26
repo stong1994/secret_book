@@ -5,6 +5,7 @@ import 'package:secret_book/page/googleauth/home.dart';
 import 'package:secret_book/utils/utils.dart';
 
 import 'page/account/home.dart';
+import 'page/data_exchange/export.dart';
 import 'token_book.dart';
 
 class Bar extends StatefulWidget {
@@ -37,40 +38,22 @@ class _BarState extends State<Bar> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight + 10),
-          child: AppBar(
-            // title: Text('Navigation Bar Demo'),
-            bottom: TabBar(
-              controller: _tabController,
-              tabs: const [
-                Tab(text: 'Token'),
-                Tab(text: '账号'),
-                Tab(text: '谷歌身份验证器'),
-              ],
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(exportIcon),
-                onPressed: () {
-                  selectDirectory()
-                      .then((dir) => exportTablesToJson(dir).then((success) {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  Future.delayed(
-                                      const Duration(milliseconds: 5000), () {
-                                    Navigator.of(context).pop();
-                                  });
-                                  return const AlertDialog(
-                                    title: Text('文件已保存'),
-                                  );
-                                });
-                          }));
-                },
-              ),
+        appBar: AppBar(
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Token'),
+              Tab(text: '账号'),
+              Tab(text: '谷歌身份验证器'),
             ],
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(exportIcon),
+              onPressed: export(context),
+            ),
+          ],
+          // ),
         ),
         body: TabBarView(
           controller: _tabController,
