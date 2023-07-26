@@ -26,7 +26,7 @@ class DetailPage {
   void initState() {
     _titleEditingController = TextEditingController(text: account.title);
     _accountEditingController = TextEditingController(text: account.account);
-    _passwordEditingController = TextEditingController(text: account.title);
+    _passwordEditingController = TextEditingController(text: account.password);
     _commentEditingController = TextEditingController(text: account.comment);
   }
 
