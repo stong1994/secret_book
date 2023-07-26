@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'db/token.dart';
-import 'model/token.dart';
+import 'package:secret_book/db/token.dart';
+import 'package:secret_book/model/token.dart';
+
+import 'detail.dart';
 
 class TokenBook extends StatefulWidget {
   const TokenBook({super.key});
@@ -12,12 +14,12 @@ class TokenBook extends StatefulWidget {
 class _TokenBookState extends State<TokenBook> {
   final _titleEditingController = TextEditingController();
   final _contentEditingController = TextEditingController();
-  late final SecretBookData _secretData;
+  late final TokenBookData _tokenData;
 
   @override
   void initState() {
     super.initState();
-    _secretData = SecretBookData();
+    _tokenData = TokenBookData();
   }
 
   @override
@@ -32,18 +34,18 @@ class _TokenBookState extends State<TokenBook> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.all(16),
-        color: Color.fromARGB(255, 187, 194, 187),
+        margin: const EdgeInsets.all(16),
+        color: const Color.fromARGB(255, 187, 194, 187),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               mainArea(),
               Container(
-                padding: EdgeInsets.only(bottom: 16, right: 10),
+                padding: const EdgeInsets.only(bottom: 16, right: 10),
                 alignment: Alignment.bottomRight,
                 child: FloatingActionButton(
                   onPressed: onAdd,
-                  child: Icon(Icons.add),
+                  child: const Icon(Icons.add),
                 ),
               )
             ]));
@@ -51,8 +53,8 @@ class _TokenBookState extends State<TokenBook> {
 
   Widget mainArea() {
     return Expanded(
-        child: FutureBuilder<List<Secret>>(
-            future: _secretData.fetchSecrets(),
+        child: FutureBuilder<List<Token>>(
+            future: _tokenData.fetchTokens(),
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
                 return const Center(
@@ -65,28 +67,28 @@ class _TokenBookState extends State<TokenBook> {
                 );
               }
 
-              List<Secret> secrets = snapshot.data!;
+              List<Token> tokens = snapshot.data!;
               return ListView.builder(
                   controller: _scrollController,
-                  itemCount: secrets.length,
+                  itemCount: tokens.length,
                   itemBuilder: (context, index) {
-                    return SecretAction(
-                        secret: secrets[index],
-                        onSecretUpdated: onSecretUpdate,
-                        onSecretDeleted: onSecretDelete);
+                    return TokenAction(
+                        token: tokens[index],
+                        onTokenUpdated: onTokenUpdate,
+                        onTokenDeleted: onTokenDelete);
                   });
             }));
   }
 
   // void onClean() {
   //   setState(() {
-  //     SecretBookData().clean();
+  //     TokenBookData().clean();
   //   });
   // }
 
-  void onSecretAdd(String title, String content) {
+  void onTokenAdd(String title, String content) {
     setState(() {
-      SecretBookData().addSecret(Secret(title: title, content: content));
+      TokenBookData().addToken(Token(title: title, content: content));
     });
   }
 
@@ -154,7 +156,7 @@ class _TokenBookState extends State<TokenBook> {
               onPressed: () {
                 String title = _titleEditingController.text;
                 String content = _contentEditingController.text;
-                onSecretAdd(title, content);
+                onTokenAdd(title, content);
                 _titleEditingController.clear();
                 _contentEditingController.clear();
                 Navigator.of(context).pop();
@@ -166,15 +168,15 @@ class _TokenBookState extends State<TokenBook> {
     );
   }
 
-  void onSecretDelete(Secret secret) {
+  void onTokenDelete(Token token) {
     setState(() {
-      _secretData.deleteSecret(secret);
+      _tokenData.deleteToken(token);
     });
   }
 
-  void onSecretUpdate(Secret secret) {
+  void onTokenUpdate(Token token) {
     setState(() {
-      _secretData.updateSecret(secret);
+      _tokenData.updateToken(token);
     });
   }
 }

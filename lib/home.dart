@@ -1,19 +1,16 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:secret_book/db/data_exchange.dart';
 import 'package:secret_book/page/googleauth/home.dart';
-import 'package:secret_book/utils/utils.dart';
 
 import 'page/account/home.dart';
 import 'page/data_exchange/exchange.dart';
-import 'token_book.dart';
+import 'page/token/home.dart';
 
-class Bar extends StatefulWidget {
+class Home extends StatefulWidget {
   @override
-  _BarState createState() => _BarState();
+  _HomeState createState() => _HomeState();
 }
 
-class _BarState extends State<Bar> with SingleTickerProviderStateMixin {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -52,12 +49,13 @@ class _BarState extends State<Bar> with SingleTickerProviderStateMixin {
                 Tab(text: '谷歌身份验证器'),
               ],
             )),
+            const SizedBox(width: 100),
             IconButton(
               icon: const Icon(exportIcon),
               onPressed: export(context),
             ),
             IconButton(
-              icon: Icon(Icons.import_contacts),
+              icon: const Icon(Icons.publish),
               onPressed: import(context),
             ),
           ]),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'bar.dart';
+import 'home.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.lightBlue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Bar(),
+      home: Home(),
     );
   }
 }
