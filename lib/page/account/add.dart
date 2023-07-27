@@ -1,26 +1,40 @@
-import 'package:flutter/material.dart';
 import '../../db/account.dart';
 import '../../model/account.dart';
+import 'package:flutter/material.dart';
+import 'button.dart';
 
 class AddPage {
   final BuildContext context;
   final Function afterFn;
-
-  final _titleEditingController = TextEditingController();
-  final _accountEditingController = TextEditingController();
-  final _passwordEditingController = TextEditingController();
-  final _commentEditingController = TextEditingController();
 
   AddPage({
     required this.context,
     required this.afterFn,
   });
 
+  final _titleEditingController = TextEditingController();
+  final _accountEditingController = TextEditingController();
+  final _passwordEditingController = TextEditingController();
+  final _commentEditingController = TextEditingController();
+
   void dispose() {
     _titleEditingController.dispose();
     _accountEditingController.dispose();
     _passwordEditingController.dispose();
     _commentEditingController.dispose();
+  }
+
+  void onAccountAdd() {
+    AccountBookData()
+        .addAccount(Account(
+      title: _titleEditingController.text,
+      account: _accountEditingController.text,
+      password: _passwordEditingController.text,
+      comment: _commentEditingController.text,
+    ))
+        .then((_) {
+      afterFn();
+    });
   }
 
   void build() {
@@ -67,22 +81,37 @@ class AddPage {
                       border: UnderlineInputBorder(),
                     ),
                   ),
-                  TextField(
-                    autofocus: true,
-                    controller: _passwordEditingController,
-                    decoration: const InputDecoration(
-                      // fillColor: Colors.white,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 8.0,
+                  Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      TextField(
+                        autofocus: true,
+                        controller: _passwordEditingController,
+                        decoration: const InputDecoration(
+                          // fillColor: Colors.white,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 8.0,
+                          ),
+                          hintText: '请填写密码...',
+                          hintStyle: TextStyle(
+                            color: Color.fromARGB(255, 235, 186, 186),
+                            fontSize: 16,
+                          ),
+                          border: UnderlineInputBorder(),
+                        ),
                       ),
-                      hintText: '请填写密码...',
-                      hintStyle: TextStyle(
-                        color: Color.fromARGB(255, 235, 186, 186),
-                        fontSize: 16,
-                      ),
-                      border: UnderlineInputBorder(),
-                    ),
+                      Positioned(
+                          right: 0,
+                          child: genPwdButton(
+                            context,
+                            callback: (String pwd) {
+                              _passwordEditingController.text = pwd;
+                            },
+                            width: 100,
+                            height: 50,
+                          ))
+                    ],
                   ),
                   TextField(
                     autofocus: true,
@@ -107,7 +136,6 @@ class AddPage {
                 TextButton(
                   child: const Text('取消'),
                   onPressed: () {
-                    dispose();
                     Navigator.of(context).pop();
                   },
                 ),
@@ -121,20 +149,8 @@ class AddPage {
               ],
             );
           });
-        });
-  }
-
-  void onAccountAdd() {
-    AccountBookData()
-        .addAccount(Account(
-      title: _titleEditingController.text,
-      account: _accountEditingController.text,
-      password: _passwordEditingController.text,
-      comment: _commentEditingController.text,
-    ))
-        .then((_) {
-      afterFn();
-      dispose();
+        }).then((_) {
+      // dispose(); todo dispose()会导致“取消”后报错：A TextEditingController was used after being disposed.暂时还不知道问题原因
     });
   }
 }
