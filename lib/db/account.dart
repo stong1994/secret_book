@@ -26,11 +26,23 @@ class AccountBookData {
     );
   }
 
-  Future<List<Account>> fetchAccounts() async {
+  Future<List<Account>> fetchAccounts(String key) async {
     final db = await createDatabase();
     final accounts = await db.query(accountTableName);
-    return List.generate(
-        accounts.length, (index) => Account.fromJson(accounts[index]));
+    if (key.isEmpty) {
+      return List.generate(
+          accounts.length, (index) => Account.fromJson(accounts[index]));
+    }
+    key = key.toLowerCase();
+    final filteredAccounts = accounts
+        .where((account) =>
+            account['title'].toString().toLowerCase().contains(key) ||
+            account['account'].toString().toLowerCase().contains(key) ||
+            account['comment'].toString().toLowerCase().contains(key))
+        .toList();
+
+    return List.generate(filteredAccounts.length,
+        (index) => Account.fromJson(filteredAccounts[index]));
   }
 
   Future<Account> getAccountByID(String id) async {

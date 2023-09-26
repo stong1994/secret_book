@@ -17,6 +17,7 @@ class AccountBook extends StatefulWidget {
 
 class _AccountBookState extends State<AccountBook> {
   late String title;
+  String queryKey = "";
 
   final _scrollController = ScrollController();
 
@@ -39,6 +40,7 @@ class _AccountBookState extends State<AccountBook> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               mainArea(),
+              queryButton(context, queryKey, search),
               addButton(context, rebuild),
               genPwdButton(context),
             ]));
@@ -47,7 +49,7 @@ class _AccountBookState extends State<AccountBook> {
   Widget mainArea() {
     return Expanded(
         child: FutureBuilder<List<Account>>(
-            future: AccountBookData().fetchAccounts(),
+            future: AccountBookData().fetchAccounts(queryKey),
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
                 return const Center(
@@ -75,5 +77,11 @@ class _AccountBookState extends State<AccountBook> {
 
   void rebuild() {
     setState(() {});
+  }
+
+  void search(key) {
+    setState(() {
+      queryKey = key;
+    });
   }
 }

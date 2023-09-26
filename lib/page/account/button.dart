@@ -1,7 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 import 'add.dart';
+import 'search.dart';
 import 'utils.dart';
+
+typedef AfterSearchFn = void Function(String? keyword);
+
+Widget queryButton(
+    BuildContext context, String queryKey, AfterSearchFn afterFn) {
+  return Container(
+    padding: const EdgeInsets.only(bottom: 10, right: 10),
+    alignment: Alignment.bottomRight,
+    child: queryKey.isEmpty
+        ? FloatingActionButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                builder: (BuildContext context) {
+                  return QueryPage(afterFn: afterFn);
+                },
+              );
+            },
+            child: const Icon(Icons.search),
+          )
+        : cleanSearchButton(context, queryKey, () {
+            afterFn("");
+          }),
+  );
+}
+
+Widget cleanSearchButton(
+    BuildContext context, String queryKey, Function cleanSearch) {
+  return Container(
+    alignment: Alignment.bottomRight,
+    child: FloatingActionButton(
+      onPressed: () {
+        cleanSearch();
+      },
+      backgroundColor: Color.fromARGB(255, 130, 118, 10),
+      child: const Icon(
+        Icons.clear,
+        color: Colors.white,
+      ),
+    ),
+  );
+}
 
 Widget addButton(context, afterFn) {
   return Container(
