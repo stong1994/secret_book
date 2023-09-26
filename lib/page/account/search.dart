@@ -15,22 +15,17 @@ class _QueryPageState extends State<QueryPage> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            autofocus: true,
-            decoration: const InputDecoration(
-              hintText: 'Search...',
-            ),
-            onSubmitted: (value) {
-              String query = value.trim();
-              widget.afterFn(query.isNotEmpty ? query : null);
-              Navigator.of(context).pop();
-            },
-          ),
-          const SizedBox(height: 16),
-        ],
+      child: TextField(
+        autofocus: true,
+        textAlign: TextAlign.center,
+        decoration: const InputDecoration(
+          hintText: '搜索...',
+        ),
+        onSubmitted: (value) {
+          String query = value.trim();
+          widget.afterFn(query.isNotEmpty ? query : null);
+          Navigator.of(context).pop();
+        },
       ),
     );
   }

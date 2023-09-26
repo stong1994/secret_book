@@ -34,45 +34,57 @@ class _AccountBookState extends State<AccountBook> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.all(16),
-        color: Color.fromARGB(255, 200, 215, 200),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              mainArea(),
-              queryButton(context, queryKey, search),
-              addButton(context, rebuild),
-              genPwdButton(context),
-            ]));
+      margin: EdgeInsets.all(16),
+      color: Color.fromARGB(255, 200, 215, 200),
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: mainArea(),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                queryButton(context, queryKey, search),
+                addButton(context, rebuild),
+                genPwdButton(context),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget mainArea() {
-    return Expanded(
-        child: FutureBuilder<List<Account>>(
-            future: AccountBookData().fetchAccounts(queryKey),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text("Error: ${snapshot.error}}"),
-                );
-              }
+    return FutureBuilder<List<Account>>(
+        future: AccountBookData().fetchAccounts(queryKey),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("Error: ${snapshot.error}}"),
+            );
+          }
 
-              List<Account> accounts = snapshot.data!;
-              return ListView.builder(
-                  controller: _scrollController,
-                  itemCount: accounts.length,
-                  itemBuilder: (context, index) {
-                    return AccountRow(
-                      accountID: accounts[index].id,
-                      afterChangeFn: rebuild,
-                    );
-                  });
-            }));
+          List<Account> accounts = snapshot.data!;
+          return ListView.builder(
+              controller: _scrollController,
+              itemCount: accounts.length,
+              itemBuilder: (context, index) {
+                return AccountRow(
+                  accountID: accounts[index].id,
+                  afterChangeFn: rebuild,
+                );
+              });
+        });
   }
 
   void rebuild() {

@@ -13,21 +13,25 @@ Widget queryButton(
     padding: const EdgeInsets.only(bottom: 10, right: 10),
     alignment: Alignment.bottomRight,
     child: queryKey.isEmpty
-        ? FloatingActionButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.transparent,
-                builder: (BuildContext context) {
-                  return QueryPage(afterFn: afterFn);
-                },
-              );
-            },
-            child: const Icon(Icons.search),
-          )
+        ? waitSearchButton(context, afterFn)
         : cleanSearchButton(context, queryKey, () {
             afterFn("");
           }),
+  );
+}
+
+Widget waitSearchButton(context, afterFn) {
+  return FloatingActionButton(
+    onPressed: () {
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.white.withOpacity(0.6),
+        builder: (BuildContext context) {
+          return QueryPage(afterFn: afterFn);
+        },
+      );
+    },
+    child: const Icon(Icons.search),
   );
 }
 
