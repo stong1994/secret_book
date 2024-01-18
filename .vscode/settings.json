@@ -23,5 +23,6 @@
         "googleauth",
         "googleauths",
         "sqflite"
-    ]
+    ],
+    "DevChat.PythonForCommands": "/Users/stong/.chat/mamba/envs/devchat-commands/bin/python"
 }

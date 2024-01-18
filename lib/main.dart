@@ -1,13 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite/sqflite.dart';
 
 void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
   if (Platform.isWindows || Platform.isLinux) {
     // Initialize FFI
     sqfliteFfiInit();
@@ -15,7 +13,10 @@ class MyApp extends StatelessWidget {
   // Change the default factory. On iOS/Android, if not using `sqlite_flutter_lib` you can forget
   // this step, it will use the sqlite version available on the system.
   databaseFactory = databaseFactoryFfi;
+  runApp(MyApp());
+}
 
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // get a better material design for
