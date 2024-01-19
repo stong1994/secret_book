@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:secret_book/config/config.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -22,4 +24,8 @@ Future<Database> createDatabase() async {
       });
     },
   );
+}
+
+Future<String> getDataDir() async {
+  return await getDatabasesPath();
 }

@@ -55,7 +55,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               onPressed: export(context),
             ),
             IconButton(
-              icon: const Icon(Icons.publish),
+              icon: const Icon(Icons.download_rounded),
               onPressed: import(context),
             ),
           ]),

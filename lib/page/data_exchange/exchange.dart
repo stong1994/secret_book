@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/data_exchange.dart';
+import 'package:secret_book/db/scheme.dart';
 import 'package:secret_book/utils/utils.dart';
 
 VoidCallback export(BuildContext context) {
@@ -8,17 +9,54 @@ VoidCallback export(BuildContext context) {
           if (!success) {
             return;
           }
-          showDialog(
-              context: context,
-              builder: (context) {
-                Future.delayed(const Duration(milliseconds: 1000), () {
-                  Navigator.of(context).pop();
-                });
-                return const AlertDialog(
-                  title: Text('文件已保存'),
-                );
+          getDataDir().then((String dirPath) => {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                          title: const Text('文件已保存'),
+                          content: Row(
+                            children: [
+                              Text('文件存储在 $dirPath'),
+                              IconButton(
+                                icon: const Icon(Icons.copy),
+                                onPressed: onPathCopy(context, dirPath),
+                                tooltip: '复制路径',
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            OverflowBar(
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('确定'),
+                                ),
+                              ],
+                            )
+                          ]);
+                    })
               });
         }));
+  };
+}
+
+VoidCallback onPathCopy(context, path) {
+  return () {
+    copyToClipboard(path);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Navigator.of(context).pop();
+        });
+        return const AlertDialog(
+          title: Text('已复制'),
+        );
+      },
+    );
   };
 }
 
@@ -35,7 +73,7 @@ VoidCallback import(BuildContext context) {
                   Navigator.of(context).pop();
                 });
                 return const AlertDialog(
-                  title: Text('成功'),
+                  title: Text('导入成功'),
                 );
               });
         }));
