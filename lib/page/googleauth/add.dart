@@ -95,7 +95,7 @@ class AddPage {
     ))
         .then((_) {
       afterFn();
-      dispose();
+      // dispose();
     });
   }
 }
