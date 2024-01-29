@@ -68,27 +68,27 @@ class _GoogleAuthRowState extends State<GoogleAuthRow> {
               Expanded(
                   child: Row(
                 children: [
-                  IconButton(
+                  Expanded(child:IconButton(
                     icon: const Icon(Icons.domain_verification),
                     onPressed: copyCode(context, googleAuth.token),
                     tooltip: '复制验证码',
-                  ),
-                  IconButton(
+                  )),
+                  Expanded(child:IconButton(
                     icon: const Icon(Icons.key),
                     onPressed: onCopy(context, googleAuth.token),
                     tooltip: '复制秘钥',
-                  ),
-                  IconButton(
+                  )),
+                  Expanded(child:IconButton(
                     icon: const Icon(Icons.info),
                     onPressed: _showInfo(context, googleAuth),
                     tooltip: '详情',
-                  ),
-                  IconButton(
+                  )),
+                  Expanded(child:IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: onDeleteGoogleAuth(googleAuth),
                     tooltip: '删除',
                     // disabledColor: _isEditing ? Colors.grey : Colors.red,
-                  ),
+                  )),
                 ],
               ))
             ],

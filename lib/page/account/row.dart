@@ -100,27 +100,28 @@ class _AccountRowState extends State<AccountRow> {
               Expanded(
                   child: Row(
                 children: [
-                  IconButton(
+                  Expanded(child:  IconButton(
                     icon: const Icon(Icons.switch_account),
                     onPressed: onAccountCopy(context, account),
                     tooltip: '复制账号',
-                  ),
-                  IconButton(
+                  )),
+
+                  Expanded(child:IconButton(
                     icon: const Icon(Icons.password_outlined),
                     onPressed: onPasswordCopy(context, account),
                     tooltip: '复制密码',
-                  ),
-                  IconButton(
+                  )),
+                  Expanded(child:IconButton(
                     icon: const Icon(Icons.info),
                     onPressed: _showInfo(context, account),
                     tooltip: '详情',
-                  ),
-                  IconButton(
+                  )),
+                  Expanded(child:IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: onDeleteAccount(account),
                     tooltip: '删除',
                     // disabledColor: _isEditing ? Colors.grey : Colors.red,
-                  ),
+                  )),
                 ],
               ))
             ],
