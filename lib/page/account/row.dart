@@ -82,7 +82,7 @@ class _AccountRowState extends State<AccountRow> {
           }
           if (snapshot.hasError) {
             return Center(
-              child: Text("Error: ${snapshot.error}}"),
+              child: Text("Error: ${snapshot.error}"),
             );
           }
           final account = snapshot.data!;
