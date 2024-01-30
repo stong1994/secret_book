@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/page/googleauth/home.dart';
+import 'package:secret_book/page/tool_buton/ip.dart';
 
 import 'page/account/home.dart';
 import 'page/data_exchange/exchange.dart';
@@ -38,7 +39,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         backgroundColor: Colors.lightBlue,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: Row(children: [
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
             Expanded(
                 child: TabBar(
               // isScrollable: true,
@@ -49,17 +52,27 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 Tab(text: '谷歌身份验证器'),
               ],
             )),
-            const SizedBox(width: 100),
-            IconButton(
-              icon: const Icon(exportIcon),
-              tooltip: "导出数据",
-              onPressed: export(context),
-            ),
-            IconButton(
-              icon: const Icon(Icons.download_rounded),
-              tooltip: "导入数据",
-              onPressed: import(context),
-            ),
+            Flexible(child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(exportIcon),
+                  tooltip: "导出数据",
+                  onPressed: export(context),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.download_rounded),
+                  tooltip: "导入数据",
+                  onPressed: import(context),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.info),
+                  tooltip: "查看当前App信息",
+                  onPressed: IpPage(context: context).build(),
+                ),
+              ],
+            ))
+            // const SizedBox(width: 100),
           ]),
         ),
         body: TabBarView(
