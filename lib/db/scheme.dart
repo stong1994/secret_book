@@ -11,6 +11,8 @@ var createTableList = {
       'CREATE TABLE $tokenTableName(id TEXT PRIMARY KEY, title TEXT, content TEXT);',
   googleAuthTableName:
       'CREATE TABLE $googleAuthTableName(id TEXT PRIMARY KEY, title TEXT, token TEXT);',
+  userInfoTableName:
+      'CREATE TABLE $userInfoTableName(id INT, last_sync_date INT);INSERT INTO $userInfoTableName(id, last_sync_date) Values(0, 0);'
 };
 
 // WidgetsFlutterBinding.ensureInitialized();
