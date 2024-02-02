@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/info.dart';
+import 'package:secret_book/page/setting/sync.dart';
 
 class InfoPage {
   final BuildContext context;
@@ -39,7 +40,9 @@ class InfoPage {
                                   },
                                 ),
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    SyncDataWidget(info: snapshot.data!);
+                                  },
                                   icon: const Icon(Icons.sync),
                                 ),
                               ],

@@ -11,7 +11,7 @@ import 'package:secret_book/model/token.dart';
 
 import 'package:http/http.dart' as http;
 
-Future<void> importDataFromJson(
+Future<String> syncDataFromServer(
   String serverAddr,
   String lastSyncDate,
   String from,
@@ -39,12 +39,13 @@ Future<void> importDataFromJson(
         await consumeEvent(event);
       } catch (e) {
         await updateSyncDate(lastSyncDate);
-        rethrow;
+        return "同步中断，原因: $e";
       }
     }
     lastSyncDate = events.last.date;
   }
   await updateSyncDate(lastSyncDate);
+  return "已同步至最新";
 }
 
 Future<List<Event>> getEvents(String syncAddr, String lastSyncDate) async {

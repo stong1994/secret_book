@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/googleauth.dart';
 import 'package:secret_book/model/googleauth.dart';
-import 'package:secret_book/page/account/row.dart';
 import 'package:secret_book/page/googleauth/add.dart';
 import 'package:secret_book/page/googleauth/row.dart';
 
