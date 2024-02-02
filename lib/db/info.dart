@@ -4,19 +4,46 @@ import 'package:secret_book/db/scheme.dart';
 import '../model/info.dart';
 
 class InfoData {
-  Future<void> saveLastSyncDate(int date) async {
+  Future<void> saveLastSyncDate(String date) async {
     final db = await createDatabase();
     await db.rawUpdate(
-      "UPDATE $userInfoTableName SET last_sync_date = ? WHERE id=0"
-          [date],
+      "UPDATE $userInfoTableName SET last_sync_date = ? WHERE id=0",
+      [date],
     );
   }
 
-  Future<int> getLastSyncDate() async {
+  Future<String> getLastSyncDate() async {
     final db = await createDatabase();
-    final info= await db.query(
+    final info = await db.query(
       userInfoTableName,
       where: 'id = 0',
     );
     return Info.fromJson(info[0]).lastSyncDate;
   }
+
+  Future<void> saveServerAddr(String server) async {
+    final db = await createDatabase();
+    await db.rawUpdate(
+      "UPDATE $userInfoTableName SET server_addr = ? WHERE id=0",
+      [server],
+    );
+  }
+
+  Future<String> getServerAddr() async {
+    final db = await createDatabase();
+    final info = await db.query(
+      userInfoTableName,
+      where: 'id = 0',
+    );
+    return Info.fromJson(info[0]).serverAddr;
+  }
+
+  Future<Info> getInfo() async {
+    final db = await createDatabase();
+    final info = await db.query(
+      userInfoTableName,
+      where: 'id = 0',
+    );
+    return Info.fromJson(info[0]);
+  }
+}
