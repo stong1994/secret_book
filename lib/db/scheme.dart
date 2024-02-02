@@ -12,8 +12,8 @@ var createTableList = {
       'CREATE TABLE $googleAuthTableName(id TEXT PRIMARY KEY, title TEXT, token TEXT);',
   userInfoTableName: '''
 CREATE TABLE $userInfoTableName(id INT, last_sync_date TEXT, server_addr, name TEXT, auto_push_event INT);
-INSERT INTO $userInfoTableName(id, last_sync_date, server_addr, name) Values(0, 0, '127.0.0.1:12345', ${const Uuid().v4()}, 1);
-'''
+INSERT INTO $userInfoTableName(id, last_sync_date, server_addr, name, auto_push_event) Values(0, 0, '127.0.0.1:12345', '${const Uuid().v4()}', 1);
+''' // INSERT INTO info(id, last_sync_date, server_addr, name,auto_push_event) Values(0, 0, '127.0.0.1:12345', '1', 1);
 };
 
 // WidgetsFlutterBinding.ensureInitialized();

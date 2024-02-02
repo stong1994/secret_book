@@ -1,90 +1,83 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/info.dart';
+import 'package:secret_book/model/info.dart';
 import 'package:secret_book/page/setting/sync.dart';
 
-class InfoPage {
-  final BuildContext context;
+class InfoPage extends StatefulWidget {
+  InfoPage();
 
-  InfoPage({
-    required this.context,
-  });
+  @override
+  State<StatefulWidget> createState() => _InfoPageState();
+}
 
+class _InfoPageState extends State<InfoPage> {
   final _serverController = TextEditingController();
 
-  VoidCallback build() {
-    return () {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return FutureBuilder(
-              future: InfoData().getInfo(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return AlertDialog(
-                    title: const Text("设置"),
-                    content: Column(
+  @override
+  void dispose() {
+    _serverController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Info>(
+      future: InfoData().getInfo(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return AlertDialog(
+            title: const Text("设置"),
+            content: Column(
+              children: [
+                Row(
+                  children: [
+                    const Text('服务端地址'),
+                    const Spacer(),
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            const Text('服务端地址'),
-                            const Spacer(),
-                            Row(
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () {
-                                    serverPage(
-                                        context, snapshot.data!.serverAddr);
-                                  },
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    SyncDataWidget(info: snapshot.data!);
-                                  },
-                                  icon: const Icon(Icons.sync),
-                                ),
-                              ],
-                            ),
-                          ],
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () {
+                            serverPage(context, snapshot.data!.serverAddr);
+                          },
                         ),
-                        Row(
-                          children: [
-                            Text("是否自动推送事件"),
-                            Switch(
-                              value: snapshot.data!.autoPushEvent,
-                              onChanged: (newValue) {
-                                InfoData()
-                                    .saveAutoPushEvent(newValue)
-                                    .then((_) {
-                                  // setstate
-                                });
-                              },
-                            ),
-                          ],
-                        )
+                        IconButton(
+                          onPressed: () {
+                            SyncDataWidget(info: snapshot.data!);
+                          },
+                          icon: const Icon(Icons.sync),
+                        ),
                       ],
                     ),
-                    actions: [
-                      TextButton(
-                          onPressed: () => {Navigator.pop(context)},
-                          child: const Text('关闭'))
-                    ],
-                    actionsAlignment: MainAxisAlignment.center,
-                  );
-                }
-                if (snapshot.hasError) {
-                  return AlertDialog(
-                    title: const Text('Error'),
-                    content: Text('${snapshot.error}'),
-                  );
-                }
-                return const CircularProgressIndicator();
-              });
-        },
-      );
-    };
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text("是否自动推送事件"),
+                    const Spacer(),
+                    Switch(
+                      value: snapshot.data!.autoPushEvent,
+                      onChanged: (newValue) {
+                        InfoData().saveAutoPushEvent(newValue).then((_) {
+                          setState(() {});
+                        });
+                      },
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        }
+        if (snapshot.hasError) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text('${snapshot.error}'),
+          );
+        }
+        return const CircularProgressIndicator();
+      },
+    );
   }
 
   void serverPage(context, serverAddr) {

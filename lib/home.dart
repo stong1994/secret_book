@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:secret_book/page/googleauth/home.dart';
 import 'package:secret_book/page/setting/info.dart';
@@ -66,10 +68,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   onPressed: import(context),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.settings),
-                  tooltip: "设置",
-                  onPressed: InfoPage(context: context).build(),
-                ),
+                    icon: const Icon(Icons.settings),
+                    tooltip: "设置",
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return InfoPage();
+                          });
+                    }),
               ],
             ))
             // const SizedBox(width: 100),
