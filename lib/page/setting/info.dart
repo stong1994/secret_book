@@ -25,15 +25,26 @@ class InfoPage {
                     title: const Text("设置"),
                     content: Column(
                       children: [
-                        ListTile(
-                          title: const Text('服务端地址'),
-                          subtitle: Text(snapshot.data!.serverAddr),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {
-                              serverPage(context, snapshot.data!.serverAddr);
-                            },
-                          ),
+                        Row(
+                          children: [
+                            const Text('服务端地址'),
+                            const Spacer(),
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  onPressed: () {
+                                    serverPage(
+                                        context, snapshot.data!.serverAddr);
+                                  },
+                                ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.sync),
+                                ),
+                              ],
+                            ),
+                          ],
                         )
                       ],
                     ),

@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:secret_book/config/config.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:uuid/uuid.dart';
 
 var createTableList = {
   accountTableName:
@@ -12,8 +11,8 @@ var createTableList = {
   googleAuthTableName:
       'CREATE TABLE $googleAuthTableName(id TEXT PRIMARY KEY, title TEXT, token TEXT);',
   userInfoTableName: '''
-CREATE TABLE $userInfoTableName(id INT, last_sync_date TEXT, server_addr TEXT);
-INSERT INTO $userInfoTableName(id, last_sync_date, server_addr) Values(0, 0, '');
+CREATE TABLE $userInfoTableName(id INT, last_sync_date TEXT, server_addr, name TEXT);
+INSERT INTO $userInfoTableName(id, last_sync_date, server_addr, name) Values(0, 0, '127.0.0.1:12345', ${const Uuid().v4()});
 '''
 };
 
