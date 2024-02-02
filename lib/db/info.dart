@@ -29,6 +29,14 @@ class InfoData {
     );
   }
 
+  Future<void> saveAutoPushEvent(bool value) async {
+    final db = await createDatabase();
+    await db.rawUpdate(
+      "UPDATE $userInfoTableName SET auto_push_event= ? WHERE id=0",
+      [value ? 1 : 0],
+    );
+  }
+
   Future<String> getServerAddr() async {
     final db = await createDatabase();
     final info = await db.query(

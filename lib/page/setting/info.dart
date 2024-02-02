@@ -48,6 +48,21 @@ class InfoPage {
                               ],
                             ),
                           ],
+                        ),
+                        Row(
+                          children: [
+                            Text("是否自动推送事件"),
+                            Switch(
+                              value: snapshot.data!.autoPushEvent,
+                              onChanged: (newValue) {
+                                InfoData()
+                                    .saveAutoPushEvent(newValue)
+                                    .then((_) {
+                                  // setstate
+                                });
+                              },
+                            ),
+                          ],
                         )
                       ],
                     ),

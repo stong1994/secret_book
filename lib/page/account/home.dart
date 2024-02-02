@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:secret_book/db/account.dart';
 import 'package:secret_book/model/account.dart';
 import 'package:secret_book/page/account/row.dart';
-import 'package:secret_book/utils/utils.dart';
-import 'add.dart';
-import 'dart:math';
 
 import 'button.dart';
 
