@@ -39,9 +39,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         backgroundColor: Colors.lightBlue,
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Expanded(
                 child: TabBar(
               // isScrollable: true,
@@ -52,7 +51,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 Tab(text: '谷歌身份验证器'),
               ],
             )),
-            Flexible(child: Row(
+            Flexible(
+                child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
@@ -66,9 +66,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   onPressed: import(context),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.info),
-                  tooltip: "查看当前App信息",
-                  onPressed: IpPage(context: context).build(),
+                  icon: const Icon(Icons.settings),
+                  tooltip: "设置",
+                  onPressed: InfoPage(context: context).build(),
                 ),
               ],
             ))

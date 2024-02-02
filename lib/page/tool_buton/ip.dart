@@ -1,14 +1,16 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:secret_book/utils/ips.dart';
+import 'package:secret_book/db/info.dart';
 
-class IpPage {
+class InfoPage {
   final BuildContext context;
 
-  IpPage({
+  InfoPage({
     required this.context,
   });
+
+  final _serverController = TextEditingController();
 
   VoidCallback build() {
     return () {
@@ -16,38 +18,73 @@ class IpPage {
         context: context,
         builder: (BuildContext context) {
           return FutureBuilder(
-            future: getIps(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return AlertDialog(
-                  title: const Text("当前IP列表"),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: List.generate(
-                        snapshot.data!.length,
-                        (index) => ListTile(
-                          titleAlignment: ListTileTitleAlignment.center,
-                              title: Text(snapshot.data![index]),
-                            )),
-                  ),
-                  actions: [
-                    TextButton(onPressed: ()=>{Navigator.pop(context)}, child: const Text('关闭'))
-                  ],
-                  actionsAlignment: MainAxisAlignment.center,
-                );
-              }
-              if (snapshot.hasError) {
-                return AlertDialog(
-                  title: const Text('Error'),
-                  content: Text('${snapshot.error}'),
-                );
-              }
-              return const CircularProgressIndicator();
-            },
-          );
+              future: InfoData().getInfo(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return AlertDialog(
+                    title: const Text("设置"),
+                    content: Column(
+                      children: [
+                        ListTile(
+                          title: const Text('服务端地址'),
+                          subtitle: Text(snapshot.data!.serverAddr),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              serverPage(context, snapshot.data!.serverAddr);
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () => {Navigator.pop(context)},
+                          child: const Text('关闭'))
+                    ],
+                    actionsAlignment: MainAxisAlignment.center,
+                  );
+                }
+                if (snapshot.hasError) {
+                  return AlertDialog(
+                    title: const Text('Error'),
+                    content: Text('${snapshot.error}'),
+                  );
+                }
+                return const CircularProgressIndicator();
+              });
         },
       );
     };
+  }
+
+  void serverPage(context, serverAddr) {
+    _serverController.text = serverAddr;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("编辑服务端地址"),
+            content: TextField(
+              autofocus: true,
+              controller: _serverController,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("取消"),
+              ),
+              TextButton(
+                onPressed: () {
+                  InfoData().saveServerAddr(_serverController.text);
+                  Navigator.of(context).pop();
+                },
+                child: const Text("确认"),
+              )
+            ],
+          );
+        });
   }
 }
