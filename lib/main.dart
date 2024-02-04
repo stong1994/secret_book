@@ -1,11 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:secret_book/db/info.dart';
+import 'package:secret_book/utils/app_bloc.dart';
 import 'home.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite/sqflite.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows || Platform.isLinux) {
     // Initialize FFI
     sqfliteFfiInit();
@@ -13,7 +16,17 @@ void main() {
     // this step, it will use the sqlite version available on the system.
     databaseFactory = databaseFactoryFfi;
   }
-  runApp(MyApp());
+  var info = await InfoData().getInfo();
+  runApp(
+    AppBloc(
+      appState: AppStateNotifier(
+        state: AppState(
+          info: info,
+        ),
+      ),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

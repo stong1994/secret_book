@@ -25,4 +25,13 @@ class Event {
       from: json['from'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'date': date,
+        'event_type': event_type,
+        'data_type': data_type,
+        'content': content,
+        'from': from,
+      };
 }
