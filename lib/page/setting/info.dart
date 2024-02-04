@@ -41,12 +41,6 @@ class _InfoPageState extends State<InfoPage> {
                             serverPage(context, snapshot.data!.serverAddr);
                           },
                         ),
-                        IconButton(
-                          onPressed: () {
-                            SyncDataWidget(info: snapshot.data!);
-                          },
-                          icon: const Icon(Icons.sync),
-                        ),
                       ],
                     ),
                   ],
@@ -63,6 +57,24 @@ class _InfoPageState extends State<InfoPage> {
                         });
                       },
                     ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text("拉取服务端数据"),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return SyncDataWidget(
+                                info: snapshot.data!,
+                              );
+                            });
+                      },
+                      icon: const Icon(Icons.sync),
+                    )
                   ],
                 )
               ],

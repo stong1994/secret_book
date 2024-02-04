@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/sync.dart';
 import 'package:secret_book/model/info.dart';
@@ -5,7 +7,6 @@ import 'package:secret_book/model/info.dart';
 class SyncDataWidget extends StatefulWidget {
   final Info info;
   const SyncDataWidget({
-    super.key,
     required this.info,
   });
 
@@ -14,34 +15,48 @@ class SyncDataWidget extends StatefulWidget {
 }
 
 class _SyncDataWidgetState extends State<SyncDataWidget> {
-  bool isSyncing = false;
-
+  bool finished = false;
+  String finishStr = "";
   Future<void> syncData() async {
-    setState(() {
-      isSyncing = true;
-    });
-
     syncDataFromServer(
             widget.info.serverAddr, widget.info.lastSyncDate, widget.info.name)
-        .then((_) {
+        .then((s) {
       setState(() {
-        isSyncing = false;
+        sleep(const Duration(seconds: 1));
+        finishStr = s;
+        finished = true;
       });
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+    syncData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: isSyncing ? null : syncData,
-          child: Text('同步中。。。'),
-        ),
-        SizedBox(height: 16.0),
-        if (isSyncing)
-          CircularProgressIndicator(), // Show a progress indicator while syncing
-      ],
+    if (!finished) {
+      return const LoadingWidget();
+      // return AlertDialog(
+      // title: const Text("同步中"),
+      // content: LoadingWidget(),
+      // );
+    }
+    return AlertDialog(
+      title: Text(finishStr),
+    );
+  }
+}
+
+class LoadingWidget extends StatelessWidget {
+  const LoadingWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 }

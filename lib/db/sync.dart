@@ -17,56 +17,58 @@ Future<String> syncDataFromServer(
   String from,
 ) async {
   if (serverAddr == "") {
-    throw ("服务器地址为空");
+    return "服务器地址为空";
   }
   if (from == "") {
-    throw ("来源未设置");
+    return "来源未设置";
   }
 
-  bool finished = false;
+  bool unFinished = true;
 
-  while (finished) {
-    List<Event> events = await getEvents(serverAddr, lastSyncDate);
-    if (events.isEmpty) {
-      finished = true;
-      continue;
-    }
-    for (var event in events) {
-      if (event.from == from) {
+  while (unFinished) {
+    try {
+      List<Event> events = await getEvents(serverAddr, lastSyncDate);
+      if (events.isEmpty) {
+        unFinished = false;
         continue;
       }
-      try {
+      for (var event in events) {
+        if (event.from == from) {
+          continue;
+        }
         await consumeEvent(event);
-      } catch (e) {
-        await updateSyncDate(lastSyncDate);
-        return "同步中断，原因: $e";
       }
+      lastSyncDate = events.last.date;
+    } catch (e) {
+      await updateSyncDate(lastSyncDate);
+      return "同步中断，原因: $e";
     }
-    lastSyncDate = events.last.date;
   }
   await updateSyncDate(lastSyncDate);
   return "已同步至最新";
 }
 
 Future<List<Event>> getEvents(String syncAddr, String lastSyncDate) async {
-  var request = http.Request('GET', Uri.parse('$syncAddr/fetch'));
-
+  var request = http.Request('GET', Uri.parse('http://$syncAddr/fetch'));
   // request.headers.addAll(headers);
+  try {
+    http.StreamedResponse response =
+        await request.send().timeout(const Duration(seconds: 2));
 
-  http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      String body = await response.stream.bytesToString();
+      List<dynamic> list = jsonDecode(body);
 
-  if (response.statusCode == 200) {
-    String body = await response.stream.bytesToString();
-    List<dynamic> list = jsonDecode(body);
-
-    List<Event> rst = [];
-    for (var item in list) {
-      rst.add(Event.fromJson(item));
+      List<Event> rst = [];
+      for (var item in list) {
+        rst.add(Event.fromJson(item));
+      }
+      return rst;
+    } else {
+      throw (response.reasonPhrase!); // error thrown
     }
-    return rst;
-  } else {
-    print(response.reasonPhrase);
-    throw (response.reasonPhrase!); // error thrown
+  } catch (e) {
+    rethrow;
   }
 }
 
