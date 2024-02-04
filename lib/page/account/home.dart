@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/account.dart';
 import 'package:secret_book/model/account.dart';
+import 'package:secret_book/page/account/add.dart';
 import 'package:secret_book/page/account/row.dart';
 
 import 'button.dart';
@@ -46,7 +47,8 @@ class _AccountBookState extends State<AccountBook> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 queryButton(context, queryKey, search),
-                addButton(context, rebuild),
+                // addButton(context, rebuild),
+                AddAccountButton(),
                 genPwdButton(context),
               ],
             ),

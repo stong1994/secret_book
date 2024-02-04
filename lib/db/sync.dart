@@ -5,11 +5,10 @@ import 'package:secret_book/db/googleauth.dart';
 import 'package:secret_book/db/info.dart';
 import 'package:secret_book/db/token.dart';
 import 'package:secret_book/model/account.dart';
+import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/googleauth.dart';
 import 'package:secret_book/model/token.dart';
-
-import 'package:http/http.dart' as http;
 
 Future<String> syncDataFromServer(
   String serverAddr,
@@ -46,30 +45,6 @@ Future<String> syncDataFromServer(
   }
   await updateSyncDate(lastSyncDate);
   return "已同步至最新";
-}
-
-Future<List<Event>> getEvents(String syncAddr, String lastSyncDate) async {
-  var request = http.Request('GET', Uri.parse('http://$syncAddr/fetch'));
-  // request.headers.addAll(headers);
-  try {
-    http.StreamedResponse response =
-        await request.send().timeout(const Duration(seconds: 2));
-
-    if (response.statusCode == 200) {
-      String body = await response.stream.bytesToString();
-      List<dynamic> list = jsonDecode(body);
-
-      List<Event> rst = [];
-      for (var item in list) {
-        rst.add(Event.fromJson(item));
-      }
-      return rst;
-    } else {
-      throw (response.reasonPhrase!); // error thrown
-    }
-  } catch (e) {
-    rethrow;
-  }
 }
 
 Future<void> consumeEvent(Event event) async {

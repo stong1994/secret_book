@@ -1,6 +1,8 @@
 import 'package:secret_book/extensions/context_extension.dart';
+import 'package:secret_book/model/api_client.dart';
+import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/info.dart';
-import 'package:secret_book/utils/app_bloc.dart';
+import 'package:secret_book/utils/time.dart';
 
 import '../../db/account.dart';
 import '../../model/account.dart';
@@ -23,7 +25,15 @@ class AddAccountButton extends StatelessWidget {
                   AccountBookData().addAccount(account);
                   Info info = appState.info;
                   if (info.autoPushEvent) {
-                    
+                    pushEvent(
+                        info.serverAddr,
+                        Event(
+                            name: "add account ${account.title}",
+                            date: nowStr(),
+                            data_type: "account",
+                            event_type: "create",
+                            content: account.toJson().toString(),
+                            from: info.name));
                   }
                   // appState.addAccount(account);
                 }
@@ -36,8 +46,11 @@ class AddAccountButton extends StatelessWidget {
 
   Future<Account?> showAddDialog(BuildContext context) {
     String title = '';
+    String account = '';
+    String password = '';
+    String comment = '';
 
-    showDialog(
+    return showDialog(
         context: context,
         builder: (context) {
           print("hi... ${context.info.autoPushEvent}");
@@ -45,13 +58,13 @@ class AddAccountButton extends StatelessWidget {
             content: SingleChildScrollView(
                 child: Column(
               children: [
-                const TextField(
+                TextField(
                   // focusNode: _focusNode,
                   autofocus: true,
                   onChanged: (value) {
                     title = value;
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     // fillColor: Colors.white,
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 16.0,
@@ -67,7 +80,9 @@ class AddAccountButton extends StatelessWidget {
                 ),
                 TextField(
                   autofocus: true,
-                  controller: _accountEditingController,
+                  onChanged: (value) {
+                    account = account;
+                  },
                   decoration: const InputDecoration(
                     // fillColor: Colors.white,
                     contentPadding: EdgeInsets.symmetric(
@@ -87,7 +102,9 @@ class AddAccountButton extends StatelessWidget {
                   children: [
                     TextField(
                       autofocus: true,
-                      controller: _passwordEditingController,
+                      onChanged: (value) {
+                        password = value;
+                      },
                       decoration: const InputDecoration(
                         // fillColor: Colors.white,
                         contentPadding: EdgeInsets.symmetric(
@@ -107,7 +124,7 @@ class AddAccountButton extends StatelessWidget {
                         child: genPwdButton(
                           context,
                           callback: (String pwd) {
-                            _passwordEditingController.text = pwd;
+                            password = pwd;
                           },
                           width: 100,
                           height: 50,
@@ -116,7 +133,9 @@ class AddAccountButton extends StatelessWidget {
                 ),
                 TextField(
                   autofocus: true,
-                  controller: _commentEditingController,
+                  onChanged: (value) {
+                    comment = value;
+                  },
                   decoration: const InputDecoration(
                     // fillColor: Colors.white,
                     contentPadding: EdgeInsets.symmetric(
@@ -137,14 +156,18 @@ class AddAccountButton extends StatelessWidget {
               TextButton(
                 child: const Text('取消'),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(null);
                 },
               ),
               TextButton(
                 child: const Text('完成'),
                 onPressed: () {
-                  onAccountAdd();
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(Account(
+                    title: title,
+                    account: account,
+                    password: password,
+                    comment: comment,
+                  ));
                 },
               ),
             ],
