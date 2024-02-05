@@ -13,7 +13,7 @@ VoidCallback onGenPwd(BuildContext context, {Function(String pwd)? callback}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        Future.delayed(const Duration(milliseconds: 1500), () {
+        Future.delayed(const Duration(milliseconds: 500), () {
           Navigator.of(context).pop();
         });
         return const AlertDialog(
