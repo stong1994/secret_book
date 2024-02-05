@@ -91,7 +91,7 @@ class _AccountBookState extends State<AccountBook> {
               itemCount: accounts.length,
               itemBuilder: (context, index) {
                 return AccountRow(
-                  accountID: accounts[index].id,
+                  account: accounts[index],
                 );
               });
         });
