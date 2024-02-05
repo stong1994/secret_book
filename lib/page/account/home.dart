@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/account.dart';
+import 'package:secret_book/event/event_bus.dart';
+import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/account.dart';
 import 'package:secret_book/page/account/add.dart';
 import 'package:secret_book/page/account/row.dart';
@@ -22,6 +24,9 @@ class _AccountBookState extends State<AccountBook> {
   @override
   void initState() {
     super.initState();
+    eventBus.on<EventAccountAdded>().listen((_) {
+      setState(() {});
+    });
   }
 
   @override

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:secret_book/model/account.dart';
 import 'package:secret_book/model/info.dart';
 
 class AppState {

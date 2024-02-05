@@ -1,3 +1,4 @@
+import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
@@ -8,6 +9,8 @@ import '../../db/account.dart';
 import '../../model/account.dart';
 import 'package:flutter/material.dart';
 import 'button.dart';
+
+class EventAccountAdded {}
 
 class AddAccountButton extends StatelessWidget {
   @override
@@ -32,6 +35,7 @@ class AddAccountButton extends StatelessWidget {
                       content: account.toJson().toString(),
                       from: info.name));
             }
+            eventBus.fire(EventAccountAdded());
             // appState.addAccount(account);
           }
         },
