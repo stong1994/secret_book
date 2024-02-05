@@ -34,7 +34,7 @@ class _TokenBookState extends State<TokenBook> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.all(2),
         color: const Color.fromARGB(255, 187, 194, 187),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

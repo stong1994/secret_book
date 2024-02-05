@@ -44,7 +44,7 @@ class _AccountBookState extends State<AccountBook> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      margin: EdgeInsets.all(16),
+      margin: EdgeInsets.all(2),
       color: Color.fromARGB(255, 200, 215, 200),
       child: Stack(
         children: [

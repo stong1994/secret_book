@@ -29,7 +29,7 @@ class _GoogleAuthBookState extends State<GoogleAuthBook> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.all(16),
+        margin: EdgeInsets.all(2),
         color: Color.fromARGB(255, 204, 216, 204),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
