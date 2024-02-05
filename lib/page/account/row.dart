@@ -78,16 +78,20 @@ class AccountRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Spacer(),
         Expanded(
-          child: Center(
+          child: Container(
             child: Text(
               account.title,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         ),
+        Spacer(),
         Expanded(
             child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Expanded(
                 child: IconButton(
@@ -115,7 +119,8 @@ class AccountRow extends StatelessWidget {
               // disabledColor: _isEditing ? Colors.grey : Colors.red,
             )),
           ],
-        ))
+        )),
+        Spacer(),
       ],
     );
   }

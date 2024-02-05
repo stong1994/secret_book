@@ -91,37 +91,43 @@ class _TokenActionState extends State<TokenAction> {
           _toggleEditing();
           eventBus.fire(widget.hashCode);
         },
-        child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Expanded(
-            child: Center(
-              child: Text(
-                widget.token.title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          Expanded(
-              child: Row(
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton(
-                icon: const Icon(Icons.copy),
-                onPressed: onCopy,
-                tooltip: '复制内容',
+              Spacer(),
+              Expanded(
+                child: Container(
+                  child: Text(
+                    widget.token.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
-              IconButton(
-                icon: const Icon(Icons.visibility),
-                onPressed: _showContent,
-                tooltip: '显示内容',
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: _deleteToken,
-                tooltip: '删除',
-                // disabledColor: _isEditing ? Colors.grey : Colors.red,
-              ),
-            ],
-          )),
-        ]));
+              Spacer(),
+              Expanded(
+                  child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.copy),
+                    onPressed: onCopy,
+                    tooltip: '复制内容',
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.visibility),
+                    onPressed: _showContent,
+                    tooltip: '显示内容',
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: _deleteToken,
+                    tooltip: '删除',
+                    // disabledColor: _isEditing ? Colors.grey : Colors.red,
+                  ),
+                ],
+              )),
+              Spacer(),
+            ]));
   }
 
   Widget _edit() {

@@ -57,40 +57,49 @@ class _GoogleAuthRowState extends State<GoogleAuthRow> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Spacer(),
               Expanded(
-                child: Center(
+                child: Container(
                   child: Text(
                     googleAuth.title,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
+              Spacer(),
               Expanded(
                   child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(child:IconButton(
+                  Expanded(
+                      child: IconButton(
                     icon: const Icon(Icons.domain_verification),
                     onPressed: copyCode(context, googleAuth.token),
                     tooltip: '复制验证码',
                   )),
-                  Expanded(child:IconButton(
+                  Expanded(
+                      child: IconButton(
                     icon: const Icon(Icons.key),
                     onPressed: onCopy(context, googleAuth.token),
                     tooltip: '复制秘钥',
                   )),
-                  Expanded(child:IconButton(
+                  Expanded(
+                      child: IconButton(
                     icon: const Icon(Icons.info),
                     onPressed: _showInfo(context, googleAuth),
                     tooltip: '详情',
                   )),
-                  Expanded(child:IconButton(
+                  Expanded(
+                      child: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: onDeleteGoogleAuth(googleAuth),
                     tooltip: '删除',
                     // disabledColor: _isEditing ? Colors.grey : Colors.red,
                   )),
                 ],
-              ))
+              )),
+              Spacer(),
             ],
           );
         });

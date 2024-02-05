@@ -20,3 +20,4 @@ samples, guidance on mobile development, and a full API reference.
 2. optimize page，make it more beautiful
 3. sync server addr check and compatible url that has prefix http.
 4. show the notice after password generated in account adding
+5. language switch
