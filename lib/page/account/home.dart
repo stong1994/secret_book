@@ -31,7 +31,8 @@ class _AccountBookState extends State<AccountBook> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+        body: Container(
       margin: EdgeInsets.all(16),
       color: Color.fromARGB(255, 200, 215, 200),
       child: Stack(
@@ -49,13 +50,13 @@ class _AccountBookState extends State<AccountBook> {
                 queryButton(context, queryKey, search),
                 // addButton(context, rebuild),
                 AddAccountButton(),
-                genPwdButton(context),
+                genPwdButton(context, true),
               ],
             ),
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget mainArea() {

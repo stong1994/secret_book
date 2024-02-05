@@ -66,7 +66,8 @@ Widget addButton(context, afterFn) {
 }
 
 Widget genPwdButton(
-  BuildContext context, {
+  BuildContext context,
+  bool inScaffold, {
   Function(String pwd)? callback,
   double? width,
   double? height,
@@ -77,7 +78,7 @@ Widget genPwdButton(
     padding: const EdgeInsets.all(10),
     alignment: Alignment.bottomRight,
     child: FloatingActionButton(
-      onPressed: onGenPwd(context, callback: callback),
+      onPressed: onGenPwd(context, inScaffold, callback: callback),
       tooltip: '生成密码',
       child: const Icon(Icons.vpn_key),
     ),

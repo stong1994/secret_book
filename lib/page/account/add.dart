@@ -13,35 +13,31 @@ class AddAccountButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appState = context.appState;
-    return ValueListenableBuilder(
-        valueListenable: appState,
-        builder: (context, state, _) {
-          return Padding(
-            padding: const EdgeInsets.all(8),
-            child: ElevatedButton(
-              onPressed: () async {
-                final account = await showAddDialog(context);
-                if (account != null) {
-                  AccountBookData().addAccount(account);
-                  Info info = appState.info;
-                  if (info.autoPushEvent) {
-                    pushEvent(
-                        info.serverAddr,
-                        Event(
-                            name: "add account ${account.title}",
-                            date: nowStr(),
-                            data_type: "account",
-                            event_type: "create",
-                            content: account.toJson().toString(),
-                            from: info.name));
-                  }
-                  // appState.addAccount(account);
-                }
-              },
-              child: const Icon(Icons.add),
-            ),
-          );
-        });
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5, right: 10),
+      child: ElevatedButton(
+        onPressed: () async {
+          final account = await showAddDialog(context);
+          if (account != null) {
+            AccountBookData().addAccount(account);
+            Info info = appState.info;
+            if (info.autoPushEvent) {
+              pushEvent(
+                  info.serverAddr,
+                  Event(
+                      name: "add account ${account.title}",
+                      date: nowStr(),
+                      data_type: "account",
+                      event_type: "create",
+                      content: account.toJson().toString(),
+                      from: info.name));
+            }
+            // appState.addAccount(account);
+          }
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 
   Future<Account?> showAddDialog(BuildContext context) {
@@ -120,6 +116,7 @@ class AddAccountButton extends StatelessWidget {
                         right: 0,
                         child: genPwdButton(
                           context,
+                          false,
                           callback: (String pwd) {
                             passwordCtrl.text = pwd;
                           },
@@ -214,7 +211,6 @@ class AddPage {
     showDialog(
         context: context,
         builder: (context) {
-          print("hi... ${context.info.autoPushEvent}");
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
               content: SingleChildScrollView(
@@ -279,6 +275,7 @@ class AddPage {
                           right: 0,
                           child: genPwdButton(
                             context,
+                            false,
                             callback: (String pwd) {
                               _passwordEditingController.text = pwd;
                             },

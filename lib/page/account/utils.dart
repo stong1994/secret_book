@@ -1,26 +1,31 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/utils/utils.dart';
 
-VoidCallback onGenPwd(BuildContext context, {Function(String pwd)? callback}) {
+VoidCallback onGenPwd(BuildContext context, bool inScaffold,
+    {Function(String pwd)? callback}) {
   return () {
     var pwd = genPwd();
     copyToClipboard(pwd);
     if (callback != null) {
       callback(pwd);
     }
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Future.delayed(const Duration(milliseconds: 500), () {
-          Navigator.of(context).pop();
-        });
-        return const AlertDialog(
-          title: Text('新密码已复制到粘贴板'),
-        );
-      },
-    );
+    if (inScaffold) {
+      context.showSnackBar('新密码已复制到粘贴板');
+    }
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     Future.delayed(const Duration(milliseconds: 500), () {
+    //       Navigator.of(context).pop();
+    //     });
+    //     return const AlertDialog(
+    //       title: Text('新密码已复制到粘贴板'),
+    //     );
+    //   },
+    // );
   };
 }
 
