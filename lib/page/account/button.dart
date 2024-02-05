@@ -51,13 +51,13 @@ Widget cleanSearchButton(
   );
 }
 
-Widget addButton(context, afterFn) {
+Widget addButton(context) {
   return Container(
     padding: const EdgeInsets.only(bottom: 5, right: 10),
     alignment: Alignment.bottomRight,
     child: FloatingActionButton(
       onPressed: () {
-        AddPage(context: context, afterFn: afterFn).build();
+        AddAccountButton().build(context);
       },
       child: const Icon(Icons.add),
     ),

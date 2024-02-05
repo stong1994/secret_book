@@ -59,8 +59,8 @@ class _AccountBookState extends State<AccountBook> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 queryButton(context, queryKey, search),
-                // addButton(context, rebuild),
-                AddAccountButton(),
+                addButton(context),
+                // AddAccountButton(),
                 genPwdButton(context, true),
               ],
             ),
