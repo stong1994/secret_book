@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/account.dart';
+import 'package:secret_book/event/event_bus.dart';
+import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/account.dart';
+import 'package:secret_book/model/api_client.dart';
+import 'package:secret_book/model/event.dart';
+import 'package:secret_book/utils/time.dart';
 import 'package:secret_book/utils/utils.dart';
 import 'detail.dart';
 
+class EventAccountDeleted {}
+
 class AccountRow extends StatefulWidget {
   final String accountID;
-  final Function afterChangeFn;
 
   const AccountRow({
     Key? key,
     required this.accountID,
-    required this.afterChangeFn,
   }) : super(key: key);
 
   @override
@@ -29,10 +34,24 @@ class _AccountRowState extends State<AccountRow> {
     super.dispose();
   }
 
-  VoidCallback onDeleteAccount(account) {
+  VoidCallback onDeleteAccount(Account account) {
     return () {
-      AccountBookData().deleteAccount(account);
-      widget.afterChangeFn();
+      AccountBookData().deleteAccount(account).then((_) {
+        if (context.autoPushEvent) {
+          pushEvent(
+              context.serverAddr,
+              Event(
+                name: "delete account ${account.title}",
+                date: nowStr(),
+                data_type: "account",
+                event_type: "delete",
+                content: account.toJson().toString(),
+                from: context.name,
+              ));
+        }
+      }).then((_) {
+        eventBus.fire(EventAccountDeleted());
+      });
     };
   }
 
@@ -132,15 +151,9 @@ class _AccountRowState extends State<AccountRow> {
         });
   }
 
-  void rebuildCallback() {
-    // widget.afterChangeFn();
-    setState(() {});
-  }
-
   VoidCallback _showInfo(context, account) {
     return () {
-      DetailPage(context: context, account: account)
-          .build();
+      DetailPage(context: context, account: account).build();
     };
   }
 }

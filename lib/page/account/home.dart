@@ -30,6 +30,9 @@ class _AccountBookState extends State<AccountBook> {
     eventBus.on<EventAccountUpdated>().listen((_) {
       setState(() {});
     });
+    eventBus.on<EventAccountDeleted>().listen((_) {
+      setState(() {});
+    });
   }
 
   @override
@@ -89,14 +92,9 @@ class _AccountBookState extends State<AccountBook> {
               itemBuilder: (context, index) {
                 return AccountRow(
                   accountID: accounts[index].id,
-                  afterChangeFn: rebuild,
                 );
               });
         });
-  }
-
-  void rebuild() {
-    setState(() {});
   }
 
   void search(key) {
