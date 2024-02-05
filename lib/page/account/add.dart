@@ -47,13 +47,12 @@ class AddAccountButton extends StatelessWidget {
   Future<Account?> showAddDialog(BuildContext context) {
     String title = '';
     String account = '';
-    String password = '';
+    TextEditingController passwordCtrl = TextEditingController();
     String comment = '';
 
     return showDialog(
         context: context,
         builder: (context) {
-          print("hi... ${context.info.autoPushEvent}");
           return AlertDialog(
             content: SingleChildScrollView(
                 child: Column(
@@ -102,9 +101,7 @@ class AddAccountButton extends StatelessWidget {
                   children: [
                     TextField(
                       autofocus: true,
-                      onChanged: (value) {
-                        password = value;
-                      },
+                      controller: passwordCtrl,
                       decoration: const InputDecoration(
                         // fillColor: Colors.white,
                         contentPadding: EdgeInsets.symmetric(
@@ -124,7 +121,7 @@ class AddAccountButton extends StatelessWidget {
                         child: genPwdButton(
                           context,
                           callback: (String pwd) {
-                            password = pwd;
+                            passwordCtrl.text = pwd;
                           },
                           width: 100,
                           height: 50,
@@ -165,15 +162,18 @@ class AddAccountButton extends StatelessWidget {
                   Navigator.of(context).pop(Account(
                     title: title,
                     account: account,
-                    password: password,
+                    password: passwordCtrl.text,
                     comment: comment,
                   ));
                 },
               ),
             ],
           );
-        });
-  } // dispose(); todo dispose()会导致“取消”后报错：A TextEditingController was used after being disposed.暂时还不知道问题原因
+        }).then((value) {
+      passwordCtrl.dispose;
+      return value;
+    });
+  }
 }
 
 class AddPage {
