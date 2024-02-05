@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/account.dart';
+import 'package:secret_book/event/event_bus.dart';
+import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/account.dart';
+import 'package:secret_book/model/api_client.dart';
+import 'package:secret_book/model/event.dart';
+import 'package:secret_book/utils/time.dart';
+
+class EventAccountUpdated {}
 
 class DetailPage {
   final Account account;
   final BuildContext context;
-  final Function afterFn;
 
   DetailPage({
     Key? key,
     required this.context,
     required this.account,
-    required this.afterFn,
   }) {
     initState();
   }
@@ -76,14 +81,28 @@ class DetailPage {
                   onPressed: () {
                     AccountBookData()
                         .updateAccount(Account(
-                          id: account.id,
-                          title: _titleEditingController.text,
-                          account: _accountEditingController.text,
-                          password: _passwordEditingController.text,
-                          comment: _commentEditingController.text,
-                        ))
-                        .then((_) => dispose())
-                        .then((_) => afterFn());
+                      id: account.id,
+                      title: _titleEditingController.text,
+                      account: _accountEditingController.text,
+                      password: _passwordEditingController.text,
+                      comment: _commentEditingController.text,
+                    ))
+                        .then((newAccount) {
+                      if (context.autoPushEvent) {
+                        pushEvent(
+                            context.serverAddr,
+                            Event(
+                              name: "update account ${newAccount.title}",
+                              date: nowStr(),
+                              data_type: "account",
+                              event_type: "update",
+                              content: newAccount.toJson().toString(),
+                              from: context.name,
+                            ));
+                      }
+                    }).then((_) {
+                      eventBus.fire(EventAccountUpdated());
+                    }).then((value) => dispose);
                     // _contentEditingController.clear();
                     Navigator.of(context).pop();
                   },

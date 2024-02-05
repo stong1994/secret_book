@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/account.dart';
 import 'package:secret_book/event/event_bus.dart';
-import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/account.dart';
 import 'package:secret_book/page/account/add.dart';
+import 'package:secret_book/page/account/detail.dart';
 import 'package:secret_book/page/account/row.dart';
 
 import 'button.dart';
@@ -25,6 +25,9 @@ class _AccountBookState extends State<AccountBook> {
   void initState() {
     super.initState();
     eventBus.on<EventAccountAdded>().listen((_) {
+      setState(() {});
+    });
+    eventBus.on<EventAccountUpdated>().listen((_) {
       setState(() {});
     });
   }

@@ -100,23 +100,26 @@ class _AccountRowState extends State<AccountRow> {
               Expanded(
                   child: Row(
                 children: [
-                  Expanded(child:  IconButton(
+                  Expanded(
+                      child: IconButton(
                     icon: const Icon(Icons.switch_account),
                     onPressed: onAccountCopy(context, account),
                     tooltip: '复制账号',
                   )),
-
-                  Expanded(child:IconButton(
+                  Expanded(
+                      child: IconButton(
                     icon: const Icon(Icons.password_outlined),
                     onPressed: onPasswordCopy(context, account),
                     tooltip: '复制密码',
                   )),
-                  Expanded(child:IconButton(
+                  Expanded(
+                      child: IconButton(
                     icon: const Icon(Icons.info),
                     onPressed: _showInfo(context, account),
                     tooltip: '详情',
                   )),
-                  Expanded(child:IconButton(
+                  Expanded(
+                      child: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: onDeleteAccount(account),
                     tooltip: '删除',
@@ -136,7 +139,7 @@ class _AccountRowState extends State<AccountRow> {
 
   VoidCallback _showInfo(context, account) {
     return () {
-      DetailPage(context: context, account: account, afterFn: rebuildCallback)
+      DetailPage(context: context, account: account)
           .build();
     };
   }

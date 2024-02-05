@@ -15,6 +15,10 @@ extension ContextExtension on BuildContext {
   /// Returns the [ApiService] of the current [BuildContext].
   Info get info => appState.info;
 
+  bool get autoPushEvent => info.autoPushEvent;
+  String get serverAddr => info.serverAddr;
+  String get name => info.name;
+
   // MediaQuery
 
   /// Returns `true` if the current screen width is less than 600.
