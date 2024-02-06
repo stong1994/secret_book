@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:secret_book/page/googleauth/home.dart';
 import 'package:secret_book/page/setting/info.dart';

@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/token.dart';
+import 'package:secret_book/event/event_bus.dart';
+import 'package:secret_book/extensions/context_extension.dart';
+import 'package:secret_book/model/api_client.dart';
+import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/token.dart';
+import 'package:secret_book/utils/time.dart';
+
+class EventTokenCreate {}
 
 class AddPage {
   final BuildContext context;
-  final Function afterFn;
 
   final _titleEditingController = TextEditingController();
   final _contentEditingController = TextEditingController();
 
   AddPage({
     required this.context,
-    required this.afterFn,
   });
 
   void dispose() {
@@ -98,9 +103,20 @@ class AddPage {
       title: _titleEditingController.text,
       content: _contentEditingController.text,
     ))
-        .then((_) {
-      afterFn();
+        .then((token) {
+      pushEvent(
+          context.serverAddr,
+          Event(
+            name: "create token ${token.title}",
+            date: nowStr(),
+            data_type: "token",
+            event_type: "create",
+            content: token.toJson().toString(),
+            from: context.name,
+          ));
       // dispose();
+    }).then((value) {
+      eventBus.fire(EventTokenCreate());
     });
   }
 }
