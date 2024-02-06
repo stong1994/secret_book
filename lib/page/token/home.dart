@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/token.dart';
+import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/model/token.dart';
 import 'add.dart';
 import 'detail.dart';
@@ -12,20 +13,23 @@ class TokenBook extends StatefulWidget {
 }
 
 class _TokenBookState extends State<TokenBook> {
-  final _titleEditingController = TextEditingController();
-  final _contentEditingController = TextEditingController();
-  late final TokenBookData _tokenData;
 
   @override
   void initState() {
     super.initState();
-    _tokenData = TokenBookData();
+    eventBus.on<EventTokenCreated>().listen((_) {
+      setState(() {});
+    });
+    eventBus.on<EventTokenUpdated>().listen((_) {
+      setState(() {});
+    });
+    eventBus.on<EventTokenDeleted>().listen((_) {
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
-    _titleEditingController.dispose();
-    _contentEditingController.dispose();
     super.dispose();
   }
 
@@ -59,7 +63,7 @@ class _TokenBookState extends State<TokenBook> {
   Widget mainArea() {
     return Expanded(
         child: FutureBuilder<List<Token>>(
-            future: _tokenData.fetchTokens(),
+            future: TokenBookData().fetchTokens(),
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
                 return const Center(
@@ -78,22 +82,9 @@ class _TokenBookState extends State<TokenBook> {
                   itemCount: tokens.length,
                   itemBuilder: (context, index) {
                     return TokenAction(
-                        token: tokens[index],
-                        onTokenUpdated: onTokenUpdate,
-                        onTokenDeleted: onTokenDelete);
+                      token: tokens[index],
+                    );
                   });
             }));
-  }
-
-  void onTokenDelete(Token token) {
-    setState(() {
-      _tokenData.deleteToken(token);
-    });
-  }
-
-  void onTokenUpdate(Token token) {
-    setState(() {
-      _tokenData.updateToken(token);
-    });
   }
 }

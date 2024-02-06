@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:secret_book/db/token.dart';
 import 'package:secret_book/event/event_bus.dart';
+import 'package:secret_book/model/api_client.dart';
+import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/token.dart';
+import 'package:secret_book/utils/time.dart';
 import 'package:secret_book/utils/utils.dart';
+import 'package:secret_book/extensions/context_extension.dart';
+
+class EventTokenUpdated {}
+
+class EventTokenDeleted {}
 
 class TokenAction extends StatefulWidget {
   final Token token;
   final FocusNode? focusNode;
-  final Function(Token) onTokenUpdated;
-  final Function(Token) onTokenDeleted;
 
   const TokenAction({
     Key? key,
     required this.token,
-    required this.onTokenUpdated,
-    required this.onTokenDeleted,
     this.focusNode,
   }) : super(key: key);
 
@@ -56,18 +61,62 @@ class _TokenActionState extends State<TokenAction> {
     });
   }
 
-  void _updateTitle(String newTitle) {
-    widget.onTokenUpdated(widget.token.copyWith(title: newTitle));
+  void _updateTitle(BuildContext context, String newTitle) {
+    Token token = widget.token.copyWith(title: newTitle);
+    TokenBookData().updateToken(token).then((newToken) {
+      if (!context.autoPushEvent) {
+        return;
+      }
+      pushEvent(
+          context.serverAddr,
+          Event(
+            name: "update token ${token.title}",
+            date: nowStr(),
+            data_type: "token",
+            event_type: "create",
+            content: token.toJson().toString(),
+            from: context.name,
+          ));
+    }).then((_) => eventBus.fire(EventTokenUpdated()));
     _toggleEditing();
   }
 
-  void _updateContent(String newContent) {
-    widget.onTokenUpdated(widget.token.copyWith(content: newContent));
+  void _updateContent(BuildContext context, String newContent) {
+    Token token = widget.token.copyWith(content: newContent);
+    TokenBookData().updateToken(token).then((newToken) {
+      if (!context.autoPushEvent) {
+        return;
+      }
+      pushEvent(
+          context.serverAddr,
+          Event(
+            name: "update token ${token.title}",
+            date: nowStr(),
+            data_type: "token",
+            event_type: "create",
+            content: token.toJson().toString(),
+            from: context.name,
+          ));
+    }).then((_) => eventBus.fire(EventTokenUpdated()));
     _toggleEditing();
   }
 
   void _deleteToken() {
-    widget.onTokenDeleted(widget.token);
+    TokenBookData().deleteToken(widget.token).then((newToken) {
+      if (!context.autoPushEvent) {
+        return;
+      }
+      pushEvent(
+          context.serverAddr,
+          Event(
+            name: "update token ${widget.token.title}",
+            date: nowStr(),
+            data_type: "token",
+            event_type: "create",
+            content: widget.token.toJson().toString(),
+            from: context.name,
+          ));
+    }).then((_) => eventBus.fire(EventTokenDeleted()));
   }
 
   void onCopy() {
@@ -155,7 +204,7 @@ class _TokenActionState extends State<TokenAction> {
         ),
       ),
       onFieldSubmitted: (value) {
-        _updateTitle(value);
+        _updateTitle(context, value);
         _titleEditingController.clear();
       },
       onTapOutside: (event) => _toggleEditing(),
@@ -204,7 +253,7 @@ class _TokenActionState extends State<TokenAction> {
               child: const Text('完成'),
               onPressed: () {
                 String content = _contentEditingController.text;
-                _updateContent(content);
+                _updateContent(context, content);
                 _contentEditingController.clear();
                 Navigator.of(context).pop();
               },

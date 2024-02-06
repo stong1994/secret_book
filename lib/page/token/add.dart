@@ -7,7 +7,7 @@ import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/token.dart';
 import 'package:secret_book/utils/time.dart';
 
-class EventTokenCreate {}
+class EventTokenCreated {}
 
 class AddPage {
   final BuildContext context;
@@ -104,6 +104,9 @@ class AddPage {
       content: _contentEditingController.text,
     ))
         .then((token) {
+      if (!context.autoPushEvent) {
+        return;
+      }
       pushEvent(
           context.serverAddr,
           Event(
@@ -116,7 +119,7 @@ class AddPage {
           ));
       // dispose();
     }).then((value) {
-      eventBus.fire(EventTokenCreate());
+      eventBus.fire(EventTokenCreated());
     });
   }
 }

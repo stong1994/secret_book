@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/info.dart';
+import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/info.dart';
 import 'package:secret_book/page/setting/sync.dart';
 
@@ -53,6 +54,7 @@ class _InfoPageState extends State<InfoPage> {
                       value: snapshot.data!.autoPushEvent,
                       onChanged: (newValue) {
                         InfoData().saveAutoPushEvent(newValue).then((_) {
+                          context.info.autoPushEvent = newValue;
                           setState(() {});
                         });
                       },
