@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/googleauth.dart';
+import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/model/googleauth.dart';
 import 'package:secret_book/page/googleauth/add.dart';
+import 'package:secret_book/page/googleauth/detail.dart';
 import 'package:secret_book/page/googleauth/row.dart';
 
 class GoogleAuthBook extends StatefulWidget {
@@ -19,6 +21,15 @@ class _GoogleAuthBookState extends State<GoogleAuthBook> {
   @override
   void initState() {
     super.initState();
+    eventBus.on<EventGoogleAuthCreated>().listen((event) {
+      setState(() {});
+    });
+    eventBus.on<EventGoogleAuthUpdated>().listen((event) {
+      setState(() {});
+    });
+    eventBus.on<EventGoogleAuthDeleted>().listen((event) {
+      setState(() {});
+    });
   }
 
   @override
@@ -28,15 +39,16 @@ class _GoogleAuthBookState extends State<GoogleAuthBook> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.all(2),
-        color: Color.fromARGB(255, 204, 216, 204),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              mainArea(),
-              addButton(),
-            ]));
+    return Scaffold(
+        body: Container(
+            margin: EdgeInsets.all(2),
+            color: Color.fromARGB(255, 204, 216, 204),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  mainArea(),
+                  addButton(),
+                ])));
   }
 
   Widget addButton() {
@@ -72,20 +84,15 @@ class _GoogleAuthBookState extends State<GoogleAuthBook> {
                   itemCount: accounts.length,
                   itemBuilder: (context, index) {
                     return GoogleAuthRow(
-                      googleAuthID: accounts[index].id,
-                      afterChangeFn: rebuild,
+                      googleAuth: accounts[index],
                     );
                   });
             }));
   }
 
-  void rebuild() {
-    setState(() {});
-  }
-
   VoidCallback onAdd() {
     return () {
-      AddPage(context: context, afterFn: rebuild).build();
+      AddPage(context: context).build();
     };
   }
 }

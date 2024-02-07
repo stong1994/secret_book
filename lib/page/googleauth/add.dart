@@ -83,7 +83,6 @@ class AddPage {
                 onPressed: () {
                   onAdd();
                   Navigator.of(context).pop();
-                  dispose();
                 },
               ),
             ],
@@ -100,6 +99,9 @@ class AddPage {
       token: _tokenEditingController.text,
     ))
         .then((googleAuth) {
+      if (!context.autoPushEvent) {
+        return;
+      }
       pushEvent(
           context.serverAddr,
           Event(

@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/googleauth.dart';
+import 'package:secret_book/event/event_bus.dart';
+import 'package:secret_book/extensions/context_extension.dart';
+import 'package:secret_book/model/api_client.dart';
+import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/googleauth.dart';
+import 'package:secret_book/utils/time.dart';
+
+class EventGoogleAuthUpdated {}
 
 class DetailPage {
   final GoogleAuth googleAuth;
   final BuildContext context;
-  final Function afterFn;
 
   DetailPage({
     Key? key,
     required this.context,
     required this.googleAuth,
-    required this.afterFn,
   }) {
     initState();
   }
@@ -31,8 +36,8 @@ class DetailPage {
     _tokenEditingController.dispose();
   }
 
-  void build() {
-    showDialog(
+  Future<GoogleAuth?> build() {
+    return showDialog(
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
@@ -54,7 +59,7 @@ class DetailPage {
                   child: const Text('取消'),
                   onPressed: () {
                     dispose();
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(googleAuth);
                   },
                 ),
                 TextButton(
@@ -62,14 +67,33 @@ class DetailPage {
                   onPressed: () {
                     GoogleAuthBookData()
                         .updateGoogleAuth(GoogleAuth(
-                          id: googleAuth.id,
-                          title: _titleEditingController.text,
-                          token: _tokenEditingController.text,
-                        ))
-                        .then((_) => afterFn())
-                        .then((_) => dispose());
+                      id: googleAuth.id,
+                      title: _titleEditingController.text,
+                      token: _tokenEditingController.text,
+                    ))
+                        .then((googleAuth) {
+                      if (!context.autoPushEvent) {
+                        return googleAuth;
+                      }
+                      pushEvent(
+                          context.serverAddr,
+                          Event(
+                            name: "update google auth ${googleAuth.title}",
+                            date: nowStr(),
+                            content: googleAuth.toJson().toString(),
+                            data_type: "google_auth",
+                            event_type: "update",
+                            from: context.name,
+                          ));
+                      return googleAuth;
+                    }).then((googleAuth) {
+                      eventBus.fire(EventGoogleAuthUpdated());
+                      return googleAuth;
+                    }).then((googleAuth) {
+                      Navigator.of(context).pop(googleAuth);
+                      dispose();
+                    });
                     // _contentEditingController.clear();
-                    Navigator.of(context).pop();
                   },
                 ),
               ],
