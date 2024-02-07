@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/googleauth.dart';
+import 'package:secret_book/event/event_bus.dart';
+import 'package:secret_book/extensions/context_extension.dart';
+import 'package:secret_book/model/api_client.dart';
+import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/googleauth.dart';
+import 'package:secret_book/utils/time.dart';
+
+class EventGoogleAuthCreated {}
 
 class AddPage {
   final BuildContext context;
-  final Function afterFn;
 
   final _titleEditingController = TextEditingController();
   final _tokenEditingController = TextEditingController();
@@ -15,7 +21,6 @@ class AddPage {
   }
 
   AddPage({
-    required this.afterFn,
     required this.context,
   });
 
@@ -78,6 +83,7 @@ class AddPage {
                 onPressed: () {
                   onAdd();
                   Navigator.of(context).pop();
+                  dispose();
                 },
               ),
             ],
@@ -93,9 +99,18 @@ class AddPage {
       title: _titleEditingController.text,
       token: _tokenEditingController.text,
     ))
-        .then((_) {
-      afterFn();
+        .then((googleAuth) {
+      pushEvent(
+          context.serverAddr,
+          Event(
+            name: "add google auth ${googleAuth.title}",
+            date: nowStr(),
+            data_type: "google_auth",
+            event_type: "create",
+            content: googleAuth.toJson().toString(),
+            from: context.name,
+          ));
       // dispose();
-    });
+    }).then((value) => eventBus.fire(EventGoogleAuthCreated()));
   }
 }
