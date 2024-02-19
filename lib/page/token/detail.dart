@@ -102,21 +102,25 @@ class _TokenActionState extends State<TokenAction> {
   }
 
   void _deleteToken() {
-    TokenBookData().deleteToken(widget.token).then((_) {
-      if (!context.autoPushEvent) {
-        return;
-      }
-      pushEvent(
-          context.serverAddr,
-          Event(
-            name: "delete token ${widget.token.title}",
-            date: nowStr(),
-            data_type: "token",
-            event_type: "delete",
-            content: widget.token.toJson().toString(),
-            from: context.name,
-          ));
-    }).then((_) => eventBus.fire(EventTokenDeleted()));
+    TokenBookData()
+        .deleteToken(widget.token)
+        .then((_) {
+          if (!context.autoPushEvent) {
+            return;
+          }
+          pushEvent(
+              context.serverAddr,
+              Event(
+                name: "delete token ${widget.token.title}",
+                date: nowStr(),
+                data_type: "token",
+                event_type: "delete",
+                content: widget.token.toJson().toString(),
+                from: context.name,
+              ));
+        })
+        .then((_) => dispose)
+        .then((_) => eventBus.fire(EventTokenDeleted()));
   }
 
   void onCopy() {

@@ -13,7 +13,6 @@ class TokenBook extends StatefulWidget {
 }
 
 class _TokenBookState extends State<TokenBook> {
-  GlobalKey<_TokenBookState> parentKey = GlobalKey();
 
   @override
   void initState() {
@@ -83,7 +82,6 @@ class _TokenBookState extends State<TokenBook> {
                   itemCount: tokens.length,
                   itemBuilder: (context, index) {
                     return TokenAction(
-                      key: parentKey,
                       token: tokens[index],
                     );
                   });
