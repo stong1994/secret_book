@@ -73,7 +73,7 @@ class _TokenActionState extends State<TokenAction> {
             name: "update token ${token.title}",
             date: nowStr(),
             data_type: "token",
-            event_type: "create",
+            event_type: "update",
             content: token.toJson().toString(),
             from: context.name,
           ));
@@ -93,7 +93,7 @@ class _TokenActionState extends State<TokenAction> {
             name: "update token ${token.title}",
             date: nowStr(),
             data_type: "token",
-            event_type: "create",
+            event_type: "update",
             content: token.toJson().toString(),
             from: context.name,
           ));
@@ -102,17 +102,17 @@ class _TokenActionState extends State<TokenAction> {
   }
 
   void _deleteToken() {
-    TokenBookData().deleteToken(widget.token).then((newToken) {
+    TokenBookData().deleteToken(widget.token).then((_) {
       if (!context.autoPushEvent) {
         return;
       }
       pushEvent(
           context.serverAddr,
           Event(
-            name: "update token ${widget.token.title}",
+            name: "delete token ${widget.token.title}",
             date: nowStr(),
             data_type: "token",
-            event_type: "create",
+            event_type: "delete",
             content: widget.token.toJson().toString(),
             from: context.name,
           ));
