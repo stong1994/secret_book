@@ -12,6 +12,13 @@ class EventTokenUpdated {}
 
 class EventTokenDeleted {}
 
+class EventTokenEditing {
+  final int hashCode;
+  EventTokenEditing({
+    required this.hashCode,
+  });
+}
+
 class TokenAction extends StatefulWidget {
   final Token token;
   final FocusNode? focusNode;
@@ -37,8 +44,8 @@ class _TokenActionState extends State<TokenAction> {
     _titleEditingController = TextEditingController(text: widget.token.title);
     _contentEditingController =
         TextEditingController(text: widget.token.content);
-    eventBus.on<int>().listen((hashCode) {
-      onOtherTokenEditing(hashCode);
+    eventBus.on<EventTokenEditing>().listen((event) {
+      onOtherTokenEditing(event.hashCode);
     });
   }
 
@@ -142,7 +149,7 @@ class _TokenActionState extends State<TokenAction> {
     return GestureDetector(
         onTap: () {
           _toggleEditing();
-          eventBus.fire(widget.hashCode);
+          eventBus.fire(EventTokenEditing(hashCode: widget.hashCode));
         },
         child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
