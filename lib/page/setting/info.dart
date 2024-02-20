@@ -53,6 +53,10 @@ class _InfoPageState extends State<InfoPage> {
                     Switch(
                       value: snapshot.data!.autoPushEvent,
                       onChanged: (newValue) {
+                        if (newValue && snapshot.data!.serverAddr == "") {
+                          needSetServer(context);
+                          return;
+                        }
                         InfoData().saveAutoPushEvent(newValue).then((_) {
                           context.info.autoPushEvent = newValue;
                           setState(() {});
@@ -67,6 +71,10 @@ class _InfoPageState extends State<InfoPage> {
                     const Spacer(),
                     IconButton(
                       onPressed: () {
+                        if (snapshot.data!.serverAddr == "") {
+                          needSetServer(context);
+                          return;
+                        }
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -123,4 +131,17 @@ class _InfoPageState extends State<InfoPage> {
           );
         });
   }
+}
+
+void needSetServer(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(milliseconds: 500), () {
+          Navigator.of(context).pop(true);
+        });
+        return const AlertDialog(
+          title: Text("需要先设置服务端地址"),
+        );
+      });
 }
