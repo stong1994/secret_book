@@ -35,14 +35,14 @@ String genPwd() {
   const specials = '~!@#&^*%';
   const nums = '1234567890';
   Random random = Random();
-  String str = String.fromCharCodes(Iterable.generate(3,
+  String str = String.fromCharCodes(Iterable.generate(6,
           (_) => littleChars.codeUnitAt(random.nextInt(littleChars.length)))) +
       String.fromCharCodes(Iterable.generate(
-          3, (_) => bigChars.codeUnitAt(random.nextInt(bigChars.length)))) +
+          6, (_) => bigChars.codeUnitAt(random.nextInt(bigChars.length)))) +
       String.fromCharCodes(Iterable.generate(
-          2, (_) => specials.codeUnitAt(random.nextInt(specials.length)))) +
+          4, (_) => specials.codeUnitAt(random.nextInt(specials.length)))) +
       String.fromCharCodes(Iterable.generate(
-          2, (_) => nums.codeUnitAt(random.nextInt(nums.length))));
+          4, (_) => nums.codeUnitAt(random.nextInt(nums.length))));
   var chars = str.split('');
   chars.shuffle();
   return chars.join('');
