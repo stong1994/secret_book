@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/info.dart';
+import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/info.dart';
 import 'package:secret_book/page/setting/sync.dart';
+
+class EventSettingChanged {}
 
 class InfoPage extends StatefulWidget {
   InfoPage();
@@ -13,6 +16,14 @@ class InfoPage extends StatefulWidget {
 
 class _InfoPageState extends State<InfoPage> {
   final _serverController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    eventBus.on<EventSettingChanged>().listen((event) {
+      setState(() {});
+    });
+  }
 
   @override
   void dispose() {
@@ -60,7 +71,9 @@ class _InfoPageState extends State<InfoPage> {
                         InfoData().saveAutoPushEvent(newValue).then((_) {
                           context.info.autoPushEvent = newValue;
                           setState(() {});
-                        });
+                        })
+                            // .then((_) => Navigator.of(context).pop())
+                            .then((_) => eventBus.fire(EventSettingChanged()));
                       },
                     ),
                   ],
@@ -122,8 +135,10 @@ class _InfoPageState extends State<InfoPage> {
               ),
               TextButton(
                 onPressed: () {
-                  InfoData().saveServerAddr(_serverController.text);
-                  Navigator.of(context).pop();
+                  InfoData()
+                      .saveServerAddr(_serverController.text)
+                      .then((_) => Navigator.of(context).pop())
+                      .then((_) => eventBus.fire(EventSettingChanged()));
                 },
                 child: const Text("确认"),
               )
