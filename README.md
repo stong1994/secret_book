@@ -18,6 +18,7 @@ samples, guidance on mobile development, and a full API reference.
 ## todo
 1. fulfill context, eg: db connection、changed event
 2. optimize page，make it more beautiful
-3. sync server addr check and compatible url that has prefix http.
+3. sync server addr check and compatible url that has prefix http.[✅]
 4. show the notice after password generated in account adding
 5. language switch
+6. sync data for event single info
