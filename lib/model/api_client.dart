@@ -7,7 +7,7 @@ import 'package:http/http.dart';
 Future<void> pushEvent(String serverAddr, Event event) async {
   try {
     final response = await post(
-      Uri.parse('http://$serverAddr/push'),
+      Uri.parse(handleUrl('$serverAddr/push')),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -25,7 +25,7 @@ Future<void> pushEvent(String serverAddr, Event event) async {
 }
 
 Future<List<Event>> getEvents(String syncAddr, String lastSyncDate) async {
-  var request = Request('GET', Uri.parse('http://$syncAddr/fetch'));
+  var request = Request('GET', Uri.parse(handleUrl('$syncAddr/fetch')));
   // request.headers.addAll(headers);
   try {
     StreamedResponse response =
@@ -46,4 +46,11 @@ Future<List<Event>> getEvents(String syncAddr, String lastSyncDate) async {
   } catch (e) {
     rethrow;
   }
+}
+
+String handleUrl(String url) {
+  if (url.startsWith("http")) {
+    return url;
+  }
+  return "http://$url";
 }
