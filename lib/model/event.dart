@@ -1,4 +1,5 @@
 class Event {
+  String id;
   String name;
   String date;
   String event_type;
@@ -7,6 +8,7 @@ class Event {
   String from;
 
   Event({
+    this.id = "",
     this.name = "",
     this.date = "",
     this.data_type = "",
@@ -17,6 +19,7 @@ class Event {
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
+      id: json['id'],
       name: json['name'],
       date: json['date'],
       event_type: json['event_type'],
@@ -27,6 +30,7 @@ class Event {
   }
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'name': name,
         'date': date,
         'event_type': event_type,

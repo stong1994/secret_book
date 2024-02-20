@@ -92,6 +92,7 @@ class DetailPage {
                         pushEvent(
                             context.serverAddr,
                             Event(
+                              id: newAccount.id,
                               name: "update account ${newAccount.title}",
                               date: nowStr(),
                               data_type: "account",

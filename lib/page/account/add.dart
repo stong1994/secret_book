@@ -23,6 +23,7 @@ class AddAccountButton {
         pushEvent(
             info.serverAddr,
             Event(
+                id: account.id,
                 name: "add account ${account.title}",
                 date: nowStr(),
                 data_type: "account",

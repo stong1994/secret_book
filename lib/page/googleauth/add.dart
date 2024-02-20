@@ -105,6 +105,7 @@ class AddPage {
       pushEvent(
           context.serverAddr,
           Event(
+            id: googleAuth.id,
             name: "add google auth ${googleAuth.title}",
             date: nowStr(),
             data_type: "google_auth",

@@ -25,6 +25,7 @@ class AccountRow extends StatelessWidget {
           pushEvent(
               context.serverAddr,
               Event(
+                id: account.id,
                 name: "delete account ${account.title}",
                 date: nowStr(),
                 data_type: "account",

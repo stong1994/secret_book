@@ -110,6 +110,7 @@ class AddPage {
       pushEvent(
           context.serverAddr,
           Event(
+            id: token.id,
             name: "create token ${token.title}",
             date: nowStr(),
             data_type: "token",

@@ -77,6 +77,7 @@ class _TokenActionState extends State<TokenAction> {
       pushEvent(
           context.serverAddr,
           Event(
+            id: token.id,
             name: "update token ${token.title}",
             date: nowStr(),
             data_type: "token",
@@ -97,6 +98,7 @@ class _TokenActionState extends State<TokenAction> {
       pushEvent(
           context.serverAddr,
           Event(
+            id: token.id,
             name: "update token ${token.title}",
             date: nowStr(),
             data_type: "token",
@@ -118,6 +120,7 @@ class _TokenActionState extends State<TokenAction> {
           pushEvent(
               context.serverAddr,
               Event(
+                id: widget.token.id,
                 name: "delete token ${widget.token.title}",
                 date: nowStr(),
                 data_type: "token",

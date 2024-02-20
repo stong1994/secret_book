@@ -78,6 +78,7 @@ class DetailPage {
                       pushEvent(
                           context.serverAddr,
                           Event(
+                            id: googleAuth.id,
                             name: "update google auth ${googleAuth.title}",
                             date: nowStr(),
                             content: googleAuth.toJson().toString(),

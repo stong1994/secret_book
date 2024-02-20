@@ -30,6 +30,7 @@ class GoogleAuthRow extends StatelessWidget {
         pushEvent(
             context.serverAddr,
             Event(
+              id: googleAuth.id,
               name: "delete google auth ${googleAuth.title}",
               date: nowStr(),
               content: googleAuth.toJson().toString(),
