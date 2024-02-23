@@ -46,6 +46,28 @@ class AccountRow extends StatelessWidget {
     };
   }
 
+  VoidCallback uploadAccount(BuildContext context, Account account) {
+    return () {
+      pushEvent(
+          context.serverAddr,
+          Event(
+            id: account.id,
+            name: "upload account ${account.title}",
+            date: nowStr(),
+            data_type: "account",
+            event_type: "update",
+            content: account.toJson().toString(),
+            from: context.name,
+          )).then((value) {
+        if (value == "") {
+          context.showSnackBar("上传成功");
+        } else {
+          context.showSnackBar("上传失败, 原因： $value");
+        }
+      });
+    };
+  }
+
   VoidCallback onAccountCopy(context, account) {
     return () {
       copyToClipboard(account.account);
@@ -125,6 +147,11 @@ class AccountRow extends StatelessWidget {
               tooltip: '删除',
               // disabledColor: _isEditing ? Colors.grey : Colors.red,
             )),
+            Expanded(
+                child: IconButton(
+              icon: const Icon(Icons.upload),
+              onPressed: uploadAccount(context, account),
+            ))
           ],
         )),
         Spacer(),
