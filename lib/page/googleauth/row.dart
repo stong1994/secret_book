@@ -48,6 +48,28 @@ class GoogleAuthRow extends StatelessWidget {
     };
   }
 
+  VoidCallback uploadGoogleAuth(BuildContext context, GoogleAuth googleAuth) {
+    return () {
+      pushEvent(
+          context.serverAddr,
+          Event(
+            id: googleAuth.id,
+            name: "upload google auth ${googleAuth.title}",
+            date: nowStr(),
+            content: googleAuth.toJson().toString(),
+            data_type: "google_auth",
+            event_type: "update",
+            from: context.name,
+          )).then((value) {
+        if (value == "") {
+          context.showSnackBar("上传成功");
+        } else {
+          context.showSnackBar("上传失败, 原因： $value");
+        }
+      });
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -91,6 +113,13 @@ class GoogleAuthRow extends StatelessWidget {
               icon: const Icon(Icons.delete),
               onPressed: onDeleteGoogleAuth(context, googleAuth),
               tooltip: '删除',
+              // disabledColor: _isEditing ? Colors.grey : Colors.red,
+            )),
+            Expanded(
+                child: IconButton(
+              icon: const Icon(Icons.upload),
+              onPressed: uploadGoogleAuth(context, googleAuth),
+              tooltip: '上传',
               // disabledColor: _isEditing ? Colors.grey : Colors.red,
             )),
           ],
