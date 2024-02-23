@@ -156,7 +156,7 @@ class _TokenActionState extends State<TokenAction> {
         context.serverAddr,
         Event(
           id: widget.token.id,
-          name: "delete token ${widget.token.title}",
+          name: "upload token ${widget.token.title}",
           date: nowStr(),
           data_type: "token",
           event_type: "update",
