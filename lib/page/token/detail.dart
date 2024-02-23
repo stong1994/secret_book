@@ -84,7 +84,13 @@ class _TokenActionState extends State<TokenAction> {
             event_type: "update",
             content: token.toJson().toString(),
             from: context.name,
-          ));
+          )).then((value) {
+        if (value == "") {
+          context.showSnackBar("发送事件成功");
+        } else {
+          context.showSnackBar("发送事件失败, 原因： $value");
+        }
+      });
     }).then((_) => eventBus.fire(EventTokenUpdated()));
     _toggleEditing();
   }
@@ -105,7 +111,13 @@ class _TokenActionState extends State<TokenAction> {
             event_type: "update",
             content: token.toJson().toString(),
             from: context.name,
-          ));
+          )).then((value) {
+        if (value == "") {
+          context.showSnackBar("发送事件成功");
+        } else {
+          context.showSnackBar("发送事件失败, 原因： $value");
+        }
+      });
     }).then((_) => eventBus.fire(EventTokenUpdated()));
     _toggleEditing();
   }
@@ -127,10 +139,36 @@ class _TokenActionState extends State<TokenAction> {
                 event_type: "delete",
                 content: widget.token.toJson().toString(),
                 from: context.name,
-              ));
+              )).then((value) {
+            if (value == "") {
+              context.showSnackBar("发送事件成功");
+            } else {
+              context.showSnackBar("发送事件失败, 原因： $value");
+            }
+          });
         })
         .then((_) => dispose)
         .then((_) => eventBus.fire(EventTokenDeleted()));
+  }
+
+  void _uploadToken() {
+    pushEvent(
+        context.serverAddr,
+        Event(
+          id: widget.token.id,
+          name: "delete token ${widget.token.title}",
+          date: nowStr(),
+          data_type: "token",
+          event_type: "update",
+          content: widget.token.toJson().toString(),
+          from: context.name,
+        )).then((value) {
+      if (value == "") {
+        context.showSnackBar("上传成功");
+      } else {
+        context.showSnackBar("上传失败, 原因： $value");
+      }
+    });
   }
 
   void onCopy() {
@@ -156,7 +194,7 @@ class _TokenActionState extends State<TokenAction> {
         },
         child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             children: [
               Spacer(),
               Expanded(
@@ -171,25 +209,35 @@ class _TokenActionState extends State<TokenAction> {
               Expanded(
                   child: Row(
                 children: [
-                  IconButton(
+                  Expanded(
+                      child: IconButton(
                     icon: const Icon(Icons.copy),
                     onPressed: onCopy,
                     tooltip: '复制内容',
-                  ),
-                  IconButton(
+                  )),
+                  Expanded(
+                      child: IconButton(
                     icon: const Icon(Icons.visibility),
                     onPressed: _showContent,
                     tooltip: '显示内容',
-                  ),
-                  IconButton(
+                  )),
+                  Expanded(
+                      child: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: _deleteToken,
                     tooltip: '删除',
                     // disabledColor: _isEditing ? Colors.grey : Colors.red,
-                  ),
+                  )),
+                  Expanded(
+                      child: IconButton(
+                    onPressed: _uploadToken,
+                    icon: const Icon(Icons.upload),
+                    tooltip: '上传',
+                  ))
                 ],
               )),
               Spacer(),
+              // Container(),
             ]));
   }
 
