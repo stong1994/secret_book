@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:http/http.dart';
 
-Future<void> pushEvent(String serverAddr, Event event) async {
+Future<String> pushEvent(String serverAddr, Event event) async {
   try {
     final response = await post(
       Uri.parse(handleUrl('$serverAddr/push')),
@@ -17,10 +17,10 @@ Future<void> pushEvent(String serverAddr, Event event) async {
     if (response.statusCode != 200) {
       throw ("push event failed: ${response.reasonPhrase}");
     }
-    return;
+    return "";
   } catch (e) {
     debugPrint(e.toString());
-    return;
+    return e.toString();
   }
 }
 

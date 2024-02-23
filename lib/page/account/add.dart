@@ -21,15 +21,22 @@ class AddAccountButton {
       Info info = appState.info;
       if (info.autoPushEvent) {
         pushEvent(
-            info.serverAddr,
-            Event(
-                id: account.id,
-                name: "add account ${account.title}",
-                date: nowStr(),
-                data_type: "account",
-                event_type: "create",
-                content: account.toJson().toString(),
-                from: info.name));
+                info.serverAddr,
+                Event(
+                    id: account.id,
+                    name: "add account ${account.title}",
+                    date: nowStr(),
+                    data_type: "account",
+                    event_type: "create",
+                    content: account.toJson().toString(),
+                    from: info.name))
+            .then((value) {
+          if (value == "") {
+            context.showSnackBar("发送事件成功");
+          } else {
+            context.showSnackBar("发送事件失败, 原因： $value");
+          }
+        });
       }
       eventBus.fire(EventAccountAdded());
     }

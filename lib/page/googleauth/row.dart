@@ -37,7 +37,13 @@ class GoogleAuthRow extends StatelessWidget {
               data_type: "google_auth",
               event_type: "delete",
               from: context.name,
-            ));
+            )).then((value) {
+          if (value == "") {
+            context.showSnackBar("发送事件成功");
+          } else {
+            context.showSnackBar("发送事件失败, 原因： $value");
+          }
+        });
       }).then((_) => eventBus.fire(EventGoogleAuthDeleted()));
     };
   }

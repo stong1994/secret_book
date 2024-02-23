@@ -85,7 +85,13 @@ class DetailPage {
                             data_type: "google_auth",
                             event_type: "update",
                             from: context.name,
-                          ));
+                          )).then((value) {
+                        if (value == "") {
+                          context.showSnackBar("发送事件成功");
+                        } else {
+                          context.showSnackBar("发送事件失败, 原因： $value");
+                        }
+                      });
                       return googleAuth;
                     }).then((googleAuth) {
                       eventBus.fire(EventGoogleAuthUpdated());

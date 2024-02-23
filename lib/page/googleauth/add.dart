@@ -112,7 +112,13 @@ class AddPage {
             event_type: "create",
             content: googleAuth.toJson().toString(),
             from: context.name,
-          ));
+          )).then((value) {
+        if (value == "") {
+          context.showSnackBar("发送事件成功");
+        } else {
+          context.showSnackBar("发送事件失败, 原因： $value");
+        }
+      });
       // dispose();
     }).then((value) => eventBus.fire(EventGoogleAuthCreated()));
   }
