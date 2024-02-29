@@ -104,6 +104,40 @@ class AccountRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> buttons = [
+      Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.switch_account),
+        onPressed: onAccountCopy(context, account),
+        tooltip: '复制账号',
+      )),
+      Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.password_outlined),
+        onPressed: onPasswordCopy(context, account),
+        tooltip: '复制密码',
+      )),
+      Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.info),
+        onPressed: _showInfo(context, account),
+        tooltip: '详情',
+      )),
+      Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: onDeleteAccount(context, account),
+        tooltip: '删除',
+        // disabledColor: _isEditing ? Colors.grey : Colors.red,
+      )),
+    ];
+    if (canSync(context)) {
+      buttons.add(Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.upload),
+        onPressed: uploadAccount(context, account),
+      )));
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -121,38 +155,7 @@ class AccountRow extends StatelessWidget {
             child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-                child: IconButton(
-              icon: const Icon(Icons.switch_account),
-              onPressed: onAccountCopy(context, account),
-              tooltip: '复制账号',
-            )),
-            Expanded(
-                child: IconButton(
-              icon: const Icon(Icons.password_outlined),
-              onPressed: onPasswordCopy(context, account),
-              tooltip: '复制密码',
-            )),
-            Expanded(
-                child: IconButton(
-              icon: const Icon(Icons.info),
-              onPressed: _showInfo(context, account),
-              tooltip: '详情',
-            )),
-            Expanded(
-                child: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: onDeleteAccount(context, account),
-              tooltip: '删除',
-              // disabledColor: _isEditing ? Colors.grey : Colors.red,
-            )),
-            Expanded(
-                child: IconButton(
-              icon: const Icon(Icons.upload),
-              onPressed: uploadAccount(context, account),
-            ))
-          ],
+          children: buttons,
         )),
         Spacer(),
       ],
@@ -163,5 +166,9 @@ class AccountRow extends StatelessWidget {
     return () {
       DetailPage(context: context, account: account).build();
     };
+  }
+
+  bool canSync(BuildContext context) {
+    return context.serverAddr != "" && context.name != "";
   }
 }

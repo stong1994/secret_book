@@ -72,6 +72,42 @@ class GoogleAuthRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> buttons = [
+      Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.domain_verification),
+        onPressed: copyCode(context, googleAuth.token),
+        tooltip: '复制验证码',
+      )),
+      Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.key),
+        onPressed: onCopy(context, googleAuth.token),
+        tooltip: '复制秘钥',
+      )),
+      Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.info),
+        onPressed: _showInfo(context, googleAuth),
+        tooltip: '详情',
+      )),
+      Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: onDeleteGoogleAuth(context, googleAuth),
+        tooltip: '删除',
+        // disabledColor: _isEditing ? Colors.grey : Colors.red,
+      )),
+    ];
+    if (context.canSync) {
+      buttons.add(Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.upload),
+        onPressed: uploadGoogleAuth(context, googleAuth),
+        tooltip: '上传',
+        // disabledColor: _isEditing ? Colors.grey : Colors.red,
+      )));
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -89,40 +125,7 @@ class GoogleAuthRow extends StatelessWidget {
             child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-                child: IconButton(
-              icon: const Icon(Icons.domain_verification),
-              onPressed: copyCode(context, googleAuth.token),
-              tooltip: '复制验证码',
-            )),
-            Expanded(
-                child: IconButton(
-              icon: const Icon(Icons.key),
-              onPressed: onCopy(context, googleAuth.token),
-              tooltip: '复制秘钥',
-            )),
-            Expanded(
-                child: IconButton(
-              icon: const Icon(Icons.info),
-              onPressed: _showInfo(context, googleAuth),
-              tooltip: '详情',
-            )),
-            Expanded(
-                child: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: onDeleteGoogleAuth(context, googleAuth),
-              tooltip: '删除',
-              // disabledColor: _isEditing ? Colors.grey : Colors.red,
-            )),
-            Expanded(
-                child: IconButton(
-              icon: const Icon(Icons.upload),
-              onPressed: uploadGoogleAuth(context, googleAuth),
-              tooltip: '上传',
-              // disabledColor: _isEditing ? Colors.grey : Colors.red,
-            )),
-          ],
+          children: buttons,
         )),
         Spacer(),
       ],

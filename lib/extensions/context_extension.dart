@@ -19,7 +19,7 @@ extension ContextExtension on BuildContext {
   String get serverAddr => info.serverAddr;
   String get name => info.name;
 
-  // MediaQuery
+  bool get canSync => info.serverAddr != "" && info.name != "";
 
   /// Returns `true` if the current screen width is less than 600.
   bool get isMobile => MediaQuery.of(this).size.width < 600;

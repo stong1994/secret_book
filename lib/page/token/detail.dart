@@ -187,6 +187,35 @@ class _TokenActionState extends State<TokenAction> {
   }
 
   Widget _show() {
+    List<Widget> buttons = [
+      Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.copy),
+        onPressed: onCopy,
+        tooltip: '复制内容',
+      )),
+      Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.visibility),
+        onPressed: _showContent,
+        tooltip: '显示内容',
+      )),
+      Expanded(
+          child: IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: _deleteToken,
+        tooltip: '删除',
+        // disabledColor: _isEditing ? Colors.grey : Colors.red,
+      )),
+    ];
+    if (context.canSync) {
+      buttons.add(Expanded(
+          child: IconButton(
+        onPressed: _uploadToken,
+        icon: const Icon(Icons.upload),
+        tooltip: '上传',
+      )));
+    }
     return GestureDetector(
         onTap: () {
           _toggleEditing();
@@ -208,33 +237,7 @@ class _TokenActionState extends State<TokenAction> {
               Spacer(),
               Expanded(
                   child: Row(
-                children: [
-                  Expanded(
-                      child: IconButton(
-                    icon: const Icon(Icons.copy),
-                    onPressed: onCopy,
-                    tooltip: '复制内容',
-                  )),
-                  Expanded(
-                      child: IconButton(
-                    icon: const Icon(Icons.visibility),
-                    onPressed: _showContent,
-                    tooltip: '显示内容',
-                  )),
-                  Expanded(
-                      child: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: _deleteToken,
-                    tooltip: '删除',
-                    // disabledColor: _isEditing ? Colors.grey : Colors.red,
-                  )),
-                  Expanded(
-                      child: IconButton(
-                    onPressed: _uploadToken,
-                    icon: const Icon(Icons.upload),
-                    tooltip: '上传',
-                  ))
-                ],
+                children: buttons,
               )),
               Spacer(),
               // Container(),
