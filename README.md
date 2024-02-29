@@ -22,4 +22,4 @@ samples, guidance on mobile development, and a full API reference.
 4. show the notice after password generated in account adding
 5. language switch
 6. sync data for event single info
-7. change the color of the upload button when can't sync data
+7. auto refresh when settings have changed
