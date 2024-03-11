@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/account.dart';
 import 'package:secret_book/event/event_bus.dart';
@@ -97,7 +99,7 @@ class DetailPage {
                               date: nowStr(),
                               data_type: "account",
                               event_type: "update",
-                              content: newAccount.toJson().toString(),
+                              content: jsonEncode(newAccount.toJson()),
                               from: context.name,
                             )).then((value) {
                           if (value == "") {

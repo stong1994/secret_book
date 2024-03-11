@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/googleauth.dart';
 import 'package:secret_book/event/event_bus.dart';
@@ -110,7 +112,7 @@ class AddPage {
             date: nowStr(),
             data_type: "google_auth",
             event_type: "create",
-            content: googleAuth.toJson().toString(),
+            content: jsonEncode(googleAuth.toJson()),
             from: context.name,
           )).then((value) {
         if (value == "") {

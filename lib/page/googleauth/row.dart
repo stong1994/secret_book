@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/googleauth.dart';
 import 'package:secret_book/event/event_bus.dart';
@@ -33,7 +35,7 @@ class GoogleAuthRow extends StatelessWidget {
               id: googleAuth.id,
               name: "delete google auth ${googleAuth.title}",
               date: nowStr(),
-              content: googleAuth.toJson().toString(),
+              content: jsonEncode(googleAuth.toJson()),
               data_type: "google_auth",
               event_type: "delete",
               from: context.name,
@@ -56,7 +58,7 @@ class GoogleAuthRow extends StatelessWidget {
             id: googleAuth.id,
             name: "upload google auth ${googleAuth.title}",
             date: nowStr(),
-            content: googleAuth.toJson().toString(),
+            content: jsonEncode(googleAuth.toJson()),
             data_type: "google_auth",
             event_type: "update",
             from: context.name,

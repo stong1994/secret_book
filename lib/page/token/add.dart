@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/token.dart';
 import 'package:secret_book/event/event_bus.dart';
@@ -115,7 +117,7 @@ class AddPage {
             date: nowStr(),
             data_type: "token",
             event_type: "create",
-            content: token.toJson().toString(),
+            content: jsonEncode(token.toJson()),
             from: context.name,
           )).then((value) {
         if (value == "") {

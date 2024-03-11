@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/api_client.dart';
@@ -28,7 +30,7 @@ class AddAccountButton {
                     date: nowStr(),
                     data_type: "account",
                     event_type: "create",
-                    content: account.toJson().toString(),
+                    content: jsonEncode(account.toJson()),
                     from: info.name))
             .then((value) {
           if (value == "") {
