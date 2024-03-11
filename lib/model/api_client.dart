@@ -25,11 +25,12 @@ Future<String> pushEvent(String serverAddr, Event event) async {
 }
 
 Future<List<Event>> getEvents(String syncAddr, String lastSyncDate) async {
-  var request = Request('GET', Uri.parse(handleUrl('$syncAddr/fetch')));
+  var request = Request('GET',
+      Uri.parse(handleUrl('$syncAddr/fetch?last_sync_date=$lastSyncDate')));
   // request.headers.addAll(headers);
   try {
     StreamedResponse response =
-        await request.send().timeout(const Duration(seconds: 2));
+        await request.send().timeout(const Duration(seconds: 10));
 
     if (response.statusCode == 200) {
       String body = await response.stream.bytesToString();
