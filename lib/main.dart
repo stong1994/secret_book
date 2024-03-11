@@ -16,6 +16,9 @@ void main() async {
     // this step, it will use the sqlite version available on the system.
     databaseFactory = databaseFactoryFfi;
   }
+  var dbPath = await getDatabasesPath();
+  print("db path is ${dbPath}");
+
   var info = await InfoData().getInfo();
   runApp(
     AppBloc(
