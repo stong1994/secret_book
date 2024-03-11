@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/account.dart';
 import 'package:secret_book/event/event_bus.dart';
@@ -30,7 +32,7 @@ class AccountRow extends StatelessWidget {
                 date: nowStr(),
                 data_type: "account",
                 event_type: "delete",
-                content: account.toJson().toString(),
+                  content: jsonEncode(account.toJson()),
                 from: context.name,
               )).then((value) {
             if (value == "") {
@@ -56,7 +58,7 @@ class AccountRow extends StatelessWidget {
             date: nowStr(),
             data_type: "account",
             event_type: "update",
-            content: account.toJson().toString(),
+            content: jsonEncode(account.toJson()),
             from: context.name,
           )).then((value) {
         if (value == "") {

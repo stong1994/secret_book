@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/token.dart';
 import 'package:secret_book/event/event_bus.dart';
@@ -82,7 +84,7 @@ class _TokenActionState extends State<TokenAction> {
             date: nowStr(),
             data_type: "token",
             event_type: "update",
-            content: token.toJson().toString(),
+            content: jsonEncode(token.toJson()),
             from: context.name,
           )).then((value) {
         if (value == "") {
@@ -109,7 +111,7 @@ class _TokenActionState extends State<TokenAction> {
             date: nowStr(),
             data_type: "token",
             event_type: "update",
-            content: token.toJson().toString(),
+            content: jsonEncode(token.toJson()),
             from: context.name,
           )).then((value) {
         if (value == "") {
@@ -137,7 +139,7 @@ class _TokenActionState extends State<TokenAction> {
                 date: nowStr(),
                 data_type: "token",
                 event_type: "delete",
-                content: widget.token.toJson().toString(),
+                content: jsonEncode(widget.token.toJson()),
                 from: context.name,
               )).then((value) {
             if (value == "") {
@@ -160,7 +162,7 @@ class _TokenActionState extends State<TokenAction> {
           date: nowStr(),
           data_type: "token",
           event_type: "update",
-          content: widget.token.toJson().toString(),
+          content: jsonEncode(widget.token.toJson()),
           from: context.name,
         )).then((value) {
       if (value == "") {

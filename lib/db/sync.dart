@@ -61,7 +61,7 @@ Future<void> consumeEvent(Event event) async {
 }
 
 Future<void> consumeAccountEvent(Event event) async {
-  switch (event.event_type) {
+  switch (event.event_type.toLowerCase()) {
     case 'create':
       var account = Account.fromJson(jsonDecode(event.content));
       AccountBookData().addAccount(account);
@@ -80,7 +80,7 @@ Future<void> consumeAccountEvent(Event event) async {
 }
 
 Future<void> consumeTokenEvent(Event event) async {
-  switch (event.event_type) {
+  switch (event.event_type.toLowerCase()) {
     case 'create':
       var token = Token.fromJson(jsonDecode(event.content));
       TokenBookData().addToken(token);
@@ -99,7 +99,7 @@ Future<void> consumeTokenEvent(Event event) async {
 }
 
 Future<void> consumeGoogleAuthEvent(Event event) async {
-  switch (event.event_type) {
+  switch (event.event_type.toLowerCase()) {
     case 'create':
       var googleAuth = GoogleAuth.fromJson(jsonDecode(event.content));
       GoogleAuthBookData().addGoogleAuth(googleAuth);
