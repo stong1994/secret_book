@@ -87,7 +87,7 @@ Future<void> consumeTokenEvent(Event event) async {
       return;
     case 'update':
       var token = Token.fromJson(jsonDecode(event.content));
-      TokenBookData().updateToken(token);
+      TokenBookData().saveToken(token);
       return;
     case 'delete':
       var token = Token.fromJson(jsonDecode(event.content));
