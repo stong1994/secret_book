@@ -16,6 +16,7 @@ class InfoPage extends StatefulWidget {
 
 class _InfoPageState extends State<InfoPage> {
   final _serverController = TextEditingController();
+  final _appNameController = TextEditingController();
 
   @override
   void initState() {
@@ -28,6 +29,7 @@ class _InfoPageState extends State<InfoPage> {
   @override
   void dispose() {
     _serverController.dispose();
+    _appNameController.dispose();
     super.dispose();
   }
 
@@ -41,6 +43,22 @@ class _InfoPageState extends State<InfoPage> {
             title: const Text("设置"),
             content: Column(
               children: [
+                Row(
+                  children: [
+                    const Text('app唯一标识（用于同步）'),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () {
+                            appNamePage(context, snapshot.data!.name);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
                 Row(
                   children: [
                     const Text('服务端地址'),
@@ -137,6 +155,38 @@ class _InfoPageState extends State<InfoPage> {
                 onPressed: () {
                   InfoData()
                       .saveServerAddr(_serverController.text)
+                      .then((_) => Navigator.of(context).pop())
+                      .then((_) => eventBus.fire(EventSettingChanged()));
+                },
+                child: const Text("确认"),
+              )
+            ],
+          );
+        });
+  }
+
+  void appNamePage(context, appName) {
+    _appNameController.text = appName;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("编辑App名称"),
+            content: TextField(
+              autofocus: true,
+              controller: _appNameController,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("取消"),
+              ),
+              TextButton(
+                onPressed: () {
+                  InfoData()
+                      .saveAppName(_appNameController.text)
                       .then((_) => Navigator.of(context).pop())
                       .then((_) => eventBus.fire(EventSettingChanged()));
                 },

@@ -29,6 +29,14 @@ class InfoData {
     );
   }
 
+  Future<void> saveAppName(String appName) async {
+    final db = await createDatabase();
+    await db.rawUpdate(
+      "UPDATE $userInfoTableName SET name= ? WHERE id=0",
+      [appName],
+    );
+  }
+
   Future<void> saveAutoPushEvent(bool value) async {
     final db = await createDatabase();
     await db.rawUpdate(

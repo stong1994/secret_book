@@ -80,7 +80,7 @@ class AddAccountButton {
                 TextField(
                   autofocus: true,
                   onChanged: (value) {
-                    account = account;
+                    account = value;
                   },
                   decoration: const InputDecoration(
                     // fillColor: Colors.white,
