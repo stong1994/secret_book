@@ -23,3 +23,5 @@ samples, guidance on mobile development, and a full API reference.
 5. language switch
 6. sync data for event single info
 7. auto refresh when settings have changed
+8. save system settings
+9. can't push event after changed server url 
