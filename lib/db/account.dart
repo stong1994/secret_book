@@ -65,4 +65,15 @@ class AccountBookData {
     );
     return account;
   }
+
+  Future<Account> saveAccount(Account account) async {
+    final db = await createDatabase();
+    final oldAccount = await db
+        .query(accountTableName, where: "id=?", whereArgs: [account.id]);
+    if (oldAccount.isNotEmpty) {
+      return await updateAccount(account);
+    } else {
+      return await addAccount(account);
+    }
+  }
 }

@@ -50,13 +50,7 @@ class TokenBookData {
     final oldToken =
         await db.query(tokenTableName, where: "id=?", whereArgs: [token.id]);
     if (oldToken.isNotEmpty) {
-      await db.update(
-        tokenTableName,
-        token.toJson(),
-        where: 'id = ?',
-        whereArgs: [token.id],
-      );
-      return token;
+      return await updateToken(token);
     } else {
       return await addToken(token);
     }

@@ -127,11 +127,11 @@ class _TokenActionState extends State<TokenAction> {
   void _deleteToken() {
     TokenBookData()
         .deleteToken(widget.token)
-        .then((_) {
+        .then((_) async {
           if (!context.autoPushEvent) {
             return;
           }
-          pushEvent(
+          await pushEvent(
               context.serverAddr,
               Event(
                 id: widget.token.id,

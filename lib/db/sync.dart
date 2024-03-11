@@ -64,11 +64,11 @@ Future<void> consumeAccountEvent(Event event) async {
   switch (event.event_type.toLowerCase()) {
     case 'create':
       var account = Account.fromJson(jsonDecode(event.content));
-      AccountBookData().addAccount(account);
+      AccountBookData().saveAccount(account);
       return;
     case 'update':
       var account = Account.fromJson(jsonDecode(event.content));
-      AccountBookData().updateAccount(account);
+      AccountBookData().saveAccount(account);
       return;
     case 'delete':
       var account = Account.fromJson(jsonDecode(event.content));
@@ -83,7 +83,7 @@ Future<void> consumeTokenEvent(Event event) async {
   switch (event.event_type.toLowerCase()) {
     case 'create':
       var token = Token.fromJson(jsonDecode(event.content));
-      TokenBookData().addToken(token);
+      TokenBookData().saveToken(token);
       return;
     case 'update':
       var token = Token.fromJson(jsonDecode(event.content));
@@ -102,11 +102,11 @@ Future<void> consumeGoogleAuthEvent(Event event) async {
   switch (event.event_type.toLowerCase()) {
     case 'create':
       var googleAuth = GoogleAuth.fromJson(jsonDecode(event.content));
-      GoogleAuthBookData().addGoogleAuth(googleAuth);
+      GoogleAuthBookData().saveGoogleAuth(googleAuth);
       return;
     case 'update':
       var googleAuth = GoogleAuth.fromJson(jsonDecode(event.content));
-      GoogleAuthBookData().updateGoogleAuth(googleAuth);
+      GoogleAuthBookData().saveGoogleAuth(googleAuth);
       return;
     case 'delete':
       var googleAuth = GoogleAuth.fromJson(jsonDecode(event.content));

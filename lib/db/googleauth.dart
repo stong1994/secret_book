@@ -54,4 +54,15 @@ class GoogleAuthBookData {
     );
     return GoogleAuth.fromJson(googleauths.first);
   }
+
+  Future<GoogleAuth> saveGoogleAuth(GoogleAuth googleauth) async {
+    final db = await createDatabase();
+    final oldGoogleAuth = await db
+        .query(googleAuthTableName, where: "id=?", whereArgs: [googleauth.id]);
+    if (oldGoogleAuth.isNotEmpty) {
+      return await updateGoogleAuth(googleauth);
+    } else {
+      return await addGoogleAuth(googleauth);
+    }
+  }
 }
