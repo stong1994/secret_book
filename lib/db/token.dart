@@ -13,7 +13,7 @@ class TokenBookData {
 
   Future<Token> addToken(Token token) async {
     final db = await createDatabase();
-    token.id = Uuid().v4();
+    token.id = const Uuid().v4();
     await db.insert(tokenTableName, token.toJson());
     return token;
   }

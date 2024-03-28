@@ -113,7 +113,7 @@ class GoogleAuthRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Spacer(),
+        const Spacer(),
         Expanded(
           child: Container(
             child: Text(
@@ -122,14 +122,14 @@ class GoogleAuthRow extends StatelessWidget {
             ),
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Expanded(
             child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: buttons,
         )),
-        Spacer(),
+        const Spacer(),
       ],
     );
   }

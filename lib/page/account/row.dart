@@ -16,7 +16,7 @@ class EventAccountDeleted {}
 class AccountRow extends StatelessWidget {
   final Account account;
 
-  AccountRow({
+  const AccountRow({super.key, 
     required this.account,
   });
 
@@ -143,7 +143,7 @@ class AccountRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Spacer(),
+        const Spacer(),
         Expanded(
           child: Container(
             child: Text(
@@ -152,14 +152,14 @@ class AccountRow extends StatelessWidget {
             ),
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Expanded(
             child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: buttons,
         )),
-        Spacer(),
+        const Spacer(),
       ],
     );
   }

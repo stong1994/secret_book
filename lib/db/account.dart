@@ -12,7 +12,7 @@ class AccountBookData {
 
   Future<Account> addAccount(Account account) async {
     final db = await createDatabase();
-    account.id = Uuid().v4();
+    account.id = const Uuid().v4();
     await db.insert(accountTableName, account.toJson());
     return account;
   }

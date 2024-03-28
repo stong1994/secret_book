@@ -8,7 +8,7 @@ import 'package:secret_book/page/setting/sync.dart';
 class EventSettingChanged {}
 
 class InfoPage extends StatefulWidget {
-  InfoPage();
+  const InfoPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _InfoPageState();
@@ -202,7 +202,7 @@ void needSetServer(BuildContext context) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
-        Future.delayed(Duration(milliseconds: 500), () {
+        Future.delayed(const Duration(milliseconds: 500), () {
           Navigator.of(context).pop(true);
         });
         return const AlertDialog(

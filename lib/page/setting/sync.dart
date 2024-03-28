@@ -6,7 +6,7 @@ import 'package:secret_book/model/info.dart';
 
 class SyncDataWidget extends StatefulWidget {
   final Info info;
-  const SyncDataWidget({
+  const SyncDataWidget({super.key, 
     required this.info,
   });
 

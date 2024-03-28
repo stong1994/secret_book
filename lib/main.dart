@@ -5,7 +5,6 @@ import 'package:secret_book/db/info.dart';
 import 'package:secret_book/utils/app_bloc.dart';
 import 'home.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:sqflite/sqflite.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +16,7 @@ void main() async {
     databaseFactory = databaseFactoryFfi;
   }
   var dbPath = await getDatabasesPath();
-  print("db path is ${dbPath}");
+  print("db path is $dbPath");
 
   var info = await InfoData().getInfo();
   runApp(
@@ -27,12 +26,14 @@ void main() async {
           info: info,
         ),
       ),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     // get a better material design for
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.lightBlue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Home(),
+      home: const Home(),
     );
   }
 }

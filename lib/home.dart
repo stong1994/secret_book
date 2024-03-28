@@ -7,6 +7,8 @@ import 'page/data_exchange/exchange.dart';
 import 'page/token/home.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -72,7 +74,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       showDialog(
                           context: context,
                           builder: (context) {
-                            return InfoPage();
+                            return const InfoPage();
                           });
                     }),
               ],

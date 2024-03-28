@@ -13,7 +13,7 @@ class GoogleAuthBookData {
 
   Future<GoogleAuth> addGoogleAuth(GoogleAuth googleauth) async {
     final db = await createDatabase();
-    googleauth.id = Uuid().v4();
+    googleauth.id = const Uuid().v4();
     await db.insert(googleAuthTableName, googleauth.toJson());
     return googleauth;
   }

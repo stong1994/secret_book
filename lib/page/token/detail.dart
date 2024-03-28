@@ -15,6 +15,7 @@ class EventTokenUpdated {}
 class EventTokenDeleted {}
 
 class EventTokenEditing {
+  @override
   final int hashCode;
   EventTokenEditing({
     required this.hashCode,
@@ -227,7 +228,7 @@ class _TokenActionState extends State<TokenAction> {
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Spacer(),
+              const Spacer(),
               Expanded(
                 child: Container(
                   child: Text(
@@ -236,12 +237,12 @@ class _TokenActionState extends State<TokenAction> {
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Expanded(
                   child: Row(
                 children: buttons,
               )),
-              Spacer(),
+              const Spacer(),
               // Container(),
             ]));
   }
@@ -250,11 +251,11 @@ class _TokenActionState extends State<TokenAction> {
     return TextFormField(
       controller: _titleEditingController,
       autofocus: true,
-      style: TextStyle(fontSize: 18.0, color: Colors.black87),
+      style: const TextStyle(fontSize: 18.0, color: Colors.black87),
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+        contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(

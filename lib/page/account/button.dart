@@ -42,7 +42,7 @@ Widget cleanSearchButton(
       onPressed: () {
         cleanSearch();
       },
-      backgroundColor: Color.fromARGB(255, 130, 118, 10),
+      backgroundColor: const Color.fromARGB(255, 130, 118, 10),
       child: const Icon(
         Icons.clear,
         color: Colors.white,
