@@ -19,6 +19,7 @@ class _AccountBookState extends State<AccountBook> {
   late String title;
   String queryKey = "";
 
+  Map<String, dynamic> recentlyUsedAccounts = {};
   final _scrollController = ScrollController();
 
   @override
@@ -59,7 +60,7 @@ class _AccountBookState extends State<AccountBook> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 queryButton(context, queryKey, search),
-                addButton(context),
+                addButton(context, recentlyUsedAccounts),
                 // AddAccountButton(),
                 genPwdButton(context, true),
               ],
@@ -86,6 +87,9 @@ class _AccountBookState extends State<AccountBook> {
           }
 
           List<Account> accounts = snapshot.data!;
+          accounts.forEach((account) {
+            recentlyUsedAccounts[account.account] = {};
+          });
           return ListView.builder(
               controller: _scrollController,
               itemCount: accounts.length,

@@ -15,9 +15,9 @@ import 'button.dart';
 class EventAccountAdded {}
 
 class AddAccountButton {
-  void build(BuildContext context) async {
+  void build(BuildContext context,     Map<String, dynamic> recentlyUsedAccounts ) async {
     final appState = context.appState;
-    final account = await showAddDialog(context);
+    final account = await showAddDialog(context, recentlyUsedAccounts);
     if (account != null) {
       AccountBookData().addAccount(account);
       Info info = appState.info;
@@ -44,12 +44,11 @@ class AddAccountButton {
     }
   }
 
-  Future<Account?> showAddDialog(BuildContext context) {
+  Future<Account?> showAddDialog(BuildContext context, Map<String, dynamic> recentlyUsedAccounts) {
     String title = '';
     String account = '';
     TextEditingController passwordCtrl = TextEditingController();
     String comment = '';
-
     return showDialog(
         context: context,
         builder: (context) {
@@ -77,25 +76,88 @@ class AddAccountButton {
                     border: UnderlineInputBorder(),
                   ),
                 ),
-                TextField(
-                  autofocus: true,
-                  onChanged: (value) {
-                    account = value;
+                Autocomplete<String>(
+                  optionsBuilder: (TextEditingValue textEditingValue) {
+                    if (textEditingValue.text == '') {
+                      return const Iterable<String>.empty();
+                    }
+                    return recentlyUsedAccounts.keys.map((key) => key.toLowerCase() ).where((key) =>
+                        key.contains(textEditingValue.text.toLowerCase()));
                   },
-                  decoration: const InputDecoration(
-                    // fillColor: Colors.white,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 8.0,
-                    ),
-                    hintText: '请填写账号...',
-                    hintStyle: TextStyle(
-                      color: Color.fromARGB(255, 235, 186, 186),
-                      fontSize: 16,
-                    ),
-                    border: UnderlineInputBorder(),
-                  ),
+                  optionsViewBuilder: (context, onSelected, options) {
+                    return Align(
+                      alignment: Alignment.topLeft,
+                      child: SizedBox(
+                        width: 200, // TODO: try not specify width
+                        child: Material(
+                          elevation: 4,
+                          clipBehavior: Clip.antiAlias,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: options.map((e) {
+                              return ListTile(
+                                  title: Text(e,
+                                      style: TextStyle(color: Colors.blue)));
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  fieldViewBuilder: ((context, textEditingController, focusNode,
+                      onFieldSubmitted) {
+                    return TextFormField(
+                      controller: textEditingController,
+                      focusNode: focusNode,
+                    onChanged: (value) {
+                      account = value;
+                    },
+                      onEditingComplete: onFieldSubmitted,
+
+                      decoration: const InputDecoration(
+                        // fillColor: Colors.white,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
+                        ),
+                        hintText: '请填写账号...',
+                        hintStyle: TextStyle(
+                          color: Color.fromARGB(255, 235, 186, 186),
+                          fontSize: 16,
+                        ),
+                        border: UnderlineInputBorder(),
+                      ),
+                      //   decoration:
+                      //       const InputDecoration(hintText: 'Your hint text'),
+                    );
+                  }),
+                  onSelected: (String selection) {
+                    account = selection;
+                  },
                 ),
+                // TextField(
+                //   autofocus: true,
+                //   onChanged: (value) {
+                //     account = value;
+                //   },
+                //   decoration: const InputDecoration(
+                //     // fillColor: Colors.white,
+                //     contentPadding: EdgeInsets.symmetric(
+                //       horizontal: 16.0,
+                //       vertical: 8.0,
+                //     ),
+                //     hintText: '请填写账号...',
+                //     hintStyle: TextStyle(
+                //       color: Color.fromARGB(255, 235, 186, 186),
+                //       fontSize: 16,
+                //     ),
+                //     border: UnderlineInputBorder(),
+                //   ),
+                // ),
                 Stack(
                   alignment: Alignment.centerRight,
                   children: [
