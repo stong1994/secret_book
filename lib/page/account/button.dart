@@ -51,7 +51,7 @@ Widget cleanSearchButton(
   );
 }
 
-Widget addButton(context,     Map<String, dynamic> recentlyUsedAccounts) {
+Widget addButton(context, Map<String, dynamic> recentlyUsedAccounts) {
   return Container(
     padding: const EdgeInsets.only(bottom: 5, right: 10),
     alignment: Alignment.bottomRight,

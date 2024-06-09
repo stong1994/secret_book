@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:secret_book/page/googleauth/home.dart';
 import 'package:secret_book/page/setting/info.dart';
-import 'package:keymap/keymap.dart';
 
 import 'page/account/home.dart';
 import 'page/data_exchange/exchange.dart';

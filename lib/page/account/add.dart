@@ -12,10 +12,13 @@ import '../../model/account.dart';
 import 'package:flutter/material.dart';
 import 'button.dart';
 
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+
 class EventAccountAdded {}
 
 class AddAccountButton {
-  void build(BuildContext context,     Map<String, dynamic> recentlyUsedAccounts ) async {
+  void build(
+      BuildContext context, Map<String, dynamic> recentlyUsedAccounts) async {
     final appState = context.appState;
     final account = await showAddDialog(context, recentlyUsedAccounts);
     if (account != null) {
@@ -44,10 +47,11 @@ class AddAccountButton {
     }
   }
 
-  Future<Account?> showAddDialog(BuildContext context, Map<String, dynamic> recentlyUsedAccounts) {
+  Future<Account?> showAddDialog(
+      BuildContext context, Map<String, dynamic> recentlyUsedAccounts) {
     String title = '';
-    String account = '';
     TextEditingController passwordCtrl = TextEditingController();
+    TextEditingController accountCtrl = TextEditingController();
     String comment = '';
     return showDialog(
         context: context,
@@ -57,13 +61,11 @@ class AddAccountButton {
                 child: Column(
               children: [
                 TextField(
-                  // focusNode: _focusNode,
                   autofocus: true,
                   onChanged: (value) {
                     title = value;
                   },
                   decoration: const InputDecoration(
-                    // fillColor: Colors.white,
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 16.0,
                       vertical: 8.0,
@@ -76,48 +78,19 @@ class AddAccountButton {
                     border: UnderlineInputBorder(),
                   ),
                 ),
-                Autocomplete<String>(
-                  optionsBuilder: (TextEditingValue textEditingValue) {
-                    if (textEditingValue.text == '') {
-                      return const Iterable<String>.empty();
-                    }
-                    return recentlyUsedAccounts.keys.map((key) => key.toLowerCase() ).where((key) =>
-                        key.contains(textEditingValue.text.toLowerCase()));
+                TypeAheadField<String>(
+                  suggestionsCallback: (search) {
+                    return recentlyUsedAccounts.keys
+                        .map((key) => key.toLowerCase())
+                        .where((key) => key.contains(search..toLowerCase()))
+                        .toList();
                   },
-                  optionsViewBuilder: (context, onSelected, options) {
-                    return Align(
-                      alignment: Alignment.topLeft,
-                      child: SizedBox(
-                        width: 200, // TODO: try not specify width
-                        child: Material(
-                          elevation: 4,
-                          clipBehavior: Clip.antiAlias,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: options.map((e) {
-                              return ListTile(
-                                  title: Text(e,
-                                      style: TextStyle(color: Colors.blue)));
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  fieldViewBuilder: ((context, textEditingController, focusNode,
-                      onFieldSubmitted) {
-                    return TextFormField(
-                      controller: textEditingController,
+                  controller: accountCtrl,
+                  builder: (context, controller, focusNode) {
+                    return TextField(
+                      controller: controller,
                       focusNode: focusNode,
-                    onChanged: (value) {
-                      account = value;
-                    },
-                      onEditingComplete: onFieldSubmitted,
-
+                      autofocus: true,
                       decoration: const InputDecoration(
                         // fillColor: Colors.white,
                         contentPadding: EdgeInsets.symmetric(
@@ -131,33 +104,17 @@ class AddAccountButton {
                         ),
                         border: UnderlineInputBorder(),
                       ),
-                      //   decoration:
-                      //       const InputDecoration(hintText: 'Your hint text'),
                     );
-                  }),
-                  onSelected: (String selection) {
-                    account = selection;
+                  },
+                  itemBuilder: (context, account) {
+                    return ListTile(
+                      title: Text(account),
+                    );
+                  },
+                  onSelected: (account) {
+                    accountCtrl.text = account;
                   },
                 ),
-                // TextField(
-                //   autofocus: true,
-                //   onChanged: (value) {
-                //     account = value;
-                //   },
-                //   decoration: const InputDecoration(
-                //     // fillColor: Colors.white,
-                //     contentPadding: EdgeInsets.symmetric(
-                //       horizontal: 16.0,
-                //       vertical: 8.0,
-                //     ),
-                //     hintText: '请填写账号...',
-                //     hintStyle: TextStyle(
-                //       color: Color.fromARGB(255, 235, 186, 186),
-                //       fontSize: 16,
-                //     ),
-                //     border: UnderlineInputBorder(),
-                //   ),
-                // ),
                 Stack(
                   alignment: Alignment.centerRight,
                   children: [
@@ -165,7 +122,6 @@ class AddAccountButton {
                       autofocus: true,
                       controller: passwordCtrl,
                       decoration: const InputDecoration(
-                        // fillColor: Colors.white,
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 16.0,
                           vertical: 8.0,
@@ -197,7 +153,6 @@ class AddAccountButton {
                     comment = value;
                   },
                   decoration: const InputDecoration(
-                    // fillColor: Colors.white,
                     contentPadding: EdgeInsets.symmetric(
                       horizontal: 16.0,
                       vertical: 8.0,
@@ -224,7 +179,7 @@ class AddAccountButton {
                 onPressed: () {
                   Navigator.of(context).pop(Account(
                     title: title,
-                    account: account,
+                    account: accountCtrl.text,
                     password: passwordCtrl.text,
                     comment: comment,
                   ));
@@ -234,6 +189,7 @@ class AddAccountButton {
           );
         }).then((value) {
       passwordCtrl.dispose;
+      accountCtrl.dispose;
       return value;
     });
   }
