@@ -1,3 +1,5 @@
+import 'package:secret_book/utils/time.dart';
+
 import '../model/account.dart';
 import 'package:uuid/uuid.dart';
 import '../config/config.dart';
@@ -17,13 +19,15 @@ class AccountBookData {
     return account;
   }
 
-  Future deleteAccount(Account account) async {
+  Future<Account> deleteAccount(Account account) async {
     final db = await createDatabase();
     await db.delete(
       accountTableName,
       where: 'id = ?',
       whereArgs: [account.id],
     );
+    account.date = nowStr();
+    return account;
   }
 
   Future<List<Account>> fetchAccounts(String key) async {

@@ -6,7 +6,8 @@ import 'package:secret_book/model/info.dart';
 
 class SyncDataWidget extends StatefulWidget {
   final Info info;
-  const SyncDataWidget({super.key, 
+  const SyncDataWidget({
+    super.key,
     required this.info,
   });
 
@@ -18,12 +19,12 @@ class _SyncDataWidgetState extends State<SyncDataWidget> {
   bool finished = false;
   String finishStr = "";
   Future<void> syncData() async {
-    syncDataFromServer(
+    syncDataWithServer(
             widget.info.serverAddr, widget.info.lastSyncDate, widget.info.name)
-        .then((s) {
+        .then((_) {
       setState(() {
         sleep(const Duration(seconds: 1));
-        finishStr = s;
+        finishStr = "同步完成";
         finished = true;
       });
     });

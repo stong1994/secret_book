@@ -99,22 +99,16 @@ class AddPage {
         .addGoogleAuth(GoogleAuth(
       title: _titleEditingController.text,
       token: _tokenEditingController.text,
+      date: nowStr(),
     ))
         .then((googleAuth) {
       if (!context.autoPushEvent) {
         return;
       }
       pushEvent(
-          context.serverAddr,
-          Event(
-            id: googleAuth.id,
-            name: "add google auth ${googleAuth.title}",
-            date: nowStr(),
-            data_type: "google_auth",
-            event_type: "create",
-            content: jsonEncode(googleAuth.toJson()),
-            from: context.name,
-          )).then((value) {
+        context.serverAddr,
+        googleAuth.toEvent(EventType.create, context.name),
+      ).then((value) {
         if (value == "") {
           context.showSnackBar("发送事件成功");
         } else {

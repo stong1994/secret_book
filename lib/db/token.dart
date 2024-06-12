@@ -1,5 +1,6 @@
 import 'package:secret_book/config/config.dart';
 import 'package:secret_book/model/token.dart';
+import 'package:secret_book/utils/time.dart';
 import 'package:uuid/uuid.dart';
 
 import 'scheme.dart';
@@ -18,13 +19,15 @@ class TokenBookData {
     return token;
   }
 
-  Future deleteToken(Token token) async {
+  Future<Token> deleteToken(Token token) async {
     final db = await createDatabase();
     await db.delete(
       tokenTableName,
       where: 'id = ?',
       whereArgs: [token.id],
     );
+    token.date = nowStr();
+    return token;
   }
 
   Future<List<Token>> fetchTokens() async {

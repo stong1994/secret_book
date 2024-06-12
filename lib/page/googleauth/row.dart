@@ -25,21 +25,14 @@ class GoogleAuthRow extends StatelessWidget {
 
   VoidCallback onDeleteGoogleAuth(BuildContext context, GoogleAuth googleAuth) {
     return () {
-      GoogleAuthBookData().deleteGoogleAuth(googleAuth).then((_) {
+      GoogleAuthBookData().deleteGoogleAuth(googleAuth).then((googleAuth) {
         if (!context.autoPushEvent) {
           return;
         }
         pushEvent(
-            context.serverAddr,
-            Event(
-              id: googleAuth.id,
-              name: "delete google auth ${googleAuth.title}",
-              date: nowStr(),
-              content: jsonEncode(googleAuth.toJson()),
-              data_type: "google_auth",
-              event_type: "delete",
-              from: context.name,
-            )).then((value) {
+          context.serverAddr,
+          googleAuth.toEvent(EventType.delete, context.name),
+        ).then((value) {
           if (value == "") {
             context.showSnackBar("发送事件成功");
           } else {
@@ -53,16 +46,9 @@ class GoogleAuthRow extends StatelessWidget {
   VoidCallback uploadGoogleAuth(BuildContext context, GoogleAuth googleAuth) {
     return () {
       pushEvent(
-          context.serverAddr,
-          Event(
-            id: googleAuth.id,
-            name: "upload google auth ${googleAuth.title}",
-            date: nowStr(),
-            content: jsonEncode(googleAuth.toJson()),
-            data_type: "google_auth",
-            event_type: "update",
-            from: context.name,
-          )).then((value) {
+        context.serverAddr,
+        googleAuth.toEvent(EventType.delete, context.name),
+      ).then((value) {
         if (value == "") {
           context.showSnackBar("上传成功");
         } else {

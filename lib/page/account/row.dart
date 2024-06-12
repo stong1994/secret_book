@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/account.dart';
 import 'package:secret_book/event/event_bus.dart';
@@ -7,7 +5,6 @@ import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/account.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
-import 'package:secret_book/utils/time.dart';
 import 'package:secret_book/utils/utils.dart';
 import 'detail.dart';
 
@@ -16,25 +13,19 @@ class EventAccountDeleted {}
 class AccountRow extends StatelessWidget {
   final Account account;
 
-  const AccountRow({super.key, 
+  const AccountRow({
+    super.key,
     required this.account,
   });
 
   VoidCallback onDeleteAccount(BuildContext context, Account account) {
     return () {
-      AccountBookData().deleteAccount(account).then((_) {
+      AccountBookData().deleteAccount(account).then((account) {
         if (context.autoPushEvent) {
           pushEvent(
-              context.serverAddr,
-              Event(
-                id: account.id,
-                name: "delete account ${account.title}",
-                date: nowStr(),
-                data_type: "account",
-                event_type: "delete",
-                  content: jsonEncode(account.toJson()),
-                from: context.name,
-              )).then((value) {
+            context.serverAddr,
+            account.toEvent(EventType.delete, context.name),
+          ).then((value) {
             if (value == "") {
               context.showSnackBar("发送事件成功");
             } else {
@@ -51,16 +42,9 @@ class AccountRow extends StatelessWidget {
   VoidCallback uploadAccount(BuildContext context, Account account) {
     return () {
       pushEvent(
-          context.serverAddr,
-          Event(
-            id: account.id,
-            name: "upload account ${account.title}",
-            date: nowStr(),
-            data_type: "account",
-            event_type: "update",
-            content: jsonEncode(account.toJson()),
-            from: context.name,
-          )).then((value) {
+        context.serverAddr,
+        account.toEvent(EventType.update, context.name),
+      ).then((value) {
         if (value == "") {
           context.showSnackBar("上传成功");
         } else {

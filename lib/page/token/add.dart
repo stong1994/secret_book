@@ -104,22 +104,16 @@ class AddPage {
         .addToken(Token(
       title: _titleEditingController.text,
       content: _contentEditingController.text,
+      date: nowStr(),
     ))
         .then((token) {
       if (!context.autoPushEvent) {
         return;
       }
       pushEvent(
-          context.serverAddr,
-          Event(
-            id: token.id,
-            name: "create token ${token.title}",
-            date: nowStr(),
-            data_type: "token",
-            event_type: "create",
-            content: jsonEncode(token.toJson()),
-            from: context.name,
-          )).then((value) {
+        context.serverAddr,
+        token.toEvent(EventType.create, context.name),
+      ).then((value) {
         if (value == "") {
           context.showSnackBar("发送事件成功");
         } else {

@@ -1,5 +1,6 @@
 import 'package:secret_book/config/config.dart';
 import 'package:secret_book/model/googleauth.dart';
+import 'package:secret_book/utils/time.dart';
 import 'package:uuid/uuid.dart';
 
 import 'scheme.dart';
@@ -18,13 +19,15 @@ class GoogleAuthBookData {
     return googleauth;
   }
 
-  Future deleteGoogleAuth(GoogleAuth googleauth) async {
+  Future<GoogleAuth> deleteGoogleAuth(GoogleAuth googleauth) async {
     final db = await createDatabase();
     await db.delete(
       googleAuthTableName,
       where: 'id = ?',
       whereArgs: [googleauth.id],
     );
+    googleauth.date = nowStr();
+    return googleauth;
   }
 
   Future<List<GoogleAuth>> fetchGoogleAuths() async {

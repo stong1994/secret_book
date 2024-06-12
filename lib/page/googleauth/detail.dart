@@ -72,22 +72,16 @@ class DetailPage {
                       id: googleAuth.id,
                       title: _titleEditingController.text,
                       token: _tokenEditingController.text,
+                      date: nowStr(),
                     ))
                         .then((googleAuth) {
                       if (!context.autoPushEvent) {
                         return googleAuth;
                       }
                       pushEvent(
-                          context.serverAddr,
-                          Event(
-                            id: googleAuth.id,
-                            name: "update google auth ${googleAuth.title}",
-                            date: nowStr(),
-                            content: jsonEncode(googleAuth.toJson()),
-                            data_type: "google_auth",
-                            event_type: "update",
-                            from: context.name,
-                          )).then((value) {
+                        context.serverAddr,
+                        googleAuth.toEvent(EventType.update, context.name),
+                      ).then((value) {
                         if (value == "") {
                           context.showSnackBar("发送事件成功");
                         } else {
@@ -119,7 +113,8 @@ class DetailPage {
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(

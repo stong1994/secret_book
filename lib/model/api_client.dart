@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:http/http.dart';
+import 'package:secret_book/model/state.dart';
+import 'package:secret_book/model/type.dart';
 
 Future<String> pushEvent(String serverAddr, Event event) async {
   try {
@@ -39,6 +42,31 @@ Future<List<Event>> getEvents(String syncAddr, String lastSyncDate) async {
       List<Event> rst = [];
       for (var item in list) {
         rst.add(Event.fromJson(item));
+      }
+      return rst;
+    } else {
+      throw (response.reasonPhrase!); // error thrown
+    }
+  } catch (e) {
+    rethrow;
+  }
+}
+
+Future<List<DataState>> getStates(String syncAddr, String lastSyncID, DataType dataType) async {
+  var request = Request('GET',
+      Uri.parse(handleUrl('$syncAddr/fetch_states?last_sync_id=$lastSyncID&data_type=${dataType.name}')));
+  // request.headers.addAll(headers);
+  try {
+    StreamedResponse response =
+        await request.send().timeout(const Duration(seconds: 10));
+
+    if (response.statusCode == 200) {
+      String body = await response.stream.bytesToString();
+      List<dynamic> list = jsonDecode(body);
+
+      List<DataState> rst = [];
+      for (var item in list) {
+        rst.add(DataState.fromJson(item));
       }
       return rst;
     } else {

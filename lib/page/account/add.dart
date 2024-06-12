@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/api_client.dart';
@@ -26,16 +24,9 @@ class AddAccountButton {
       Info info = appState.info;
       if (info.autoPushEvent) {
         pushEvent(
-                info.serverAddr,
-                Event(
-                    id: account.id,
-                    name: "add account ${account.title}",
-                    date: nowStr(),
-                    data_type: "account",
-                    event_type: "create",
-                    content: jsonEncode(account.toJson()),
-                    from: info.name))
-            .then((value) {
+          info.serverAddr,
+          account.toEvent(EventType.create, info.name),
+        ).then((value) {
           if (value == "") {
             context.showSnackBar("发送事件成功");
           } else {
@@ -182,6 +173,7 @@ class AddAccountButton {
                     account: accountCtrl.text,
                     password: passwordCtrl.text,
                     comment: comment,
+                    date: nowStr(),
                   ));
                 },
               ),

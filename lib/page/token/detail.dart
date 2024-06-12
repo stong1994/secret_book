@@ -73,21 +73,15 @@ class _TokenActionState extends State<TokenAction> {
 
   void _updateTitle(BuildContext context, String newTitle) {
     Token token = widget.token.copyWith(title: newTitle);
+    token.date = nowStr();
     TokenBookData().updateToken(token).then((newToken) {
       if (!context.autoPushEvent) {
         return;
       }
       pushEvent(
-          context.serverAddr,
-          Event(
-            id: token.id,
-            name: "update token ${token.title}",
-            date: nowStr(),
-            data_type: "token",
-            event_type: "update",
-            content: jsonEncode(token.toJson()),
-            from: context.name,
-          )).then((value) {
+        context.serverAddr,
+        token.toEvent(EventType.update, context.name),
+      ).then((value) {
         if (value == "") {
           context.showSnackBar("发送事件成功");
         } else {
@@ -100,21 +94,15 @@ class _TokenActionState extends State<TokenAction> {
 
   void _updateContent(BuildContext context, String newContent) {
     Token token = widget.token.copyWith(content: newContent);
+    token.date = nowStr();
     TokenBookData().updateToken(token).then((newToken) {
       if (!context.autoPushEvent) {
         return;
       }
       pushEvent(
-          context.serverAddr,
-          Event(
-            id: token.id,
-            name: "update token ${token.title}",
-            date: nowStr(),
-            data_type: "token",
-            event_type: "update",
-            content: jsonEncode(token.toJson()),
-            from: context.name,
-          )).then((value) {
+        context.serverAddr,
+        token.toEvent(EventType.update, context.name),
+      ).then((value) {
         if (value == "") {
           context.showSnackBar("发送事件成功");
         } else {
@@ -128,21 +116,14 @@ class _TokenActionState extends State<TokenAction> {
   void _deleteToken() {
     TokenBookData()
         .deleteToken(widget.token)
-        .then((_) async {
+        .then((token) async {
           if (!context.autoPushEvent) {
             return;
           }
           await pushEvent(
-              context.serverAddr,
-              Event(
-                id: widget.token.id,
-                name: "delete token ${widget.token.title}",
-                date: nowStr(),
-                data_type: "token",
-                event_type: "delete",
-                content: jsonEncode(widget.token.toJson()),
-                from: context.name,
-              )).then((value) {
+            context.serverAddr,
+            token.toEvent(EventType.delete, context.name),
+          ).then((value) {
             if (value == "") {
               context.showSnackBar("发送事件成功");
             } else {
@@ -156,16 +137,9 @@ class _TokenActionState extends State<TokenAction> {
 
   void _uploadToken() {
     pushEvent(
-        context.serverAddr,
-        Event(
-          id: widget.token.id,
-          name: "upload token ${widget.token.title}",
-          date: nowStr(),
-          data_type: "token",
-          event_type: "update",
-          content: jsonEncode(widget.token.toJson()),
-          from: context.name,
-        )).then((value) {
+      context.serverAddr,
+      widget.token.toEvent(EventType.update, context.name),
+    ).then((value) {
       if (value == "") {
         context.showSnackBar("上传成功");
       } else {
@@ -255,7 +229,8 @@ class _TokenActionState extends State<TokenAction> {
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/account.dart';
 import 'package:secret_book/event/event_bus.dart';
@@ -7,7 +5,6 @@ import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/account.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
-import 'package:secret_book/utils/time.dart';
 
 class EventAccountUpdated {}
 
@@ -92,16 +89,9 @@ class DetailPage {
                         .then((newAccount) {
                       if (context.autoPushEvent) {
                         pushEvent(
-                            context.serverAddr,
-                            Event(
-                              id: newAccount.id,
-                              name: "update account ${newAccount.title}",
-                              date: nowStr(),
-                              data_type: "account",
-                              event_type: "update",
-                              content: jsonEncode(newAccount.toJson()),
-                              from: context.name,
-                            )).then((value) {
+                          context.serverAddr,
+                          newAccount.toEvent(EventType.update, context.name),
+                        ).then((value) {
                           if (value == "") {
                             context.showSnackBar("发送事件成功");
                           } else {
@@ -130,7 +120,8 @@ class DetailPage {
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(

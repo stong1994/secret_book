@@ -13,7 +13,6 @@ class TokenBook extends StatefulWidget {
 }
 
 class _TokenBookState extends State<TokenBook> {
-
   @override
   void initState() {
     super.initState();

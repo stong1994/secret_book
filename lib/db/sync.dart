@@ -8,7 +8,145 @@ import 'package:secret_book/model/account.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/googleauth.dart';
+import 'package:secret_book/model/state.dart';
 import 'package:secret_book/model/token.dart';
+import 'package:secret_book/model/type.dart';
+import 'package:secret_book/utils/show_error.dart';
+
+Future<void> syncDataWithServer(
+  String serverAddr,
+  String lastSyncDate,
+  String from,
+) async {
+  if (serverAddr == "") {
+    showError("服务器地址为空");
+    return;
+  }
+  if (from == "") {
+    showError("来源未设置");
+    return;
+  }
+  print("syncing token data");
+  await syncTokenWithServer(serverAddr, lastSyncDate, from);
+  // print("syncing account data");
+  // await syncAccountWithServer(serverAddr, lastSyncDate, from);
+  // print("syncing googel auth data");
+  // await syncGoogleAuthWithServer(serverAddr, lastSyncDate, from);
+}
+
+Future<void> syncTokenWithServer(
+  String serverAddr,
+  String lastSyncDate,
+  String from,
+) async {
+  var localTokens = await TokenBookData().fetchTokens();
+  var remoteTokens = await dataFromServer(serverAddr, DataType.token);
+  // convert to map for quick search
+  var localTokenMap = Map.fromIterable(localTokens, key: (e) => e.id);
+  var remoteTokenMap = Map.fromIterable(remoteTokens, key: (e) => e.id);
+  // add to local if local is not exists or older  & update to remote if local is newer
+  await Future.forEach(remoteTokens, (remote) async {
+    var local = localTokenMap[remote.id];
+    if (local == null || local.date < remote.date) {
+      print(
+          "token: ${remote.id} local date: ${local?.date} remote date: ${remote.date}");
+      await TokenBookData().saveToken(Token.fromState(remote));
+    } else if (local.date > remote.date) {
+      await pushEvent(serverAddr, local.toEvent(EventType.update, from));
+    }
+  });
+
+  // add to remote if remote is not exist
+  await Future.forEach(localTokens, (local) async {
+    if (!remoteTokenMap.containsKey(local.id)) {
+      await pushEvent(serverAddr, local.toEvent(EventType.create, from));
+    }
+  });
+  // TODO: handle delete
+}
+
+Future<void> syncAccountWithServer(
+  String serverAddr,
+  String lastSyncDate,
+  String from,
+) async {
+  var locals = await TokenBookData().fetchTokens();
+  var remotes = await dataFromServer(serverAddr, DataType.account);
+  // convert to map for quick search
+  var localMap = Map.fromIterable(locals, key: (e) => e.id);
+  var remoteMap = Map.fromIterable(remotes, key: (e) => e.id);
+  // add to local if local is not exists or older  & update to remote if local is newer
+  await Future.forEach(remotes, (remote) async {
+    var local = localMap[remote.id];
+    if (local == null || local.date < remote.date) {
+      await AccountBookData().saveAccount(Account.fromState(remote));
+    } else if (local.date > remote.date) {
+      await pushEvent(serverAddr, local.toEvent(EventType.update, from));
+    }
+  });
+
+  // add to remote if remote is not exist
+  await Future.forEach(locals, (local) async {
+    if (!remoteMap.containsKey(local.id)) {
+      await pushEvent(serverAddr, local.toEvent(EventType.create, from));
+    }
+  });
+  // TODO: handle delete
+}
+
+Future<void> syncGoogleAuthWithServer(
+  String serverAddr,
+  String lastSyncDate,
+  String from,
+) async {
+  var locals = await GoogleAuthBookData().fetchGoogleAuths();
+  var remotes = await dataFromServer(serverAddr, DataType.google_auth);
+  // convert to map for quick search
+  var localMap = Map.fromIterable(locals, key: (e) => e.id);
+  var remoteMap = Map.fromIterable(remotes, key: (e) => e.id);
+  // add to local if local is not exists or older  & update to remote if local is newer
+  await Future.forEach(remotes, (remote) async {
+    var local = localMap[remote.id];
+    if (local == null || local.date < remote.date) {
+      await GoogleAuthBookData().saveGoogleAuth(GoogleAuth.fromState(remote));
+    } else if (local.date > remote.date) {
+      await pushEvent(serverAddr, local.toEvent(EventType.update, from));
+    }
+  });
+
+  // add to remote if remote is not exist
+  await Future.forEach(locals, (local) async {
+    if (!remoteMap.containsKey(local.id)) {
+      await pushEvent(serverAddr, local.toEvent(EventType.create, from));
+    }
+  });
+  // TODO: handle delete
+}
+
+Future<List<DataState>> dataFromServer(
+  String serverAddr,
+  DataType dataType,
+) async {
+  List<DataState> states = [];
+  bool unFinished = true;
+  String lastSyncID = "";
+
+  while (unFinished) {
+    try {
+      List<DataState> data = await getStates(serverAddr, lastSyncID, dataType);
+      if (data.isEmpty) {
+        unFinished = false;
+        continue;
+      }
+      lastSyncID = data.last.id;
+      states.addAll(data);
+    } catch (e) {
+      showError("同步中断，原因: $e");
+      rethrow; // make sure stop the execution
+    }
+  }
+  return states;
+}
 
 Future<String> syncDataFromServer(
   String serverAddr,
@@ -49,11 +187,11 @@ Future<String> syncDataFromServer(
 
 Future<void> consumeEvent(Event event) async {
   switch (event.data_type) {
-    case 'token':
+    case DataType.token:
       return consumeTokenEvent(event);
-    case 'account':
+    case DataType.account:
       return consumeAccountEvent(event);
-    case 'google_auth':
+    case DataType.google_auth:
       return consumeGoogleAuthEvent(event);
     default:
       throw ('Invalid data type: ${event.data_type}');
@@ -61,17 +199,17 @@ Future<void> consumeEvent(Event event) async {
 }
 
 Future<void> consumeAccountEvent(Event event) async {
-  switch (event.event_type.toLowerCase()) {
-    case 'create':
-      var account = Account.fromJson(jsonDecode(event.content));
+  switch (event.event_type) {
+    case EventType.create:
+      var account = Account.fromEvent(event);
       AccountBookData().saveAccount(account);
       return;
-    case 'update':
-      var account = Account.fromJson(jsonDecode(event.content));
+    case EventType.update:
+      var account = Account.fromEvent(event);
       AccountBookData().saveAccount(account);
       return;
-    case 'delete':
-      var account = Account.fromJson(jsonDecode(event.content));
+    case EventType.delete:
+      var account = Account.fromEvent(event);
       AccountBookData().deleteAccount(account);
       return;
     default:
@@ -80,17 +218,17 @@ Future<void> consumeAccountEvent(Event event) async {
 }
 
 Future<void> consumeTokenEvent(Event event) async {
-  switch (event.event_type.toLowerCase()) {
-    case 'create':
-      var token = Token.fromJson(jsonDecode(event.content));
+  switch (event.event_type) {
+    case EventType.create:
+      var token = Token.fromEvent(event);
       TokenBookData().saveToken(token);
       return;
-    case 'update':
-      var token = Token.fromJson(jsonDecode(event.content));
+    case EventType.update:
+      var token = Token.fromEvent(event);
       TokenBookData().saveToken(token);
       return;
-    case 'delete':
-      var token = Token.fromJson(jsonDecode(event.content));
+    case EventType.delete:
+      var token = Token.fromEvent(event);
       TokenBookData().deleteToken(token);
       return;
     default:
@@ -99,17 +237,17 @@ Future<void> consumeTokenEvent(Event event) async {
 }
 
 Future<void> consumeGoogleAuthEvent(Event event) async {
-  switch (event.event_type.toLowerCase()) {
-    case 'create':
-      var googleAuth = GoogleAuth.fromJson(jsonDecode(event.content));
+  switch (event.event_type) {
+    case EventType.create:
+      var googleAuth = GoogleAuth.fromEvent(event);
       GoogleAuthBookData().saveGoogleAuth(googleAuth);
       return;
-    case 'update':
-      var googleAuth = GoogleAuth.fromJson(jsonDecode(event.content));
+    case EventType.update:
+      var googleAuth = GoogleAuth.fromEvent(event);
       GoogleAuthBookData().saveGoogleAuth(googleAuth);
       return;
-    case 'delete':
-      var googleAuth = GoogleAuth.fromJson(jsonDecode(event.content));
+    case EventType.delete:
+      var googleAuth = GoogleAuth.fromEvent(event);
       GoogleAuthBookData().deleteGoogleAuth(googleAuth);
       return;
     default:
