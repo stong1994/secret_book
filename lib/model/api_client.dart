@@ -8,6 +8,7 @@ import 'package:secret_book/model/state.dart';
 import 'package:secret_book/model/type.dart';
 
 Future<String> pushEvent(String serverAddr, Event event) async {
+  debugPrint("pushing event: ${event.toString()}");
   try {
     final response = await post(
       Uri.parse(handleUrl('$serverAddr/push')),
@@ -22,7 +23,7 @@ Future<String> pushEvent(String serverAddr, Event event) async {
     }
     return "";
   } catch (e) {
-    debugPrint(e.toString());
+    debugPrint("push failed: ${e.toString()}");
     return e.toString();
   }
 }
@@ -52,9 +53,12 @@ Future<List<Event>> getEvents(String syncAddr, String lastSyncDate) async {
   }
 }
 
-Future<List<DataState>> getStates(String syncAddr, String lastSyncID, DataType dataType) async {
-  var request = Request('GET',
-      Uri.parse(handleUrl('$syncAddr/fetch_states?last_sync_id=$lastSyncID&data_type=${dataType.name}')));
+Future<List<DataState>> getStates(
+    String syncAddr, String lastSyncID, DataType dataType) async {
+  var request = Request(
+      'GET',
+      Uri.parse(handleUrl(
+          '$syncAddr/fetch_states?last_sync_id=$lastSyncID&data_type=${dataType.name}')));
   // request.headers.addAll(headers);
   try {
     StreamedResponse response =

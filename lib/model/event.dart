@@ -63,4 +63,6 @@ class Event {
         'content': content,
         'from': from,
       };
+  @override
+  toString() => toJson().toString();
 }

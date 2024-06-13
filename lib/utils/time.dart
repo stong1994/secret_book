@@ -9,3 +9,7 @@ String twoDigits(int n) {
   }
   return "0$n";
 }
+
+bool dateAfter(String d1, String d2) {
+  return d1.compareTo(d2) > 0;
+}

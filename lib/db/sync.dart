@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:secret_book/db/account.dart';
@@ -12,6 +13,7 @@ import 'package:secret_book/model/state.dart';
 import 'package:secret_book/model/token.dart';
 import 'package:secret_book/model/type.dart';
 import 'package:secret_book/utils/show_error.dart';
+import 'package:secret_book/utils/time.dart';
 
 Future<void> syncDataWithServer(
   String serverAddr,
@@ -27,9 +29,9 @@ Future<void> syncDataWithServer(
     return;
   }
   print("syncing token data");
-  await syncTokenWithServer(serverAddr, lastSyncDate, from);
-  // print("syncing account data");
-  // await syncAccountWithServer(serverAddr, lastSyncDate, from);
+  // await syncTokenWithServer(serverAddr, lastSyncDate, from);
+  print("syncing account data");
+  await syncAccountWithServer(serverAddr, lastSyncDate, from);
   // print("syncing googel auth data");
   // await syncGoogleAuthWithServer(serverAddr, lastSyncDate, from);
 }
@@ -39,19 +41,21 @@ Future<void> syncTokenWithServer(
   String lastSyncDate,
   String from,
 ) async {
-  var localTokens = await TokenBookData().fetchTokens();
-  var remoteTokens = await dataFromServer(serverAddr, DataType.token);
+  List<Token> localTokens = await TokenBookData().fetchTokens();
+  List<DataState> remoteTokens =
+      await dataFromServer(serverAddr, DataType.token);
   // convert to map for quick search
-  var localTokenMap = Map.fromIterable(localTokens, key: (e) => e.id);
-  var remoteTokenMap = Map.fromIterable(remoteTokens, key: (e) => e.id);
+  LinkedHashMap<String, Token> localTokenMap =
+      LinkedHashMap<String, Token>.fromIterable(localTokens, key: (e) => e.id);
+  LinkedHashMap<String, DataState> remoteTokenMap =
+      LinkedHashMap<String, DataState>.fromIterable(remoteTokens,
+          key: (e) => e.id);
   // add to local if local is not exists or older  & update to remote if local is newer
   await Future.forEach(remoteTokens, (remote) async {
     var local = localTokenMap[remote.id];
-    if (local == null || local.date < remote.date) {
-      print(
-          "token: ${remote.id} local date: ${local?.date} remote date: ${remote.date}");
+    if (local == null || dateAfter(remote.date, local.date)) {
       await TokenBookData().saveToken(Token.fromState(remote));
-    } else if (local.date > remote.date) {
+    } else if (dateAfter(local.date, remote.date)) {
       await pushEvent(serverAddr, local.toEvent(EventType.update, from));
     }
   });
@@ -70,7 +74,7 @@ Future<void> syncAccountWithServer(
   String lastSyncDate,
   String from,
 ) async {
-  var locals = await TokenBookData().fetchTokens();
+  var locals = await AccountBookData().fetchAccounts("");
   var remotes = await dataFromServer(serverAddr, DataType.account);
   // convert to map for quick search
   var localMap = Map.fromIterable(locals, key: (e) => e.id);
@@ -78,9 +82,9 @@ Future<void> syncAccountWithServer(
   // add to local if local is not exists or older  & update to remote if local is newer
   await Future.forEach(remotes, (remote) async {
     var local = localMap[remote.id];
-    if (local == null || local.date < remote.date) {
+    if (local == null || dateAfter(remote.date, remote.date)) {
       await AccountBookData().saveAccount(Account.fromState(remote));
-    } else if (local.date > remote.date) {
+    } else if (dateAfter(remote.date, local.date)) {
       await pushEvent(serverAddr, local.toEvent(EventType.update, from));
     }
   });
@@ -107,9 +111,9 @@ Future<void> syncGoogleAuthWithServer(
   // add to local if local is not exists or older  & update to remote if local is newer
   await Future.forEach(remotes, (remote) async {
     var local = localMap[remote.id];
-    if (local == null || local.date < remote.date) {
+    if (local == null || dateAfter(remote.date, local.date)) {
       await GoogleAuthBookData().saveGoogleAuth(GoogleAuth.fromState(remote));
-    } else if (local.date > remote.date) {
+    } else if (dateAfter(remote.date, local.date)) {
       await pushEvent(serverAddr, local.toEvent(EventType.update, from));
     }
   });
