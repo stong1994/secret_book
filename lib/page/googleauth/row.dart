@@ -47,7 +47,7 @@ class GoogleAuthRow extends StatelessWidget {
     return () {
       pushEvent(
         context.serverAddr,
-        googleAuth.toEvent(EventType.delete, context.name),
+        googleAuth.toEvent(EventType.update, context.name),
       ).then((value) {
         if (value == "") {
           context.showSnackBar("上传成功");
