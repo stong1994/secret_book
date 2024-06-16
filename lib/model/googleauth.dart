@@ -67,6 +67,7 @@ class GoogleAuth {
       name: title,
       event_type: eventType,
       content: token,
+      desc: '',
       date: date,
       data_id: id,
       data_type: DataType.google_auth,

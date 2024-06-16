@@ -49,6 +49,7 @@ class Token {
       name: title,
       event_type: eventType,
       content: content,
+      desc: '',
       date: date,
       data_id: id,
       data_type: DataType.token,

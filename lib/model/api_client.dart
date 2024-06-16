@@ -19,6 +19,8 @@ Future<String> pushEvent(String serverAddr, Event event) async {
     );
 
     if (response.statusCode != 200) {
+      debugPrint(
+          "push failed, url: ${handleUrl('$serverAddr/push')}, status: ${response.statusCode}");
       throw ("push event failed: ${response.reasonPhrase}");
     }
     return "";

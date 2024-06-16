@@ -60,6 +60,7 @@ class Account {
       name: title,
       event_type: eventType,
       content: "$account $password $comment",
+      desc: comment,
       date: date,
       data_id: id,
       data_type: DataType.account,
@@ -75,7 +76,7 @@ class Account {
       date: event.date,
       account: content.first,
       password: content.length > 1 ? content[1] : "",
-      comment: content.length > 2 ? content[2] : "",
+      comment: event.desc,
     );
   }
 
@@ -87,7 +88,7 @@ class Account {
       date: state.date,
       account: content.first,
       password: content.length > 1 ? content[1] : "",
-      comment: content.length > 2 ? content[2] : "",
+      comment: state.desc,
     );
   }
 }

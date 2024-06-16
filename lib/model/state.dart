@@ -3,6 +3,7 @@ class DataState {
   String name;
   String data_type;
   String content;
+  String desc;
   String date;
 
   DataState({
@@ -10,6 +11,7 @@ class DataState {
     this.name = "",
     this.data_type = "",
     this.content = "",
+    this.desc = "",
     this.date = "",
   });
 
@@ -19,6 +21,7 @@ class DataState {
       name: json['name'],
       data_type: json['data_type'],
       content: json['content'],
+      desc: json['desc'],
       date: json['date'],
     );
   }
@@ -28,6 +31,7 @@ class DataState {
         'name': name,
         'data_type': data_type,
         'content': content,
+        'desc': desc,
         'date': date,
       };
 }

@@ -27,6 +27,7 @@ class Event {
   String data_id;
   DataType data_type;
   String content;
+  String desc;
   String from;
 
   Event({
@@ -37,6 +38,7 @@ class Event {
     this.data_id = "",
     this.event_type = EventType.create,
     this.content = "",
+    this.desc = "",
     this.from = "",
   });
 
@@ -49,6 +51,7 @@ class Event {
       data_id: json['data_id'],
       data_type: getDataTypeFromString(json['data_type']),
       content: json['content'],
+      desc: json['desc'],
       from: json['from'],
     );
   }
@@ -61,6 +64,7 @@ class Event {
         'data_id': data_id,
         'data_type': data_type.name,
         'content': content,
+        'desc': desc,
         'from': from,
       };
   @override

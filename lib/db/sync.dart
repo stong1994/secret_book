@@ -103,7 +103,7 @@ Future<void> syncGoogleAuthWithServer(
   String lastSyncDate,
   String from,
 ) async {
-  var locals = await GoogleAuthBookData().fetchGoogleAuths();
+  List<GoogleAuth> locals = await GoogleAuthBookData().fetchGoogleAuths();
   var remotes = await dataFromServer(serverAddr, DataType.google_auth);
   // convert to map for quick search
   var localMap = Map.fromIterable(locals, key: (e) => e.id);
