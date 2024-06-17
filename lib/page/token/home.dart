@@ -4,6 +4,7 @@ import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/model/token.dart';
 import 'add.dart';
 import 'detail.dart';
+import 'row.dart';
 
 class TokenBook extends StatefulWidget {
   const TokenBook({super.key});
@@ -80,7 +81,7 @@ class _TokenBookState extends State<TokenBook> {
                   controller: _scrollController,
                   itemCount: tokens.length,
                   itemBuilder: (context, index) {
-                    return TokenAction(
+                    return TokenRow(
                       token: tokens[index],
                     );
                   });

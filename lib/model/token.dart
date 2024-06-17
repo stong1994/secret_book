@@ -7,12 +7,14 @@ class Token {
   String title;
   String content;
   String date;
+  String desc;
 
   Token({
     this.id = "",
     this.title = "",
     this.content = "",
     this.date = "",
+    this.desc = "",
   });
 
   factory Token.fromJson(Map<String, dynamic> json) {
@@ -20,7 +22,8 @@ class Token {
         id: json['id'],
         title: json['title'],
         content: json['content'],
-        date: json['date'] ?? "");
+        date: json['date'] ?? "",
+        desc: json['desc'] ?? "");
   }
 
   Map<String, dynamic> toJson() => {
@@ -28,6 +31,7 @@ class Token {
         'content': content,
         'id': id,
         'date': date,
+        'desc': desc,
       };
 
   Token copyWith({
@@ -35,12 +39,14 @@ class Token {
     String? id,
     String? content,
     String? date,
+    String? desc,
   }) {
     return Token(
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
       date: date ?? this.date,
+      desc: desc ?? this.desc,
     );
   }
 
@@ -49,7 +55,7 @@ class Token {
       name: title,
       event_type: eventType,
       content: content,
-      desc: '',
+      desc: desc,
       date: date,
       data_id: id,
       data_type: DataType.token,
@@ -63,6 +69,7 @@ class Token {
       title: state.name,
       content: state.content,
       date: state.date,
+      desc: state.desc,
     );
   }
 
@@ -72,6 +79,7 @@ class Token {
       title: event.name,
       content: event.content,
       date: event.date,
+      desc: event.desc,
     );
   }
 }

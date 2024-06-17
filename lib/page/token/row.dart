@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:secret_book/db/googleauth.dart';
+import 'package:secret_book/db/token.dart';
 import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
-import 'package:secret_book/model/googleauth.dart';
+import 'package:secret_book/model/token.dart';
 import 'package:secret_book/utils/utils.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 
 import 'detail.dart';
-import 'get_code.dart';
 
-class EventGoogleAuthDeleted {}
+class EventTokenDeleted {}
 
-class GoogleAuthRow extends StatelessWidget {
-  final GoogleAuth googleAuth;
+class TokenRow extends StatelessWidget {
+  final Token token;
 
-  const GoogleAuthRow({
+  const TokenRow({
     Key? key,
-    required this.googleAuth,
+    required this.token,
   }) : super(key: key);
 
-  VoidCallback onDeleteGoogleAuth(BuildContext context, GoogleAuth googleAuth) {
+  VoidCallback onDeleteToken(BuildContext context, Token token) {
     return () {
-      GoogleAuthBookData().deleteGoogleAuth(googleAuth).then((googleAuth) {
+      TokenBookData().deleteToken(token).then((token) {
         if (!context.autoPushEvent) {
           return;
         }
         pushEvent(
           context.serverAddr,
-          googleAuth.toEvent(EventType.delete, context.name),
+          token.toEvent(EventType.delete, context.name),
         ).then((value) {
           if (value == "") {
             context.showSnackBar("发送事件成功");
@@ -36,15 +35,15 @@ class GoogleAuthRow extends StatelessWidget {
             context.showSnackBar("发送事件失败, 原因： $value");
           }
         });
-      }).then((_) => eventBus.fire(EventGoogleAuthDeleted()));
+      }).then((_) => eventBus.fire(EventTokenDeleted()));
     };
   }
 
-  VoidCallback uploadGoogleAuth(BuildContext context, GoogleAuth googleAuth) {
+  VoidCallback uploadToken(BuildContext context, Token token) {
     return () {
       pushEvent(
         context.serverAddr,
-        googleAuth.toEvent(EventType.update, context.name),
+        token.toEvent(EventType.update, context.name),
       ).then((value) {
         if (value == "") {
           context.showSnackBar("上传成功");
@@ -60,26 +59,20 @@ class GoogleAuthRow extends StatelessWidget {
     List<Widget> buttons = [
       Expanded(
           child: IconButton(
-        icon: const Icon(Icons.domain_verification),
-        onPressed: copyCode(context, googleAuth.token),
-        tooltip: '复制验证码',
-      )),
-      Expanded(
-          child: IconButton(
         icon: const Icon(Icons.key),
-        onPressed: onCopy(context, googleAuth.token),
-        tooltip: '复制秘钥',
+        onPressed: onCopy(context, token.content),
+        tooltip: '复制token',
       )),
       Expanded(
           child: IconButton(
         icon: const Icon(Icons.info),
-        onPressed: _showInfo(context, googleAuth),
+        onPressed: _showInfo(context, token),
         tooltip: '详情',
       )),
       Expanded(
           child: IconButton(
         icon: const Icon(Icons.delete),
-        onPressed: onDeleteGoogleAuth(context, googleAuth),
+        onPressed: onDeleteToken(context, token),
         tooltip: '删除',
         // disabledColor: _isEditing ? Colors.grey : Colors.red,
       )),
@@ -88,7 +81,7 @@ class GoogleAuthRow extends StatelessWidget {
       buttons.add(Expanded(
           child: IconButton(
         icon: const Icon(Icons.upload),
-        onPressed: uploadGoogleAuth(context, googleAuth),
+        onPressed: uploadToken(context, token),
         tooltip: '上传',
         // disabledColor: _isEditing ? Colors.grey : Colors.red,
       )));
@@ -100,7 +93,7 @@ class GoogleAuthRow extends StatelessWidget {
         Expanded(
           child: Container(
             child: Text(
-              googleAuth.title,
+              token.title,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -117,24 +110,12 @@ class GoogleAuthRow extends StatelessWidget {
     );
   }
 
-  VoidCallback _showInfo(context, googleAuth) {
+  VoidCallback _showInfo(context, token) {
     return () {
       DetailPage(
         context: context,
-        googleAuth: googleAuth,
+        token: token,
       ).build();
-    };
-  }
-
-  VoidCallback copyCode(BuildContext context, String token) {
-    return () {
-      var authCode = getCode(token);
-      showOnCopy(
-        context,
-        authCode.code,
-        tip: '已复制，还剩${authCode.expireSecond}秒过期',
-        retentionMillSecond: 1000,
-      );
     };
   }
 }

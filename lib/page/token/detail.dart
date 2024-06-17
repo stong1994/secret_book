@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/token.dart';
 import 'package:secret_book/event/event_bus.dart';
@@ -7,12 +5,9 @@ import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/token.dart';
 import 'package:secret_book/utils/time.dart';
-import 'package:secret_book/utils/utils.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 
 class EventTokenUpdated {}
-
-class EventTokenDeleted {}
 
 class EventTokenEditing {
   @override
@@ -22,206 +17,107 @@ class EventTokenEditing {
   });
 }
 
-class TokenAction extends StatefulWidget {
+class DetailPage {
   final Token token;
-  final FocusNode? focusNode;
+  final BuildContext context;
 
-  const TokenAction({
+  DetailPage({
     Key? key,
+    required this.context,
     required this.token,
-    this.focusNode,
-  }) : super(key: key);
-
-  @override
-  _TokenActionState createState() => _TokenActionState();
-}
-
-class _TokenActionState extends State<TokenAction> {
-  late TextEditingController _titleEditingController;
-  late TextEditingController _contentEditingController;
-  bool _isEditing = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _titleEditingController = TextEditingController(text: widget.token.title);
-    _contentEditingController =
-        TextEditingController(text: widget.token.content);
-    eventBus.on<EventTokenEditing>().listen((event) {
-      onOtherTokenEditing(event.hashCode);
-    });
+  }) {
+    initState();
   }
 
-  @override
+  late TextEditingController _titleEditingController;
+  late TextEditingController _contentEditingController;
+  late TextEditingController _descEditingController;
+  bool _isEditingTitle = false;
+
+  void initState() {
+    _titleEditingController = TextEditingController(text: token.title);
+    _contentEditingController = TextEditingController(text: token.content);
+    _descEditingController = TextEditingController(text: token.desc);
+  }
+
   void dispose() {
     _titleEditingController.dispose();
     _contentEditingController.dispose();
-    super.dispose();
+    _descEditingController.dispose();
   }
 
-  onOtherTokenEditing(int hashCode) {
-    if (widget.hashCode != hashCode && _isEditing) {
-      _toggleEditing();
-    }
-  }
-
-  void _toggleEditing() {
-    setState(() {
-      _isEditing = !_isEditing;
-    });
-  }
-
-  void _updateTitle(BuildContext context, String newTitle) {
-    Token token = widget.token.copyWith(title: newTitle);
-    token.date = nowStr();
-    TokenBookData().updateToken(token).then((newToken) {
-      if (!context.autoPushEvent) {
-        return;
-      }
-      pushEvent(
-        context.serverAddr,
-        token.toEvent(EventType.update, context.name),
-      ).then((value) {
-        if (value == "") {
-          context.showSnackBar("发送事件成功");
-        } else {
-          context.showSnackBar("发送事件失败, 原因： $value");
-        }
-      });
-    }).then((_) => eventBus.fire(EventTokenUpdated()));
-    _toggleEditing();
-  }
-
-  void _updateContent(BuildContext context, String newContent) {
-    Token token = widget.token.copyWith(content: newContent);
-    token.date = nowStr();
-    TokenBookData().updateToken(token).then((newToken) {
-      if (!context.autoPushEvent) {
-        return;
-      }
-      pushEvent(
-        context.serverAddr,
-        token.toEvent(EventType.update, context.name),
-      ).then((value) {
-        if (value == "") {
-          context.showSnackBar("发送事件成功");
-        } else {
-          context.showSnackBar("发送事件失败, 原因： $value");
-        }
-      });
-    }).then((_) => eventBus.fire(EventTokenUpdated()));
-    _toggleEditing();
-  }
-
-  void _deleteToken() {
-    TokenBookData()
-        .deleteToken(widget.token)
-        .then((token) async {
-          if (!context.autoPushEvent) {
-            return;
-          }
-          await pushEvent(
-            context.serverAddr,
-            token.toEvent(EventType.delete, context.name),
-          ).then((value) {
-            if (value == "") {
-              context.showSnackBar("发送事件成功");
-            } else {
-              context.showSnackBar("发送事件失败, 原因： $value");
-            }
-          });
-        })
-        .then((_) => dispose)
-        .then((_) => eventBus.fire(EventTokenDeleted()));
-  }
-
-  void _uploadToken() {
-    pushEvent(
-      context.serverAddr,
-      widget.token.toEvent(EventType.update, context.name),
-    ).then((value) {
-      if (value == "") {
-        context.showSnackBar("上传成功");
-      } else {
-        context.showSnackBar("上传失败, 原因： $value");
-      }
-    });
-  }
-
-  void onCopy() {
-    copyToClipboard(widget.token.content);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Future.delayed(const Duration(milliseconds: 500), () {
-          Navigator.of(context).pop();
-        });
-        return const AlertDialog(
-          title: Text('已复制'),
-        );
-      },
-    );
-  }
-
-  Widget _show() {
-    List<Widget> buttons = [
-      Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.copy),
-        onPressed: onCopy,
-        tooltip: '复制内容',
-      )),
-      Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.visibility),
-        onPressed: _showContent,
-        tooltip: '显示内容',
-      )),
-      Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: _deleteToken,
-        tooltip: '删除',
-        // disabledColor: _isEditing ? Colors.grey : Colors.red,
-      )),
-    ];
-    if (context.canSync) {
-      buttons.add(Expanded(
-          child: IconButton(
-        onPressed: _uploadToken,
-        icon: const Icon(Icons.upload),
-        tooltip: '上传',
-      )));
-    }
-    return GestureDetector(
-        onTap: () {
-          _toggleEditing();
-          eventBus.fire(EventTokenEditing(hashCode: widget.hashCode));
-        },
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const Spacer(),
-              Expanded(
-                child: Container(
-                  child: Text(
-                    widget.token.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+  Future<Token?> build() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title:
+                  _isEditingTitle ? _editTitle(setState) : _showTitle(setState),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buildTextField(
+                    controller: _contentEditingController,
+                    label: "token",
                   ),
-                ),
+                  buildTextField(
+                    controller: _descEditingController,
+                    label: "描述",
+                  ),
+                ],
               ),
-              const Spacer(),
-              Expanded(
-                  child: Row(
-                children: buttons,
-              )),
-              const Spacer(),
-              // Container(),
-            ]));
+              actions: [
+                TextButton(
+                  child: const Text('取消'),
+                  onPressed: () {
+                    dispose();
+                    Navigator.of(context).pop(token);
+                  },
+                ),
+                TextButton(
+                  child: const Text('完成'),
+                  onPressed: () {
+                    TokenBookData()
+                        .updateToken(Token(
+                      id: token.id,
+                      title: _titleEditingController.text,
+                      content: _contentEditingController.text,
+                      desc: _descEditingController.text,
+                      date: nowStr(),
+                    ))
+                        .then((token) {
+                      if (!context.autoPushEvent) {
+                        return token;
+                      }
+                      pushEvent(
+                        context.serverAddr,
+                        token.toEvent(EventType.update, context.name),
+                      ).then((value) {
+                        if (value == "") {
+                          context.showSnackBar("发送事件成功");
+                        } else {
+                          context.showSnackBar("发送事件失败, 原因： $value");
+                        }
+                      });
+                      return token;
+                    }).then((token) {
+                      eventBus.fire(EventTokenUpdated());
+                      return token;
+                    }).then((token) {
+                      Navigator.of(context).pop(token);
+                      dispose();
+                    });
+                    // _contentEditingController.clear();
+                  },
+                ),
+              ],
+            );
+          });
+        });
   }
 
-  Widget _edit() {
+  Widget _editTitle(setState) {
     return TextFormField(
       controller: _titleEditingController,
       autofocus: true,
@@ -247,68 +143,36 @@ class _TokenActionState extends State<TokenAction> {
         ),
       ),
       onFieldSubmitted: (value) {
-        _updateTitle(context, value);
-        _titleEditingController.clear();
+        // token.title = _tokenEditingController.text;
       },
-      onTapOutside: (event) => _toggleEditing(),
+      // onTapOutside: (event) => setState(() {
+      //   // _isEditingTitle = false;
+      // }),
     );
   }
 
-  void _showContent() {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('详情',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
-              )),
-          content: SingleChildScrollView(
-              child: TextField(
-            // focusNode: _focusNode,
-            autofocus: true,
-            controller: _contentEditingController,
-            decoration: const InputDecoration(
-              // fillColor: Colors.white,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              hintText: 'do something...',
-              hintStyle: TextStyle(
-                color: Color.fromARGB(255, 235, 186, 186),
-                fontSize: 16,
-              ),
-              border: UnderlineInputBorder(),
-            ),
-          )),
-          actions: [
-            TextButton(
-              child: const Text('取消'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('完成'),
-              onPressed: () {
-                String content = _contentEditingController.text;
-                _updateContent(context, content);
-                _contentEditingController.clear();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  Widget _showTitle(setState) {
+    return GestureDetector(
+        onTap: () => {
+              setState(() {
+                _isEditingTitle = true;
+              })
+            },
+        child: Text(token.title,
+            style: const TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            )));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return _isEditing ? _edit() : _show();
+  Widget buildTextField({
+    required TextEditingController controller,
+    required String label,
+  }) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(labelText: label),
+    );
   }
 }

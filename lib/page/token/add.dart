@@ -16,6 +16,7 @@ class AddPage {
 
   final _titleEditingController = TextEditingController();
   final _contentEditingController = TextEditingController();
+  final _descEditingController = TextEditingController();
 
   AddPage({
     required this.context,
@@ -24,6 +25,7 @@ class AddPage {
   void dispose() {
     _titleEditingController.dispose();
     _contentEditingController.dispose();
+    _descEditingController.dispose();
   }
 
   VoidCallback build() {
@@ -75,6 +77,23 @@ class AddPage {
                     ),
                     border: UnderlineInputBorder(),
                   ),
+                ),
+                TextField(
+                  autofocus: true,
+                  controller: _descEditingController,
+                  decoration: const InputDecoration(
+                    // fillColor: Colors.white,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
+                    hintText: '请填写描述...',
+                    hintStyle: TextStyle(
+                      color: Color.fromARGB(255, 235, 186, 186),
+                      fontSize: 16,
+                    ),
+                    border: UnderlineInputBorder(),
+                  ),
                 )
               ],
             )),
@@ -104,6 +123,7 @@ class AddPage {
         .addToken(Token(
       title: _titleEditingController.text,
       content: _contentEditingController.text,
+      desc: _descEditingController.text,
       date: nowStr(),
     ))
         .then((token) {
