@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/info.dart';
-import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/info.dart';
 import 'package:secret_book/page/setting/sync.dart';
-
-class EventSettingChanged {}
 
 class InfoPage extends StatefulWidget {
   const InfoPage({super.key});
@@ -21,9 +18,6 @@ class _InfoPageState extends State<InfoPage> {
   @override
   void initState() {
     super.initState();
-    eventBus.on<EventSettingChanged>().listen((event) {
-      setState(() {});
-    });
   }
 
   @override
@@ -39,6 +33,8 @@ class _InfoPageState extends State<InfoPage> {
       future: InfoData().getInfo(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          _appNameController.text = snapshot.data!.name;
+          _serverController.text = snapshot.data!.serverAddr;
           return AlertDialog(
             title: const Text("设置"),
             content: Column(
@@ -52,7 +48,7 @@ class _InfoPageState extends State<InfoPage> {
                         IconButton(
                           icon: const Icon(Icons.edit),
                           onPressed: () {
-                            appNamePage(context, snapshot.data!.name);
+                            appNamePage(context);
                           },
                         ),
                       ],
@@ -68,7 +64,7 @@ class _InfoPageState extends State<InfoPage> {
                         IconButton(
                           icon: const Icon(Icons.edit),
                           onPressed: () {
-                            serverPage(context, snapshot.data!.serverAddr);
+                            serverPage(context);
                           },
                         ),
                       ],
@@ -89,9 +85,8 @@ class _InfoPageState extends State<InfoPage> {
                         InfoData().saveAutoPushEvent(newValue).then((_) {
                           context.info.autoPushEvent = newValue;
                           setState(() {});
-                        })
-                            // .then((_) => Navigator.of(context).pop())
-                            .then((_) => eventBus.fire(EventSettingChanged()));
+                        });
+                        // .then((_) => Navigator.of(context).pop())
                       },
                     ),
                   ],
@@ -133,8 +128,7 @@ class _InfoPageState extends State<InfoPage> {
     );
   }
 
-  void serverPage(context, serverAddr) {
-    _serverController.text = serverAddr;
+  void serverPage(context) {
     showDialog(
         context: context,
         builder: (context) {
@@ -156,7 +150,7 @@ class _InfoPageState extends State<InfoPage> {
                   InfoData().saveServerAddr(_serverController.text).then((_) {
                     context.info.serverAddr = _serverController.text;
                     Navigator.of(context).pop();
-                  }).then((_) => eventBus.fire(EventSettingChanged()));
+                  });
                 },
                 child: const Text("确认"),
               )
@@ -165,8 +159,7 @@ class _InfoPageState extends State<InfoPage> {
         });
   }
 
-  void appNamePage(context, appName) {
-    _appNameController.text = appName;
+  void appNamePage(context) {
     showDialog(
         context: context,
         builder: (context) {
@@ -187,8 +180,7 @@ class _InfoPageState extends State<InfoPage> {
                 onPressed: () {
                   InfoData()
                       .saveAppName(_appNameController.text)
-                      .then((_) => Navigator.of(context).pop())
-                      .then((_) => eventBus.fire(EventSettingChanged()));
+                      .then((_) => Navigator.of(context).pop());
                 },
                 child: const Text("确认"),
               )
