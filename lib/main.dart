@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       title: '密码本',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
+        // primarySwatch: Colors.lightBlue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const Home(),

@@ -31,7 +31,7 @@ class _GoogleAuthBookState extends State<GoogleAuthBook> {
     return Scaffold(
         body: Container(
             margin: const EdgeInsets.all(2),
-            color: const Color.fromARGB(255, 204, 216, 204),
+            color: const Color(0xFFEF9C66),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[

@@ -38,7 +38,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: const Color(0xff78ABA8),
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child:

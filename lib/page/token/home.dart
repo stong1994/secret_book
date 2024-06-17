@@ -29,7 +29,7 @@ class _TokenBookState extends State<TokenBook> {
     return Scaffold(
         body: Container(
             margin: const EdgeInsets.all(2),
-            color: const Color.fromARGB(255, 187, 194, 187),
+            color: const Color(0xffc8cfa0),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[

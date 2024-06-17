@@ -46,7 +46,7 @@ class _AccountBookState extends State<AccountBook> {
     return Scaffold(
         body: Container(
       margin: const EdgeInsets.all(2),
-      color: const Color.fromARGB(255, 200, 215, 200),
+      color: const Color(0xFFFCDC94),
       child: Stack(
         children: [
           Align(
