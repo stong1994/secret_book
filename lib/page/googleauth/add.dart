@@ -16,10 +16,12 @@ class AddPage {
 
   final _titleEditingController = TextEditingController();
   final _tokenEditingController = TextEditingController();
+  final _descEditingController = TextEditingController();
 
   void dispose() {
     _titleEditingController.dispose();
     _tokenEditingController.dispose();
+    _descEditingController.dispose();
   }
 
   AddPage({
@@ -70,6 +72,23 @@ class AddPage {
                     border: UnderlineInputBorder(),
                   ),
                 ),
+                TextField(
+                  autofocus: true,
+                  controller: _descEditingController,
+                  decoration: const InputDecoration(
+                    // fillColor: Colors.white,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
+                    hintText: '填写备注...',
+                    hintStyle: TextStyle(
+                      color: Color.fromARGB(255, 235, 186, 186),
+                      fontSize: 16,
+                    ),
+                    border: UnderlineInputBorder(),
+                  ),
+                ),
               ],
             )),
             actions: [
@@ -99,6 +118,7 @@ class AddPage {
         .addGoogleAuth(GoogleAuth(
       title: _titleEditingController.text,
       token: _tokenEditingController.text,
+      desc: _descEditingController.text,
       date: nowStr(),
     ))
         .then((googleAuth) {

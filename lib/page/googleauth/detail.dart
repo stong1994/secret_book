@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/googleauth.dart';
 import 'package:secret_book/event/event_bus.dart';
@@ -25,17 +23,20 @@ class DetailPage {
 
   late TextEditingController _titleEditingController;
   late TextEditingController _tokenEditingController;
+  late TextEditingController _descEditingController;
   bool _isEditingTitle = false;
   bool _isShowToken = false;
 
   void initState() {
     _titleEditingController = TextEditingController(text: googleAuth.title);
     _tokenEditingController = TextEditingController(text: googleAuth.token);
+    _descEditingController = TextEditingController(text: googleAuth.desc);
   }
 
   void dispose() {
     _titleEditingController.dispose();
     _tokenEditingController.dispose();
+    _descEditingController.dispose();
   }
 
   Future<GoogleAuth?> build() {
@@ -53,6 +54,10 @@ class DetailPage {
                     controller: _tokenEditingController,
                     label: "秘钥",
                     setState: setState,
+                  ),
+                  buildTextField(
+                    controller: _descEditingController,
+                    label: "描述",
                   ),
                 ],
               ),
@@ -72,6 +77,7 @@ class DetailPage {
                       id: googleAuth.id,
                       title: _titleEditingController.text,
                       token: _tokenEditingController.text,
+                      desc: _descEditingController.text,
                       date: nowStr(),
                     ))
                         .then((googleAuth) {
