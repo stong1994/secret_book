@@ -23,20 +23,20 @@ class DetailPage {
 
   late TextEditingController _titleEditingController;
   late TextEditingController _tokenEditingController;
-  late TextEditingController _descEditingController;
+  late TextEditingController _commentEditingController;
   bool _isEditingTitle = false;
   bool _isShowToken = false;
 
   void initState() {
     _titleEditingController = TextEditingController(text: googleAuth.title);
     _tokenEditingController = TextEditingController(text: googleAuth.token);
-    _descEditingController = TextEditingController(text: googleAuth.desc);
+    _commentEditingController = TextEditingController(text: googleAuth.comment);
   }
 
   void dispose() {
     _titleEditingController.dispose();
     _tokenEditingController.dispose();
-    _descEditingController.dispose();
+    _commentEditingController.dispose();
   }
 
   Future<GoogleAuth?> build() {
@@ -56,7 +56,7 @@ class DetailPage {
                     setState: setState,
                   ),
                   buildTextField(
-                    controller: _descEditingController,
+                    controller: _commentEditingController,
                     label: "描述",
                   ),
                 ],
@@ -77,7 +77,7 @@ class DetailPage {
                       id: googleAuth.id,
                       title: _titleEditingController.text,
                       token: _tokenEditingController.text,
-                      desc: _descEditingController.text,
+                      comment: _commentEditingController.text,
                       date: nowStr(),
                     ))
                         .then((googleAuth) {
@@ -96,11 +96,11 @@ class DetailPage {
                       });
                       return googleAuth;
                     }).then((googleAuth) {
-                      eventBus.fire(EventGoogleAuthUpdated());
-                      return googleAuth;
-                    }).then((googleAuth) {
                       Navigator.of(context).pop(googleAuth);
                       dispose();
+                    }).then((googleAuth) {
+                      eventBus.fire(EventGoogleAuthUpdated());
+                      return googleAuth;
                     });
                     // _contentEditingController.clear();
                   },

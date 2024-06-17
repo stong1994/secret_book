@@ -16,7 +16,7 @@ class AddPage {
 
   final _titleEditingController = TextEditingController();
   final _contentEditingController = TextEditingController();
-  final _descEditingController = TextEditingController();
+  final _commentEditingController = TextEditingController();
 
   AddPage({
     required this.context,
@@ -25,7 +25,7 @@ class AddPage {
   void dispose() {
     _titleEditingController.dispose();
     _contentEditingController.dispose();
-    _descEditingController.dispose();
+    _commentEditingController.dispose();
   }
 
   VoidCallback build() {
@@ -80,7 +80,7 @@ class AddPage {
                 ),
                 TextField(
                   autofocus: true,
-                  controller: _descEditingController,
+                  controller: _commentEditingController,
                   decoration: const InputDecoration(
                     // fillColor: Colors.white,
                     contentPadding: EdgeInsets.symmetric(
@@ -123,7 +123,7 @@ class AddPage {
         .addToken(Token(
       title: _titleEditingController.text,
       content: _contentEditingController.text,
-      desc: _descEditingController.text,
+      comment: _commentEditingController.text,
       date: nowStr(),
     ))
         .then((token) {

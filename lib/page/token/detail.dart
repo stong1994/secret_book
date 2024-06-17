@@ -31,19 +31,19 @@ class DetailPage {
 
   late TextEditingController _titleEditingController;
   late TextEditingController _contentEditingController;
-  late TextEditingController _descEditingController;
+  late TextEditingController _commentEditingController;
   bool _isEditingTitle = false;
 
   void initState() {
     _titleEditingController = TextEditingController(text: token.title);
     _contentEditingController = TextEditingController(text: token.content);
-    _descEditingController = TextEditingController(text: token.desc);
+    _commentEditingController = TextEditingController(text: token.comment);
   }
 
   void dispose() {
     _titleEditingController.dispose();
     _contentEditingController.dispose();
-    _descEditingController.dispose();
+    _commentEditingController.dispose();
   }
 
   Future<Token?> build() {
@@ -62,7 +62,7 @@ class DetailPage {
                     label: "token",
                   ),
                   buildTextField(
-                    controller: _descEditingController,
+                    controller: _commentEditingController,
                     label: "描述",
                   ),
                 ],
@@ -83,7 +83,7 @@ class DetailPage {
                       id: token.id,
                       title: _titleEditingController.text,
                       content: _contentEditingController.text,
-                      desc: _descEditingController.text,
+                      comment: _commentEditingController.text,
                       date: nowStr(),
                     ))
                         .then((token) {

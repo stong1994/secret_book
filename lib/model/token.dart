@@ -7,14 +7,14 @@ class Token {
   String title;
   String content;
   String date;
-  String desc;
+  String comment;
 
   Token({
     this.id = "",
     this.title = "",
     this.content = "",
     this.date = "",
-    this.desc = "",
+    this.comment = "",
   });
 
   factory Token.fromJson(Map<String, dynamic> json) {
@@ -23,7 +23,7 @@ class Token {
         title: json['title'],
         content: json['content'],
         date: json['date'] ?? "",
-        desc: json['desc'] ?? "");
+        comment: json['comment'] ?? "");
   }
 
   Map<String, dynamic> toJson() => {
@@ -31,7 +31,7 @@ class Token {
         'content': content,
         'id': id,
         'date': date,
-        'desc': desc,
+        'comment': comment,
       };
 
   Token copyWith({
@@ -39,14 +39,14 @@ class Token {
     String? id,
     String? content,
     String? date,
-    String? desc,
+    String? comment,
   }) {
     return Token(
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
       date: date ?? this.date,
-      desc: desc ?? this.desc,
+      comment: comment ?? this.comment,
     );
   }
 
@@ -55,7 +55,7 @@ class Token {
       name: title,
       event_type: eventType,
       content: content,
-      desc: desc,
+      desc: comment,
       date: date,
       data_id: id,
       data_type: DataType.token,
@@ -69,7 +69,7 @@ class Token {
       title: state.name,
       content: state.content,
       date: state.date,
-      desc: state.desc,
+      comment: state.desc,
     );
   }
 
@@ -79,7 +79,7 @@ class Token {
       title: event.name,
       content: event.content,
       date: event.date,
-      desc: event.desc,
+      comment: event.desc,
     );
   }
 }

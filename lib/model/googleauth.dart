@@ -7,14 +7,14 @@ class GoogleAuth {
   String token;
   String title;
   String date;
-  String desc;
+  String comment;
 
   GoogleAuth({
     this.id = "",
     this.token = "",
     this.title = "",
     this.date = "",
-    this.desc = "",
+    this.comment = "",
   });
 
   factory GoogleAuth.fromJson(Map<String, dynamic> json) {
@@ -23,7 +23,7 @@ class GoogleAuth {
         token: json['token'],
         title: json['title'],
         date: json['date'] ?? "",
-        desc: json['desc'] ?? "");
+        comment: json['comment'] ?? "");
   }
 
   Map<String, dynamic> toJson() => {
@@ -31,7 +31,7 @@ class GoogleAuth {
         'title': title,
         'id': id,
         'date': date,
-        'desc': desc,
+        'comment': comment,
       };
 
   GoogleAuth copyWith({
@@ -39,14 +39,14 @@ class GoogleAuth {
     String? id,
     String? title,
     String? date,
-    String? desc,
+    String? comment,
   }) {
     return GoogleAuth(
       id: id ?? this.id,
       token: token ?? this.token,
       title: title ?? this.title,
       date: date ?? this.date,
-      desc: desc ?? this.desc,
+      comment: comment ?? this.comment,
     );
   }
 
@@ -56,7 +56,7 @@ class GoogleAuth {
       token: state.content,
       title: state.name,
       date: state.date,
-      desc: state.desc,
+      comment: state.desc,
     );
   }
 
@@ -66,7 +66,7 @@ class GoogleAuth {
       token: event.content,
       title: event.name,
       date: event.date,
-      desc: event.desc,
+      comment: event.desc,
     );
   }
 
@@ -76,7 +76,7 @@ class GoogleAuth {
       event_type: eventType,
       content: token,
       date: date,
-      desc: desc,
+      desc: comment,
       data_id: id,
       data_type: DataType.google_auth,
       from: from,

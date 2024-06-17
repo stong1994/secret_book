@@ -16,12 +16,12 @@ class AddPage {
 
   final _titleEditingController = TextEditingController();
   final _tokenEditingController = TextEditingController();
-  final _descEditingController = TextEditingController();
+  final _commentEditingController = TextEditingController();
 
   void dispose() {
     _titleEditingController.dispose();
     _tokenEditingController.dispose();
-    _descEditingController.dispose();
+    _commentEditingController.dispose();
   }
 
   AddPage({
@@ -74,7 +74,7 @@ class AddPage {
                 ),
                 TextField(
                   autofocus: true,
-                  controller: _descEditingController,
+                  controller: _commentEditingController,
                   decoration: const InputDecoration(
                     // fillColor: Colors.white,
                     contentPadding: EdgeInsets.symmetric(
@@ -118,7 +118,7 @@ class AddPage {
         .addGoogleAuth(GoogleAuth(
       title: _titleEditingController.text,
       token: _tokenEditingController.text,
-      desc: _descEditingController.text,
+      comment: _commentEditingController.text,
       date: nowStr(),
     ))
         .then((googleAuth) {
