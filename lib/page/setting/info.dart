@@ -153,10 +153,10 @@ class _InfoPageState extends State<InfoPage> {
               ),
               TextButton(
                 onPressed: () {
-                  InfoData()
-                      .saveServerAddr(_serverController.text)
-                      .then((_) => Navigator.of(context).pop())
-                      .then((_) => eventBus.fire(EventSettingChanged()));
+                  InfoData().saveServerAddr(_serverController.text).then((_) {
+                    context.info.serverAddr = _serverController.text;
+                    Navigator.of(context).pop();
+                  }).then((_) => eventBus.fire(EventSettingChanged()));
                 },
                 child: const Text("确认"),
               )
