@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/googleauth.dart';
-import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/model/googleauth.dart';
 import 'package:secret_book/page/googleauth/add.dart';
-import 'package:secret_book/page/googleauth/detail.dart';
 import 'package:secret_book/page/googleauth/row.dart';
 
 class GoogleAuthBook extends StatefulWidget {
@@ -21,15 +19,6 @@ class _GoogleAuthBookState extends State<GoogleAuthBook> {
   @override
   void initState() {
     super.initState();
-    eventBus.on<EventGoogleAuthCreated>().listen((event) {
-      setState(() {});
-    });
-    eventBus.on<EventGoogleAuthUpdated>().listen((event) {
-      setState(() {});
-    });
-    eventBus.on<EventGoogleAuthDeleted>().listen((event) {
-      setState(() {});
-    });
   }
 
   @override
@@ -85,6 +74,7 @@ class _GoogleAuthBookState extends State<GoogleAuthBook> {
                   itemBuilder: (context, index) {
                     return GoogleAuthRow(
                       googleAuth: accounts[index],
+                      onDataChanged: onDataChanged(),
                     );
                   });
             }));
@@ -92,7 +82,13 @@ class _GoogleAuthBookState extends State<GoogleAuthBook> {
 
   VoidCallback onAdd() {
     return () {
-      AddPage(context: context).build();
+      AddPage(context: context).build(onDataChanged());
+    };
+  }
+
+  VoidCallback onDataChanged() {
+    return () {
+      setState(() {});
     };
   }
 }

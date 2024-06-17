@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/googleauth.dart';
-import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/googleauth.dart';
@@ -10,14 +9,14 @@ import 'package:secret_book/extensions/context_extension.dart';
 import 'detail.dart';
 import 'get_code.dart';
 
-class EventGoogleAuthDeleted {}
-
 class GoogleAuthRow extends StatelessWidget {
   final GoogleAuth googleAuth;
+  final Function() onDataChanged;
 
   const GoogleAuthRow({
     Key? key,
     required this.googleAuth,
+    required this.onDataChanged,
   }) : super(key: key);
 
   VoidCallback onDeleteGoogleAuth(BuildContext context, GoogleAuth googleAuth) {
@@ -35,8 +34,8 @@ class GoogleAuthRow extends StatelessWidget {
           } else {
             context.showSnackBar("发送事件失败, 原因： $value");
           }
-        });
-      }).then((_) => eventBus.fire(EventGoogleAuthDeleted()));
+        }).then((_) => onDataChanged());
+      });
     };
   }
 
@@ -98,11 +97,9 @@ class GoogleAuthRow extends StatelessWidget {
       children: [
         const Spacer(),
         Expanded(
-          child: Container(
-            child: Text(
-              googleAuth.title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+          child: Text(
+            googleAuth.title,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         const Spacer(),
@@ -122,7 +119,7 @@ class GoogleAuthRow extends StatelessWidget {
       DetailPage(
         context: context,
         googleAuth: googleAuth,
-      ).build();
+      ).build(onDataChanged);
     };
   }
 

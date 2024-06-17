@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/googleauth.dart';
-import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
@@ -28,7 +25,7 @@ class AddPage {
     required this.context,
   });
 
-  void build() {
+  void build(Function onDataChanged) {
     showDialog(
       context: context,
       builder: (context) {
@@ -104,6 +101,7 @@ class AddPage {
                 onPressed: () {
                   onAdd();
                   Navigator.of(context).pop();
+                  onDataChanged();
                 },
               ),
             ],
@@ -135,7 +133,6 @@ class AddPage {
           context.showSnackBar("发送事件失败, 原因： $value");
         }
       });
-      // dispose();
-    }).then((value) => eventBus.fire(EventGoogleAuthCreated()));
+    });
   }
 }

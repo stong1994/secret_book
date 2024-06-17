@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/googleauth.dart';
-import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/googleauth.dart';
 import 'package:secret_book/utils/time.dart';
-
-class EventGoogleAuthUpdated {}
 
 class DetailPage {
   final GoogleAuth googleAuth;
@@ -39,7 +36,7 @@ class DetailPage {
     _commentEditingController.dispose();
   }
 
-  Future<GoogleAuth?> build() {
+  Future<GoogleAuth?> build(Function onDataChanged) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -97,10 +94,8 @@ class DetailPage {
                       return googleAuth;
                     }).then((googleAuth) {
                       Navigator.of(context).pop(googleAuth);
+                      onDataChanged();
                       dispose();
-                    }).then((googleAuth) {
-                      eventBus.fire(EventGoogleAuthUpdated());
-                      return googleAuth;
                     });
                     // _contentEditingController.clear();
                   },
