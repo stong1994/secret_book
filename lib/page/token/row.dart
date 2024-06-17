@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/token.dart';
-import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/token.dart';
@@ -9,14 +8,14 @@ import 'package:secret_book/extensions/context_extension.dart';
 
 import 'detail.dart';
 
-class EventTokenDeleted {}
-
 class TokenRow extends StatelessWidget {
   final Token token;
+  final Function onDataChanged;
 
   const TokenRow({
     Key? key,
     required this.token,
+    required this.onDataChanged,
   }) : super(key: key);
 
   VoidCallback onDeleteToken(BuildContext context, Token token) {
@@ -34,8 +33,8 @@ class TokenRow extends StatelessWidget {
           } else {
             context.showSnackBar("发送事件失败, 原因： $value");
           }
-        });
-      }).then((_) => eventBus.fire(EventTokenDeleted()));
+        }).then((_) => onDataChanged());
+      });
     };
   }
 
@@ -91,11 +90,9 @@ class TokenRow extends StatelessWidget {
       children: [
         const Spacer(),
         Expanded(
-          child: Container(
-            child: Text(
-              token.title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+          child: Text(
+            token.title,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         const Spacer(),
@@ -113,9 +110,9 @@ class TokenRow extends StatelessWidget {
   VoidCallback _showInfo(context, token) {
     return () {
       DetailPage(
-        context: context,
+        parentContext: context,
         token: token,
-      ).build();
+      ).build(onDataChanged);
     };
   }
 }

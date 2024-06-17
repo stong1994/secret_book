@@ -8,11 +8,11 @@ import 'package:secret_book/utils/time.dart';
 
 class DetailPage {
   final GoogleAuth googleAuth;
-  final BuildContext context;
+  final BuildContext parentContext;
 
   DetailPage({
     Key? key,
-    required this.context,
+    required this.parentContext,
     required this.googleAuth,
   }) {
     initState();
@@ -38,7 +38,7 @@ class DetailPage {
 
   Future<GoogleAuth?> build(Function onDataChanged) {
     return showDialog(
-        context: context,
+        context: parentContext,
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
@@ -86,16 +86,15 @@ class DetailPage {
                         googleAuth.toEvent(EventType.update, context.name),
                       ).then((value) {
                         if (value == "") {
-                          context.showSnackBar("发送事件成功");
+                          parentContext.showSnackBar("发送事件成功");
                         } else {
-                          context.showSnackBar("发送事件失败, 原因： $value");
+                          parentContext.showSnackBar("发送事件失败, 原因： $value");
                         }
+                      }).then((googleAuth) {
+                        Navigator.of(context).pop(googleAuth);
+                        onDataChanged();
                       });
                       return googleAuth;
-                    }).then((googleAuth) {
-                      Navigator.of(context).pop(googleAuth);
-                      onDataChanged();
-                      dispose();
                     });
                     // _contentEditingController.clear();
                   },

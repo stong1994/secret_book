@@ -2,17 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/token.dart';
-import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/token.dart';
 import 'package:secret_book/utils/time.dart';
 
-class EventTokenCreated {}
-
 class AddPage {
   final BuildContext context;
+  final Function onDataChanged;
 
   final _titleEditingController = TextEditingController();
   final _contentEditingController = TextEditingController();
@@ -20,6 +18,7 @@ class AddPage {
 
   AddPage({
     required this.context,
+    required this.onDataChanged,
   });
 
   void dispose() {
@@ -141,8 +140,6 @@ class AddPage {
         }
       });
       // dispose();
-    }).then((value) {
-      eventBus.fire(EventTokenCreated());
-    });
+    }).then((_) => onDataChanged());
   }
 }

@@ -117,7 +117,7 @@ class GoogleAuthRow extends StatelessWidget {
   VoidCallback _showInfo(context, googleAuth) {
     return () {
       DetailPage(
-        context: context,
+        parentContext: context,
         googleAuth: googleAuth,
       ).build(onDataChanged);
     };

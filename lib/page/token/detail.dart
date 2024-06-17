@@ -1,29 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/token.dart';
-import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/token.dart';
 import 'package:secret_book/utils/time.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 
-class EventTokenUpdated {}
-
-class EventTokenEditing {
-  @override
-  final int hashCode;
-  EventTokenEditing({
-    required this.hashCode,
-  });
-}
-
 class DetailPage {
   final Token token;
-  final BuildContext context;
+  final BuildContext parentContext;
 
   DetailPage({
     Key? key,
-    required this.context,
+    required this.parentContext,
     required this.token,
   }) {
     initState();
@@ -46,9 +35,9 @@ class DetailPage {
     _commentEditingController.dispose();
   }
 
-  Future<Token?> build() {
+  Future<Token?> build(Function onDataChanged) {
     return showDialog(
-        context: context,
+        context: parentContext,
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
@@ -76,41 +65,37 @@ class DetailPage {
                   },
                 ),
                 TextButton(
-                  child: const Text('完成'),
-                  onPressed: () {
-                    TokenBookData()
-                        .updateToken(Token(
-                      id: token.id,
-                      title: _titleEditingController.text,
-                      content: _contentEditingController.text,
-                      comment: _commentEditingController.text,
-                      date: nowStr(),
-                    ))
-                        .then((token) {
-                      if (!context.autoPushEvent) {
-                        return token;
-                      }
-                      pushEvent(
-                        context.serverAddr,
-                        token.toEvent(EventType.update, context.name),
-                      ).then((value) {
-                        if (value == "") {
-                          context.showSnackBar("发送事件成功");
-                        } else {
-                          context.showSnackBar("发送事件失败, 原因： $value");
-                        }
-                      });
-                      return token;
-                    }).then((token) {
-                      eventBus.fire(EventTokenUpdated());
-                      return token;
-                    }).then((token) {
-                      Navigator.of(context).pop(token);
-                      dispose();
-                    });
-                    // _contentEditingController.clear();
-                  },
-                ),
+                    child: const Text('完成'),
+                    onPressed: () {
+                      TokenBookData()
+                          .updateToken(Token(
+                        id: token.id,
+                        title: _titleEditingController.text,
+                        content: _contentEditingController.text,
+                        comment: _commentEditingController.text,
+                        date: nowStr(),
+                      ))
+                          .then(
+                        (token) {
+                          if (!context.autoPushEvent) {
+                            return token;
+                          }
+                          pushEvent(
+                            context.serverAddr,
+                            token.toEvent(EventType.update, context.name),
+                          ).then((value) {
+                            if (value == "") {
+                              parentContext.showSnackBar("发送事件成功");
+                            } else {
+                              parentContext.showSnackBar("发送事件失败, 原因： $value");
+                            }
+                          }).then((token) {
+                            Navigator.of(context).pop(token);
+                            onDataChanged();
+                          });
+                        },
+                      );
+                    }),
               ],
             );
           });

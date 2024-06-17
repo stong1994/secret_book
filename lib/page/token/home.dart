@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/token.dart';
-import 'package:secret_book/event/event_bus.dart';
 import 'package:secret_book/model/token.dart';
 import 'add.dart';
-import 'detail.dart';
 import 'row.dart';
 
 class TokenBook extends StatefulWidget {
@@ -17,15 +15,6 @@ class _TokenBookState extends State<TokenBook> {
   @override
   void initState() {
     super.initState();
-    eventBus.on<EventTokenCreated>().listen((_) {
-      setState(() {});
-    });
-    eventBus.on<EventTokenUpdated>().listen((_) {
-      setState(() {});
-    });
-    eventBus.on<EventTokenDeleted>().listen((_) {
-      setState(() {});
-    });
   }
 
   @override
@@ -54,7 +43,8 @@ class _TokenBookState extends State<TokenBook> {
       padding: const EdgeInsets.only(bottom: 16, right: 10),
       alignment: Alignment.bottomRight,
       child: FloatingActionButton(
-        onPressed: AddPage(context: context).build(),
+        onPressed:
+            AddPage(context: context, onDataChanged: onDataChanged()).build(),
         child: const Icon(Icons.add),
       ),
     );
@@ -83,8 +73,15 @@ class _TokenBookState extends State<TokenBook> {
                   itemBuilder: (context, index) {
                     return TokenRow(
                       token: tokens[index],
+                      onDataChanged: onDataChanged(),
                     );
                   });
             }));
+  }
+
+  VoidCallback onDataChanged() {
+    return () {
+      setState(() {});
+    };
   }
 }
