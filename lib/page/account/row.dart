@@ -5,6 +5,7 @@ import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/account.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
+import 'package:secret_book/page/colors.dart';
 import 'package:secret_book/utils/utils.dart';
 import 'detail.dart';
 
@@ -92,48 +93,24 @@ class AccountRow extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> buttons = [
       Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.switch_account),
-        onPressed: onAccountCopy(context, account),
-        tooltip: '复制账号',
-      )),
-      Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.password_outlined),
-        onPressed: onPasswordCopy(context, account),
-        tooltip: '复制密码',
-      )),
-      Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.info),
-        onPressed: _showInfo(context, account),
-        tooltip: '详情',
-      )),
-      Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: onDeleteAccount(context, account),
-        tooltip: '删除',
-        // disabledColor: _isEditing ? Colors.grey : Colors.red,
-      )),
+          child: copyButton(null, const Icon(Icons.account_circle_outlined),
+              onAccountCopy(context, account))),
+      Expanded(child: copyPasswordButton(onPasswordCopy(context, account))),
+      Expanded(child: infoButton(_showInfo(context, account))),
+      Expanded(child: deleteButton(context, onDeleteAccount(context, account))),
     ];
     if (canSync(context)) {
-      buttons.add(Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.upload),
-        onPressed: uploadAccount(context, account),
-      )));
+      buttons
+          .add(Expanded(child: uploadButton(uploadAccount(context, account))));
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Spacer(),
         Expanded(
-          child: Container(
-            child: Text(
-              account.title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+          child: Text(
+            account.title,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         const Spacer(),

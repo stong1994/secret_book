@@ -3,6 +3,7 @@ import 'package:secret_book/db/googleauth.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/googleauth.dart';
+import 'package:secret_book/page/colors.dart';
 import 'package:secret_book/utils/utils.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 
@@ -58,39 +59,19 @@ class GoogleAuthRow extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> buttons = [
       Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.domain_verification),
-        onPressed: copyCode(context, googleAuth.token),
-        tooltip: '复制验证码',
-      )),
+          child: copyButton("复制验证码", const Icon(Icons.key),
+              copyCode(context, googleAuth.token))),
       Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.key),
-        onPressed: onCopy(context, googleAuth.token),
-        tooltip: '复制秘钥',
-      )),
+          child: copyButton("复制秘钥", const Icon(Icons.lock),
+              onCopy(context, googleAuth.token))),
+      Expanded(child: infoButton(_showInfo(context, googleAuth))),
       Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.info),
-        onPressed: _showInfo(context, googleAuth),
-        tooltip: '详情',
-      )),
-      Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: onDeleteGoogleAuth(context, googleAuth),
-        tooltip: '删除',
-        // disabledColor: _isEditing ? Colors.grey : Colors.red,
-      )),
+          child:
+              deleteButton(context, onDeleteGoogleAuth(context, googleAuth))),
     ];
     if (context.canSync) {
-      buttons.add(Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.upload),
-        onPressed: uploadGoogleAuth(context, googleAuth),
-        tooltip: '上传',
-        // disabledColor: _isEditing ? Colors.grey : Colors.red,
-      )));
+      buttons.add(
+          Expanded(child: uploadButton(uploadGoogleAuth(context, googleAuth))));
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -3,6 +3,7 @@ import 'package:secret_book/db/token.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
 import 'package:secret_book/model/token.dart';
+import 'package:secret_book/page/colors.dart';
 import 'package:secret_book/utils/utils.dart';
 import 'package:secret_book/extensions/context_extension.dart';
 
@@ -57,33 +58,12 @@ class TokenRow extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> buttons = [
       Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.key),
-        onPressed: onCopy(context, token.content),
-        tooltip: '复制token',
-      )),
-      Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.info),
-        onPressed: _showInfo(context, token),
-        tooltip: '详情',
-      )),
-      Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: onDeleteToken(context, token),
-        tooltip: '删除',
-        // disabledColor: _isEditing ? Colors.grey : Colors.red,
-      )),
+          child: copyButton("复制token", null, onCopy(context, token.content))),
+      Expanded(child: infoButton(_showInfo(context, token))),
+      Expanded(child: deleteButton(context, onDeleteToken(context, token))),
     ];
     if (context.canSync) {
-      buttons.add(Expanded(
-          child: IconButton(
-        icon: const Icon(Icons.upload),
-        onPressed: uploadToken(context, token),
-        tooltip: '上传',
-        // disabledColor: _isEditing ? Colors.grey : Colors.red,
-      )));
+      buttons.add(Expanded(child: uploadButton(uploadToken(context, token))));
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
