@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/data_exchange.dart';
-import 'package:secret_book/db/scheme.dart';
 import 'package:secret_book/utils/utils.dart';
 
 VoidCallback export(BuildContext context) {
@@ -9,35 +8,33 @@ VoidCallback export(BuildContext context) {
           if (!success) {
             return;
           }
-          getDataDir().then((String dirPath) => {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                          title: const Text('文件已保存'),
-                          content: Row(
-                            children: [
-                              Text('文件存储在 $dirPath'),
-                              IconButton(
-                                icon: const Icon(Icons.copy),
-                                onPressed: onPathCopy(context, dirPath),
-                                tooltip: '复制路径',
-                              ),
-                            ],
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                    title: const Text('文件已保存'),
+                    content: Row(
+                      children: [
+                        Text('文件存储在 $dir'),
+                        IconButton(
+                          icon: const Icon(Icons.copy),
+                          onPressed: onPathCopy(context, dir),
+                          tooltip: '复制路径',
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      OverflowBar(
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('确定'),
                           ),
-                          actions: [
-                            OverflowBar(
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('确定'),
-                                ),
-                              ],
-                            )
-                          ]);
-                    })
+                        ],
+                      )
+                    ]);
               });
         }));
   };

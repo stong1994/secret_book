@@ -5,7 +5,7 @@ import 'package:secret_book/extensions/context_extension.dart';
 import 'package:secret_book/model/account.dart';
 import 'package:secret_book/model/api_client.dart';
 import 'package:secret_book/model/event.dart';
-import 'package:secret_book/page/colors.dart';
+import 'package:secret_book/page/buttons.dart';
 import 'package:secret_book/utils/utils.dart';
 import 'detail.dart';
 
