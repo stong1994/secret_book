@@ -1,23 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:secret_book/db/info.dart';
+import 'package:secret_book/db/scheme.dart';
 import 'package:secret_book/utils/app_bloc.dart';
 import 'home.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isWindows || Platform.isLinux) {
-    // Initialize FFI
-    sqfliteFfiInit();
-    // Change the default factory. On iOS/Android, if not using `sqlite_flutter_lib` you can forget
-    // this step, it will use the sqlite version available on the system.
-    databaseFactory = databaseFactoryFfi;
-  }
-  var dbPath = await getDatabasesPath();
-  print("db path is $dbPath");
-
+  await initializeDB();
   var info = await InfoData().getInfo();
   runApp(
     AppBloc(

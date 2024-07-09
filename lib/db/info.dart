@@ -60,6 +60,11 @@ class InfoData {
       userInfoTableName,
       where: 'id = 0',
     );
+    // if (info.isNotEmpty) {
     return Info.fromJson(info[0]);
+    // }
+    // final defaultInfo = Info().defaultInfo();
+    // await db.insert(userInfoTableName, defaultInfo.toJson());
+    // return defaultInfo;
   }
 }
