@@ -103,24 +103,36 @@ class AccountRow extends StatelessWidget {
       buttons
           .add(Expanded(child: uploadButton(uploadAccount(context, account))));
     }
+
+    // Get the screen width
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Adjust the flex values based on the screen width
+    int textFlex = screenWidth > 600 ? 5 : 2;
+    int buttonsFlex = screenWidth > 600 ? 2 : 3;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Spacer(),
+        const Spacer(
+          flex: 1,
+        ),
         Expanded(
+          flex: textFlex,
           child: Text(
             account.title,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        const Spacer(),
+        const Spacer(flex: 1),
         Expanded(
+            flex: buttonsFlex,
             child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: buttons,
-        )),
-        const Spacer(),
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: buttons,
+            )),
+        const Spacer(flex: 1),
       ],
     );
   }

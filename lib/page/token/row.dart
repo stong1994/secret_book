@@ -65,24 +65,35 @@ class TokenRow extends StatelessWidget {
     if (context.canSync) {
       buttons.add(Expanded(child: uploadButton(uploadToken(context, token))));
     }
+    // Get the screen width
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Adjust the flex values based on the screen width
+    int textFlex = screenWidth > 600 ? 6 : 2;
+    int buttonsFlex = screenWidth > 600 ? 2 : 2;
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: MainAxisSize.max,
       children: [
-        const Spacer(),
+        const Spacer(flex: 1),
         Expanded(
+          flex: textFlex,
           child: Text(
             token.title,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        const Spacer(),
+        const Spacer(flex: 1),
         Expanded(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: buttons,
-        )),
-        const Spacer(),
+          flex: buttonsFlex,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: buttons,
+          ),
+        ),
+        const Spacer(flex: 1),
       ],
     );
   }
