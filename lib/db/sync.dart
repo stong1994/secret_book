@@ -28,12 +28,12 @@ Future<void> syncDataWithServer(
     showError("来源未设置");
     return;
   }
-  print("syncing token data");
-  // await syncTokenWithServer(serverAddr, lastSyncDate, from);
-  print("syncing account data");
+  // print("syncing token data");
+  await syncTokenWithServer(serverAddr, lastSyncDate, from);
+  // print("syncing account data");
   await syncAccountWithServer(serverAddr, lastSyncDate, from);
   // print("syncing googel auth data");
-  // await syncGoogleAuthWithServer(serverAddr, lastSyncDate, from);
+  await syncGoogleAuthWithServer(serverAddr, lastSyncDate, from);
 }
 
 Future<void> syncTokenWithServer(
